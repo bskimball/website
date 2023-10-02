@@ -1,0 +1,36 @@
+---
+title: BDKcloud Website
+date: '2022-01-14'
+tags: ['design', 'next.js']
+draft: false
+summary: The website for BDKcloud
+---
+
+![tailwind-nextjs-banner](/static/images/bdkcloud-preview.png)
+
+[Website](https://bdkcloud.com/)
+
+[Github Repo](https://github.com/bdkinc/bdkcloud)
+
+## Backstory
+
+There was a need to increase focus on the hosting part of operations. The idea was to have a site specific to
+hosting that marketing could promote. I created the design and used actual images from the data center used to house
+the equipment. It was just a landing page with a contact form.
+
+### Technical Decisions
+
+Previously I had been using Nuxt.js for websites. Nuxt is a great meta framework for Vue that provides SSR and
+developer experience out of the box. I love the performance of Vue but there's just something about being able to
+return JSX from a function that I like more than using templates. Since I switched to using tailwind, there was no
+longer a need for the style section in Vue's SFC. React is more prevalent in the industry. As the lead training
+resource, I thought it would be of benefit to switch to React and minimize the training footprint.
+
+It's a website so SEO and performance are absolutely mandatory. I chose to go with Next.js for SSR and a React ui.
+Next continues to be the easiest and most performant way to build websites using React. The website itself is
+running in a Docker environment, with a Traefik proxy.
+
+<div className="flex space-x-8">
+  <div>![blog preview](/static/images/bdkcloud-contact-form.png)</div>
+  <div>![opportunity form](/static/images/bdkcloud-light-mode.png)</div>
+</div>

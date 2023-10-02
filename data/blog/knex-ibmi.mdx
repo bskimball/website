@@ -1,0 +1,64 @@
+---
+title: IBMi Adapter for Knex
+date: '2023-8-15'
+tags: ['typescript', 'development']
+draft: false
+summary: An IBMi adapter for knex. It uses and ODBC connection under the hood.
+---
+![feathers-ibm-banner](/static/images/knex-ibmi-npm.png)
+
+[Github Repo](https://github.com/bdkinc/knex-ibmi)
+
+[NPM Package](https://www.npmjs.com/package/@bdkinc/knex-ibmi)
+
+Previously when building node based applications that run on the IBMi, I have used the
+[node-odbc](https://github.com/markdirish/node-odbc/) and has served me well. When working with other databases I normally reach for a query
+builder or even an ORM. It helps being able to write SQL queries closer to resemble the business logic. Knex is a
+popular query builder, and is used by other frameworks such as [feathers.js](https://feathersjs.com/).
+
+To make life easier, I decided to write an adapter for Knex that essentially wraps the node-odbc library. This would
+allow us to use knex on the IBMi. We could use frameworks like feathers and use the default knex based adapter as
+opposed to customizing the feathers services.
+
+```typescript
+import { knex } from "knex";
+import { DB2Config, DB2Dialect } from "@bdkinc/knex-ibmi";
+
+export const config: DB2Config = {
+  client: DB2Dialect,
+  connection: {
+    database: "*LOCAL",
+    host: "127.0.0.1",
+    port: 50000,
+    user: "user",
+    password: "password",
+    driver: "IBM i Access ODBC Driver",
+    connectionStringParams: {
+      CMT: 0,
+      NAM: 1
+    }
+  },
+  pool: {
+    max: 10,
+    min: 2
+  }
+};
+
+export const db = knex(config!);
+```
+
+The project started as forking an older library that had not been updated in 5 years.
+[Knex-db2](https://github.com/henryjw/knex-db2) is the original package, but was outdated. I ended up re-writing the entire package, so I
+could have just started fresh. I wrote the package in Typescript and bundle it using [tsup](https://tsup.egoist.dev/)
+, I wanted to make sure I supported typescript, common js and esm. I added transaction support and made sure my
+returning values all worked.
+
+The library is still in an alpha status. I have been using it in production and run into few issues. It could be
+moved to a Beta status soon. The error messages and logging could be better and will be my next area of focus.
+
+
+
+
+
+
+

@@ -1,0 +1,53 @@
+---
+title: Modern IBMi Prototype
+date: '2023-8-27'
+tags: ['development', 'react.js', 'feathers.js']
+draft: false
+summary: A modern full-stack application. A feathers backend with a vite spa frontend.
+---
+![feathers-ibm-banner](/static/images/feathers-ibm-home.png)
+
+[Github Repo](https://github.com/bskimball/feathers-ibm)
+
+## Preface
+
+I wanted to showcase a modern application built on the IBMi. It's using feathers.js for the backend server and has a
+vite spa (single page application) frontend. I had also created a knex adapter for db2 for i, and I needed a way to
+test the adapter in a "real" application. That adapter can be found on NPM [knex-ibmi](https://www.npmjs.com/package/@bdkinc/knex-ibmi) The frontend and backend
+communication is done through web-sockets, and updates in real-time.
+
+### Technical Decisions
+
+The <strong>backend</strong> is written in Typescript and uses [feathers.js](https://feathersjs.com/). If you are not
+familiar,
+feathers is a toolkit for configuring apps with authentication, web sockets (socket.io), rest api (koa), etc.
+It interacts with the DB2 database using knex. [Knex](https://knexjs.org/) is a "batteries included" SQL query
+builder, and it nice to work with in a typescript environment. To be able to use knex with DB2 for I, we use the
+[knex-ibmi](https://www.npmjs.com/package/@bdkinc/knex-ibmi). Once configured we are able to scaffold services and
+hooks using the CLI. This allows us to build modern real-time applications directly on the IBMi and using the DB2
+database.
+
+The <strong>frontend</strong> is written in Typescript using vite and [react.js](https://react.dev/). SSR (server side
+rendering) was not needed, so I decided to skip the complexity and just use [vite](https://vitejs.dev/) to bundle an
+SPA (single page application). For UI (user interface) I use the fantastic [shadcn/ui](https://ui.shadcn.com/) which
+marries together my favorite styling library [tailwind](https://tailwindcss.com/) and accessibility components in
+[radix ui](https://www.radix-ui.com/primitives/docs/overview/introduction).
+
+The frontend and backend are in separate folders. They are easier to manage in that regard. When developing I just
+opened to separate terminal windows to run the Dev servers simultaneously.
+
+<div className="flex space-x-8">
+  <div>
+    ![blog preview](/static/images/feathers-ibm-message.png)
+  </div>
+  <div>
+    ![opportunity form](/static/images/feathers-ibm-todo.png)
+  </div>
+</div>
+
+
+
+
+
+
+
