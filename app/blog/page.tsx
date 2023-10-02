@@ -5,7 +5,7 @@ import { genPageMetadata } from 'app/seo'
 
 const POSTS_PER_PAGE = 10
 
-export const runtime = 'edge';
+export const runtime = 'edge'
 
 export const metadata = genPageMetadata({ title: 'Blog' })
 
