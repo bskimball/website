@@ -6,6 +6,8 @@ export const runtime = 'edge'
 
 const POSTS_PER_PAGE = 5
 
+export const runtime = 'edge'
+
 export const generateStaticParams = async () => {
   const totalPages = Math.ceil(allBlogs.length / POSTS_PER_PAGE)
   const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
