@@ -1,5 +1,0 @@
-User-Agent: *
-Allow: /
-
-Host: https://brian-kimball.com
-Sitemap: https://brian-kimball.com/sitemap.xml
