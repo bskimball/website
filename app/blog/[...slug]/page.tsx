@@ -20,6 +20,8 @@ const layouts = {
   PostBanner,
 }
 
+export const runtime = 'edge'
+
 export async function generateMetadata({
   params,
 }: {
