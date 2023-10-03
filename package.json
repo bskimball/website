@@ -1,9 +1,9 @@
 {
-  "name": "my-blog",
+  "name": "my-website",
   "version": "1.0.0",
-  "author": "Brian Kimball",
+  "private": false,
   "scripts": {
-    "start": "next start",
+    "start": "next dev",
     "dev": "cross-env INIT_CWD=$PWD next dev",
     "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
@@ -25,7 +25,6 @@
     "next-themes": "^0.2.1",
     "pliny": "0.1.4",
     "postcss": "^8.4.24",
-    "querystring": "^0.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "reading-time": "1.5.0",

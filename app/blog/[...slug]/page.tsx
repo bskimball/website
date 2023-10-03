@@ -3,10 +3,10 @@ import 'katex/dist/katex.css'
 
 import PageTitle from '@/components/PageTitle'
 import { components } from '@/components/MDXComponents'
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
 import { allBlogs, allAuthors } from 'contentlayer/generated'
 import type { Authors, Blog } from 'contentlayer/generated'
-import { useMDXComponent } from 'next-contentlayer/hooks'
 import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
@@ -19,8 +19,6 @@ const layouts = {
   PostLayout,
   PostBanner,
 }
-
-export const runtime = 'edge'
 
 export async function generateMetadata({
   params,
@@ -76,13 +74,9 @@ export async function generateMetadata({
 }
 
 export const generateStaticParams = async () => {
-  return allBlogs.map((p) => ({ slug: p.slug.split('/') }))
-}
+  const paths = allBlogs.map((p) => ({ slug: p.slug.split('/') }))
 
-function MDXComponent({ code, ...rest }) {
-  const MDX = useMDXComponent(code)
-
-  return <MDX {...rest} />
+  return paths
 }
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
@@ -129,7 +123,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-        <MDXComponent code={post.body.code} components={components} toc={post.toc} />
+        <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
       </Layout>
     </>
   )
