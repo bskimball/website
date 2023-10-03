@@ -74,9 +74,7 @@ export async function generateMetadata({
 }
 
 export const generateStaticParams = async () => {
-  const paths = allBlogs.map((p) => ({ slug: p.slug.split('/') }))
-
-  return paths
+  return allBlogs.map((p) => ({ slug: p.slug.split('/') }))
 }
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
