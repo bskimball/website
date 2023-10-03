@@ -7,7 +7,7 @@ const siteMetadata = {
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://brian-kimball.com',
-  siteRepo: 'https://github.com/bskimball/my-website',
+  siteRepo: 'https://github.com/bskimball/website',
   siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
   mastodon: '',
