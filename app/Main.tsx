@@ -18,9 +18,6 @@ export default function Home({ posts }) {
           <h1 className="text-3xl font-extrabold leading-6 tracking-tight text-gray-900 dark:text-gray-100 md:text-4xl md:leading-8">
             Latest
           </h1>
-          {/*<p className="text-lg leading-7 text-gray-500 dark:text-gray-400">*/}
-          {/*  {siteMetadata.description}*/}
-          {/*</p>*/}
         </div>
         <ul>
           {!posts.length && 'No posts found.'}
