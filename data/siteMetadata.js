@@ -2,8 +2,8 @@
 const siteMetadata = {
   title: 'My Website',
   author: 'Brian Kimball',
-  headerTitle: 'The Website of Brian Kimball',
-  description: 'A portfolio site',
+  headerTitle: 'Stirling',
+  description: 'This is my Website',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://brian-kimball.com',
