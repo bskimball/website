@@ -17,8 +17,8 @@ function Gallery(props: Props) {
   return (
     <div className="w-full">
       <div
-        className={`flex flex-col md:grid md:grid-cols-${
-          props.slides.length % 2 == 0 ? '2' : '3'
+        className={`flex flex-col md:grid ${
+          props.slides.length % 2 == 0 ? 'md:grid-cols-2' : 'md:grid-cols-3'
         } h-full gap-8 flex-wrap mx-2 md:mx-0`}
       >
         {props.slides.map((slide, index) => (
