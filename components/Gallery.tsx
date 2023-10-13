@@ -36,8 +36,8 @@ function Gallery(props: Props) {
               <button
                 className="bg-black opacity-0 group-hover:opacity-75 absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out"
                 onClick={() => {
-                  setOpen(true)
                   setImage(index)
+                  setOpen(true)
                 }}
               >
                 <div className="text-white">
