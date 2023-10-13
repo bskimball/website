@@ -13,6 +13,7 @@ interface Props {
 
 function Gallery(props: Props) {
   const [open, setOpen] = useState(false)
+  const [image, setImage] = useState(0)
 
   return (
     <div className="w-full">
@@ -36,6 +37,7 @@ function Gallery(props: Props) {
                 className="bg-black opacity-0 group-hover:opacity-75 absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out"
                 onClick={() => {
                   setOpen(true)
+                  setImage(index)
                 }}
               >
                 <div className="text-white">
@@ -46,7 +48,13 @@ function Gallery(props: Props) {
           </div>
         ))}
       </div>
-      <Lightbox open={open} close={() => setOpen(false)} slides={props.slides} plugins={[Zoom]} />
+      <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={props.slides}
+        plugins={[Zoom]}
+        index={image}
+      />
     </div>
   )
 }
