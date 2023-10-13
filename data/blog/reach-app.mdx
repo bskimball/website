@@ -1,9 +1,11 @@
----
+## import Gallery from "@/components/Gallery";
+
 title: Prototype Demographic Application
 date: '2023-07-16'
 tags: ['development', 'react.js', 'feathers.js', 'typescript']
 draft: false
 summary: 'A modern full-stack application. A feathers backend with a vite spa frontend.'
+
 ---
 
 ![feathers-ibm-banner](/static/images/reach-app-home.png)
@@ -38,3 +40,10 @@ The <strong>infrastructure</strong> is built on Docker. The database is MySQL an
   <div>![blog preview](/static/images/reach-app-form.png)</div>
   <div>![opportunity form](/static/images/reach-app-customer-view.png)</div>
 </div>
+
+<Gallery
+  slides={[
+    { src: '/static/images/reach-app-form.png' },
+    { src: '/static/images/reach-app-customer-view.png' },
+  ]}
+/>

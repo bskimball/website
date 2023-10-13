@@ -1,9 +1,11 @@
----
+## import Gallery from "@/components/Gallery";
+
 title: Time Tracker
 date: '2021-10-4'
 tags: ['development', 'vue.js', 'laravel']
 draft: false
 summary: 'A full stack application that tracks time. Built using Laravel with a separate Vue SPA.'
+
 ---
 
 ![feathers-ibm-banner](/static/images/inventory-tracker-scanning.png)
@@ -33,7 +35,9 @@ I'm using Docker to deploy the frontend and backend to an ubuntu server. There i
 to the containers. I am using nginx behind the traefik proxy so I can run both applications from the same domain.
 That can be done through Traefik, but having an NGINX container available makes the application more portable.
 
-<div className="flex space-x-8">
-  <div>![blog preview](/static/images/inventory-tracker-lookup.png)</div>
-  <div>![opportunity form](/static/images/inventory-tracker-lookup-filtered.png)</div>
-</div>
+<Gallery
+  slides={[
+    { src: '/static/images/inventory-tracker-lookup.png' },
+    { src: '/static/images/inventory-tracker-lookup-filtered.png' },
+  ]}
+/>

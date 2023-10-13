@@ -1,10 +1,13 @@
----
+## import Gallery from "@/components/Gallery";
+
 title: Modern IBMi Prototype
 date: '2023-08-27'
 tags: ['development', 'react.js', 'feathers.js', 'typescript']
 draft: false
 summary: 'A modern full-stack application. A feathers backend with a vite spa frontend.'
+
 ---
+
 ![feathers-ibm-banner](/static/images/feathers-ibm-home.png)
 
 [Github Repo](https://github.com/bskimball/feathers-ibm)
@@ -36,18 +39,9 @@ marries together my favorite styling library [tailwind](https://tailwindcss.com/
 The frontend and backend are in separate folders. They are easier to manage in that regard. When developing I just
 opened to separate terminal windows to run the Dev servers simultaneously.
 
-<div className="flex space-x-8">
-  <div>
-    ![blog preview](/static/images/feathers-ibm-message.png)
-  </div>
-  <div>
-    ![opportunity form](/static/images/feathers-ibm-todo.png)
-  </div>
-</div>
-
-
-
-
-
-
-
+<Gallery
+  slides={[
+    { src: '/static/images/feathers-ibm-message.png' },
+    { src: '/static/images/feathers-ibm-todo.png' },
+  ]}
+/>
