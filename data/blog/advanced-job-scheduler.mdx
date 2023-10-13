@@ -1,0 +1,33 @@
+---
+title: Advanced Job Scheduler
+date: '2023-10-12'
+tags: ['IBMi']
+draft: false
+summary: Hourly jobs on the IBMi are possible thanks to Advanced Job Scheduler
+---
+
+![advanced-job-scheduler-banner](/static/images/advanced-job-scheduler-banner.png)
+
+## Hourly jobs on the IBMi?
+
+A lot of the backend projects I have been working on lately are pulling data from an API and inserting it into a
+database or emailing reports. A lot of these are related to EDI (Electronic Data Interchange) and e-commerce. I
+generally write a node application that is executed by a CL (command line) program and run it on the job scheduler.
+These programs need to run every hour or sometimes more in order for orders to be processed efficiently.
+
+On the IBMi is the default Job Scheduler which is accessed via WRKJOBSCDE. It allows for an administrator to execute
+a command either daily, weekly or monthly.
+
+<img alt="addjobscde screen" src="/static/images/addjobscde.png" style={{ float: 'right' }} /> This is
+a limited amount of options and in the past I have seen people do things like create multiple Scheduled
+entries or write a CL program to work around these limitations. I have a linux background, so I have
+always done this using a CRON job where you can specify intervals for recurring tasks.
+
+### Enter 5770-JS1 IBM's Advanced Job Scheduler
+
+The advanced job scheduler is a licensed program that has been available since IBMi v7r2. The program is 5770-JS1
+and can be installed, but you need a license to use it. It is separate from the original Job Scheduler and is
+accessible via WRKJOBJS or add a job as ADDJOBJS. <img alt="addjobscde screen" src="/static/images/addjobjs.png"
+style={{ float: 'right' }} /> The addjobjs screen has a lot of the same fields as the addjobscde screen. The big
+difference that helps me is being able to run jobs in intervals defined by minutes. I can now schedule my Node
+Applications to run hourly without any workarounds.
