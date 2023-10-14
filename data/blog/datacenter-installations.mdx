@@ -8,7 +8,7 @@ summary: Building a data center from scratch
 
 ## Preface
 
-One of the most challenging and fulfilling projects I have worked on in my professional career is datacenter design
+One of the most challenging and fulfilling projects I have worked on in my professional career is a datacenter design
 and implementation. It's been 3 years since we installed the current iteration of the datacenter. This is not the
 first iteration, as this is the 3rd location that was moved. We went from Evoswitch in Manassas, VA to AiNET in
 Beltsville, MD and then to Coresite in Reston, VA.
@@ -32,7 +32,7 @@ gotten very good at configuring IBMi as a hypervisor and virtualizing the worklo
 of glass for servers, as we used vcenter for vmware and the HMC for the power servers. As we grew, we bought more
 racks and continued to expand.
 
-At this point the networking was done by Bill Harrison, and the IBM Power configurations were done by me. We both
+At this point, the networking was done by Bill Harrison, and the IBM Power configurations were done by me. We both
 worked together on vmware stuff since we both knew the technology. I understood networking at the time, but I was not
 proficient with Cisco CLI and Bill was, and we managed to get everything up and running. We hosted mail servers,
 websites, private servers, all separated by vlans and virtual firewalls. We even used DoD addresses in between the
@@ -42,7 +42,7 @@ enough about Cisco and vlans to grow the infrastructure.
 
 ## On to Coresite
 
-Before we moved to Coresite, we had hired Tim who is really strong at networking. He was a Cisco certified
+Before we moved to Coresite, we had hired Tim, who is really strong at networking. He was a Cisco certified
 instructor. By then I was well versed in the datacenter, knew a lot about networking and had learned quite a few
 things from our previous installations. We made a plan to move all our equipment from AiNET to Coresite for various
 reasons. Tim and I spent months on the network design and infrastructure. We needed 2 of everything. We needed fast
@@ -74,7 +74,8 @@ the middle of the night.
 Tim and I grabbed a co-worker named Jesse, we all drove to Beltsville to un-rack the equipment. We worked as
 quickly as possible to take down the equipment in limited time. We packed it all up in the vans, and we drove it all
 to Reston, VA, which was about a 45-minute nerve-racking drive. Once we got there, we began racking the equipment.
-The power servers all needed to be connected to the switches via a lagg group. We used the LACP configuration on
+The power servers all needed to be connected to the switches via a [lagg](/blog/ibmi-lagg) group. We used the LACP
+configuration on
 both the IBMi and the Nexus switches. At the time, we did not know if this would work, and IBM's documentation
 stated this configuration had only ever been tested on a catalyst series switch. We were able to get them running,
 we could put the hypervisor on one network and each customer LPAR would have its own vlan assigned through the HMC.

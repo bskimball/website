@@ -1,0 +1,44 @@
+---
+title: IBMi LAGG
+date: '2023-02-26'
+tags: ['datacenter', 'IBMi']
+draft: true
+summary: Creating LAGG for performance and redundancy on the IBMi
+---
+
+## What and Why?
+
+LAGG combines multiple physical interfaces together to act as one logical interface. Why would you want this?
+Redundancy and performance. Many organizations have multiple switches, and one IBM server. LAGG allows you to plug
+the server in to both switches decreasing the chances of down-time. While both switches are operational, all network
+cables can be used simultaneously for the same ip address. This can increase the throughput of the networking to the
+server due to the increase pipe.
+
+## How?
+
+Each switch brand has a different configuration for setting up LAGG. On a Cisco Nexus switch, for example, we use a
+VPC (Virtual Port Channel) configuration. All managed switches have a way to create LAGG. On the IBMi, first you
+need to identify which physical interfaces you want to configure as your LAGG members. Typically, you would have a
+4-port network adapter, and the interfaces are labeled CMN03-CMN06. You can confirm these labels by issuing the
+following command "WRKHDWRSC \*CMN" and you should see a list of all communications hardware. If you have multiple
+network adapters, you can create LAGG between interfaces on each card.
+
+![ibmi-lagg-interfaces](/static/images/lagg-ports.png)
+
+The next step is to create your line descriptor. This can be done by pressing F6 on the WRKLIND screen or keying the
+command CRTLIND. I typically use the WRKLIND screen and hit F6 to create a new line descriptor.
+
+![ibmi-lagg-wrklind](/static/images/lagg-wrklind.png)
+
+Inside the prompt for creating your line descriptor, you will need to define your configuration. Normally for
+resource name, you would define one of the interfaces on the network adapter (e.g., CMN04). With LAGG you will
+instead specify *AGG as your resource name. The next configuration item is the aggregate policy. The standard is
+going to have to match with your switch configuration. Typically, we use Cisco switches and LACP, and on the IBMi we
+choose *LNKAGG. If you have a standard ether-channel, then you will use *ETHCHL. The policy type is how the requests
+are received by the independent interfaces. You will normally use *SRCDESTP and that is the most common. That last
+part is listing your Aggregated Resources List. This is where you identify which physical interfaces will be used.
+
+![ibmi-lagg-configure](/static/images/lagg-configure-line.png)
+
+Once all configured, you will have a line descriptor that can be used just like any other line descriptor. You can
+assign static IP addresses and routing as you would any other time. This just has the added performance and redundancy.
