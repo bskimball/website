@@ -11,7 +11,7 @@ const siteMetadata = {
   siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
   mastodon: '',
-  email: 'briankimball1982@gmail.com',
+  email: 'bskimball@outlook.com',
   github: 'https://github.com/bskimball',
   twitter: '',
   facebook: '',
