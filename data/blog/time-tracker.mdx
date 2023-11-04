@@ -6,10 +6,6 @@ draft: false
 summary: 'A full stack application that tracks time. Built using Laravel with a separate Vue SPA.'
 ---
 
-![feathers-ibm-banner](/static/images/inventory-tracker-scanning.png)
-
-[Github Repo](https://github.com/bskimball/inventory-tracker)
-
 ## Preface
 
 A vinyl fencing company needed a simple way to track inventory coming in and out of the warehouse. They wanted to be
@@ -20,7 +16,7 @@ easily share links that include the filters.
 
 ### Technical Decisions
 
-I made the decision to build a frontend as an SPA that communicates with a separate backend API. The backend is
+I made the decision to build a frontend as a SPA that communicates with a separate backend API. The backend is
 using [Laravel](https://laravel.com/). Laravel is one of the most complete frameworks available. Inspired by Rails
 but built using PHP, it is easy for a single developer to build full stack applications.
 
@@ -30,13 +26,5 @@ management a breeze. The ui is Bootstrap 5 which has utility classes as well as 
 made itself framework-agnostic and was easy to integrate into my vite + vue workflow.
 
 I'm using Docker to deploy the frontend and backend to an ubuntu server. There is a traefik proxy controlling access
-to the containers. I am using nginx behind the traefik proxy so I can run both applications from the same domain.
+to the containers. I am using nginx behind the traefik proxy, so I can run both applications from the same domain.
 That can be done through Traefik, but having an NGINX container available makes the application more portable.
-
-<Gallery
-  slides={[
-    { src: '/static/images/inventory-tracker-scanning.png' },
-    { src: '/static/images/inventory-tracker-lookup.png' },
-    { src: '/static/images/inventory-tracker-lookup-filtered.png' },
-  ]}
-/>
