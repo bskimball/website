@@ -13,7 +13,7 @@ const siteMetadata = {
   mastodon: '',
   email: 'bskimball@outlook.com',
   github: 'https://github.com/bskimball',
-  twitter: '',
+  twitter: 'https://twitter.com/_bskimball',
   facebook: '',
   youtube: '',
   linkedin: 'https://www.linkedin.com/in/brian-kimball-0499678a/',
