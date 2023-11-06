@@ -104,8 +104,8 @@ function ListComponent() {
 
   return (
     <ul>
-      {Array.from(items).map((item) => (
-        <li key={item.id}>{item.name}</li>
+      {Array.from(items).map(([id, item]) => (
+        <li key={id}>{item.name}</li>
       ))}
     </ul>
   )
