@@ -9,7 +9,7 @@ const siteMetadata = {
   siteUrl: 'https://brian-kimball.com',
   siteRepo: 'https://github.com/bskimball/website',
   siteLogo: '/static/images/logo.png',
-  socialBanner: '/static/images/twitter-card.png',
+  socialBanner: '/static/images/social-banner.png',
   mastodon: '',
   email: 'bskimball@outlook.com',
   github: 'https://github.com/bskimball',
