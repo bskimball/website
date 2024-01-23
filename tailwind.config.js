@@ -25,7 +25,7 @@ module.exports = {
         sans: ['var(--font-lato)', ...fontFamily.sans],
       },
       colors: {
-        primary: colors.teal,
+        primary: colors.cyan,
         gray: colors.slate,
       },
       typography: ({ theme }) => ({

@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react'
 import siteMetaData from '@/data/siteMetadata'
 
 export default function Hero() {
-  const [hpColor, setHpColor] = useState('heropattern-topography-emerald-500')
+  const [hpColor, setHpColor] = useState('heropattern-topography-cyan-500')
 
   useEffect(() => {
     const options = [
-      'heropattern-topography-emerald-500',
+      'heropattern-topography-cyan-500',
       'heropattern-topography-slate-300 dark:heropattern-topography-gray-700',
     ]
 
