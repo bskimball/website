@@ -26,7 +26,9 @@ export default function Hero() {
           <div className="px-16">
             <div className="mb-8 bg-cover bg-[url('/static/images/hero.png')] min-h-[360px]">
               <div className="drop-shadow">
-                <div className="pt-24 text-lg text-slate-700 dark:text-slate-100">Hi, I'm Brian</div>
+                <div className="pt-24 text-lg text-slate-700 dark:text-slate-100">
+                  Hi, I'm Brian
+                </div>
                 <div className="text-3xl sm:text-4xl md:text-5xl text-slate-800 dark:text-white font-bold">
                   {siteMetaData.description}
                 </div>
