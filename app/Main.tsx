@@ -3,7 +3,7 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
-import Hero from './Hero'
+import Hero from '@/components/Hero'
 
 const MAX_DISPLAY = 5
 
@@ -11,14 +11,10 @@ export default function Home({ posts }) {
   return (
     <>
       <div>
-        <Hero />
-      </div>
-      <div>
-        <div className="space-y-2 pb-4 pt-6 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-6 tracking-tight text-gray-900 dark:text-gray-100 md:text-4xl md:leading-8">
-            Latest
-          </h1>
-        </div>
+        <h1 className="text-4xl font-extrabold leading-6 tracking-tight text-gray-900 dark:text-gray-100 md:text-4xl md:leading-8">
+          Latest
+        </h1>
+        <div className="h-1 bg-primary w-[4rem] mt-8"></div>
         <ul>
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
@@ -82,11 +78,11 @@ export default function Home({ posts }) {
           </Link>
         </div>
       )}
-      {siteMetadata.newsletter?.provider && (
-        <div className="flex items-center justify-center pt-4">
-          <NewsletterForm />
-        </div>
-      )}
+      {/*{siteMetadata.newsletter?.provider && (*/}
+      {/*  <div className="flex items-center justify-center pt-4">*/}
+      {/*    <NewsletterForm />*/}
+      {/*  </div>*/}
+      {/*)}*/}
     </>
   )
 }

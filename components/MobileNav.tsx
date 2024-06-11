@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
+import { Button } from '@nextui-org/button'
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false)
@@ -21,7 +22,13 @@ const MobileNav = () => {
 
   return (
     <>
-      <button aria-label="Toggle Menu" onClick={onToggleNav} className="sm:hidden">
+      <Button
+        variant="light"
+        color="primary"
+        aria-label="Toggle Menu"
+        onClick={onToggleNav}
+        className="sm:hidden"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
@@ -34,7 +41,7 @@ const MobileNav = () => {
             clipRule="evenodd"
           />
         </svg>
-      </button>
+      </Button>
       <div
         className={`fixed left-0 top-0 z-10 h-full w-full transform opacity-95 dark:opacity-[0.98] bg-white duration-300 ease-in-out dark:bg-gray-950 ${
           navShow ? 'translate-x-0' : 'translate-x-full'

@@ -1,3 +1,4 @@
+const { nextui } = require('@nextui-org/theme')
 // @ts-check
 const { fontFamily } = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
@@ -11,6 +12,7 @@ module.exports = {
     './components/**/*.{js,ts,tsx}',
     './layouts/**/*.{js,ts,tsx}',
     './data/**/*.mdx',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: 'class',
   theme: {
@@ -24,19 +26,19 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-lato)', ...fontFamily.sans],
       },
-      colors: {
-        primary: colors.cyan,
-        gray: colors.slate,
-      },
+      // colors: {
+      //   primary: colors.cyan,
+      //   gray: colors.slate,
+      // },
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
             a: {
-              color: theme('colors.primary.500'),
+              color: theme('colors.cyan.500'),
               '&:hover': {
-                color: `${theme('colors.primary.600')}`,
+                color: `${theme('colors.cyan.600')}`,
               },
-              code: { color: theme('colors.primary.400') },
+              code: { color: theme('colors.cyan.400') },
             },
             'h1,h2': {
               fontWeight: '700',
@@ -53,14 +55,14 @@ module.exports = {
         invert: {
           css: {
             a: {
-              color: theme('colors.primary.500'),
+              color: theme('colors.cyan.500'),
               '&:hover': {
-                color: `${theme('colors.primary.400')}`,
+                color: `${theme('colors.cyan.400')}`,
               },
-              code: { color: theme('colors.primary.400') },
+              code: { color: theme('colors.cyan.400') },
             },
             'h1,h2,h3,h4,h5,h6': {
-              color: theme('colors.gray.100'),
+              color: theme('colors.slate.100'),
             },
           },
         },
@@ -70,7 +72,28 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
-    // @ts-ignore
     require('tailwindcss-hero-patterns'),
+    nextui({
+      themes: {
+        dark: {
+          colors: {
+            primary: {
+              ...colors.cyan,
+              DEFAULT: colors.cyan['500'],
+              foreground: colors.cyan['50'],
+            },
+          },
+        },
+        light: {
+          colors: {
+            primary: {
+              ...colors.cyan,
+              DEFAULT: colors.cyan['500'],
+              foreground: colors.cyan['50'],
+            },
+          },
+        },
+      },
+    }),
   ],
 }
