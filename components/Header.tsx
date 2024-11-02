@@ -9,7 +9,6 @@ import SearchButton from './SearchButton'
 import { usePathname } from 'next/navigation'
 import SectionContainer from '@/components/SectionContainer'
 import Hero from './Hero'
-import { KBarProvider } from 'kbar'
 
 const Header = () => {
   const pathname = usePathname()
