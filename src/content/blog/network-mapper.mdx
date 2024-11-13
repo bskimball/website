@@ -1,0 +1,44 @@
+---
+title: Network Mapper
+date: '2022-08-12'
+tags: ['development', 'solid.js', 'fastify.js']
+draft: false
+summary: 'An app to install and gather network information as well as domain information.'
+---
+
+![feathers-ibm-banner](/static/images/network-mapper-dashboard.png)
+
+[Github Repo](https://github.com/bskimball/network-mapper)
+
+## Preface
+
+In an MSP (managed service provider), gathering information when on-boarding a new account is critical. Often times,
+this can be non-billable work and will usually take a couple of hours to get the necessary information. Some of the
+information gathering can be automated. I built a node application that would run these routine tasks.
+
+The idea is to install the app on a Raspberry PI and plug in to the prospective customers network.
+Once initiated,
+the app runs an NMap scan on the known local networks.
+Alongside the NMAP scan, the app will run WHOIS lookups on
+the configured domains.
+Using the WHOIS information and DNS information, we can look up things like MX records.
+The
+MX record gives us information for which email service the domain uses.
+The last piece is a form where the tech
+could submit the gathered information to a central collection repository.
+
+### Technical Decisions
+
+This is a monolithic JS application. There is no compilation step on the server as it is just JS with ESM imports.
+It communicates to a Postgres database running in a docker container. I wanted to use the most performant
+and the fastest libraries I could find for a JS app. I decided to use Fastify for the server and Solid.js for the UI.
+This is a great minimal stack for full-stack JS applications. The frontend communicates with a rest api provided by
+fastify; then live scans can be pushed to the client using web-sockets.
+
+<Gallery
+  slides={[
+    { src: '/static/images/network-mapper-dashboard.png' },
+    { src: '/static/images/network-mapper-domains.png' },
+    { src: '/static/images/network-mapper-lan-scan.png' },
+  ]}
+/>

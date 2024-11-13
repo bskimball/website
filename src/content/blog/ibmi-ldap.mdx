@@ -1,0 +1,109 @@
+---
+title: LDAP on the IBMi
+date: '2022-10-02'
+tags: ['IBMi', 'PFSense']
+draft: false
+summary: The IBMi LDAP server can be used for authentication for other services
+---
+
+## Intro
+
+When hosting IBMi there are often other services involved such as a VPN. It would be nice for end-users if their VPN
+login was the same as their IBMi login. This is possible using the LDAP server on the IBMi.
+
+## Process
+
+The first thing that needs to be done is the user profiles need to be added to the System Distribution Directory.
+LDAP uses the System Distribution Directory to store the user info for LDAP, as well as other services like SMTP
+user information. It can be accessed using WRKDIRE command. One of the things you have to look out for is the
+username has an 8-character limit. This is due to an old unix limitation. Instead of keying each user individually, I
+wrote a script that transfers all IBM profiles to the System Distribution Directory.
+
+```javascript
+import odbc from 'odbc'
+import { Connection, CommandCall } from 'itoolkit'
+import { parseString } from 'xml2js'
+
+const config = {
+  host: '<ip-address>',
+  name: '<dsn-name>',
+  username: '<user-name>',
+  password: '<password>',
+}
+
+// set up ssh connection for running commands
+const connection = new Connection({
+  transport: 'ssh',
+  transportOptions: {
+    host: config.host,
+    username: config.username,
+    password: config.password,
+  },
+})
+
+// connect via odbc using the DSN defined in odbc.ini
+odbc.connect(`DSN=${config.name}`, (error, db) => {
+  if (error) {
+    throw error
+  }
+
+  // query the QSYS2 user info file
+  db.query('SELECT USER_NAME,TEXT FROM QSYS2.USER_INFOB', (error, result) => {
+    if (error) {
+      throw error
+    }
+
+    // comb through the results
+    result.forEach(({ USER_NAME, TEXT }) => {
+      // disregard the IBM defined profiles
+      if (USER_NAME.startsWith('Q')) {
+        return false
+      }
+
+      // USER ID has an 8 character limit
+      const USER_ID = USER_NAME.substring(0, 8)
+      console.log({ USER_ID })
+      // set up the command to run
+      const command = new CommandCall({
+        type: 'cl',
+        command: `ADDDIRE USRID(${USER_ID} ${config.name}) USRD('${TEXT}') USER(${USER_NAME})`,
+      })
+
+      // add the command to the connection
+      connection.add(command)
+    })
+
+    // after we added the commands let's run them
+    connection.run((error, xmlOutput) => {
+      if (error) {
+        console.log({ error })
+      } else {
+        // parse the results
+        parseString(xmlOutput, (parseError, result) => {
+          if (parseError) {
+            console.log({ parseError })
+          }
+          console.log({ result })
+        })
+      }
+    })
+  })
+})
+```
+
+## Managing LDAP
+
+IBM integrates the Tivoli LDAP server and can be configured using the Web Navigator. The documentation is found here
+[IBMi LDAP](https://www.ibm.com/docs/en/i/7.5?topic=server-configuring-directory). It's similar to all other LDAP
+servers with common names (CN), orgnaization names (ON), etc. This can all be used by other services to authenticate
+your user.
+
+![IBMi LDAP Properties](/static/images/ibmi-ldap-properties.png)
+
+## Implementation
+
+The most common implementation I have done is with the PFSense OpenVPN server. It's fairly easy to configure an
+authentication server via ldap. Once the authentication server is configured, you can assign it to an OpenVPN
+configuration. Many other services using LDAP are also possible.
+
+![PFSense LDAP](/static/images/pfsense-ldap.png)

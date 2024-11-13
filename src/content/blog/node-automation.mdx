@@ -1,0 +1,50 @@
+---
+title: Node Automation
+date: '2023-08-13'
+tags: ['development', 'node']
+draft: false
+summary: Building node applications that run on a schedule
+---
+
+![node-automation-banner](/static/images/ide-screenshot.png)
+
+### Intro
+
+In businesses there are many applications or processes that run on a schedule. There are things like MRP (Material
+Resource Planning) reports, EDI (Electronic Data Interchange) transactions, etc. These either run at night as to not
+interfere with normal business processes or need to run on a schedule throughout the day. I find myself writing a
+lot of these programs that interact with a database or some kind of api.
+
+### Why Node?
+
+The main reason is packages and training (I also just enjoy the language). The Node ecosystem contains many packages
+that interface with APIs. Have a Shopify website or a WooCommerce website that you need to retrieve orders? There's
+a package for that. The other main reason is training, as there are plenty of training resources online for
+javascript/typescript/node
+programming. It's easy for people to pick up and find training. Most operating systems, the installation of Node is
+very simple and most applications can be run via command line.
+
+### Currently
+
+I get sent a lot of stuff that is written in Lansa. Either the API has changed or some other reason the older
+application(s) are not working. Nothing against Lansa but they don't have the training or the ecosystem that Node has.
+Things like oauth and api definitions are manually implemented and take more time. Instead of fixing the Lansa
+program, it's just easier to switch to a Node application.
+
+### What does it look like?
+
+I have been writing most of these apps using Javascript and ESM imports. JSDocs can work for types, but when
+creating these apps I feel it's nice to not have to worry about a compilation step. I also will use a traditional
+MVC architecture, even though these apps don't really have a view layer. Most of these apps are pulling api
+information and inserting the data into a database for use by other applications. For the database interactions, I
+prefer ['knex']('https://knexjs.org/') as a query builder. I have also used the ['node-odbc']('https://github.com/markdirish/node-odbc/') package and written
+raw SQL. All these apps have sensitive data so they are published to private repo. Once the application is tested
+and working, I will write a CL program that executes on the scheduler of the operating system.
+
+<Gallery
+  slides={[
+    { src: '/static/images/node-automation-model.png' },
+    { src: '/static/images/amazon-sp-api.png' },
+    { src: '/static/images/ide-screenshot.png' },
+  ]}
+/>

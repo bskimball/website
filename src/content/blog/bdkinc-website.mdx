@@ -1,0 +1,57 @@
+---
+title: BDKinc Website Prototype
+date: '2023-9-24'
+tags: ['design', 'next.js']
+draft: false
+summary: 'The frontend built for the BDKinc website'
+---
+
+![BDKinc Home Page](/static/images/bdkinc-preview.png)
+
+[Website Preview](https://bdkinc-bskimball.vercel.app/)
+
+[GitHub Repo](https://github.com/bdkinc/website)
+
+## Backstory
+
+At the end of 2022, we began the process of updating the BDKinc website. The marketing manager was to provide the
+content and the Design Specialist was to create the designs. It was my responsibility to guide the team and build the
+website. Even though I had other responsibilities, building the web presence was important to me. I started as a Web
+Developer/Designer and building the website is a passion project of mine.
+
+### Technical Decisions
+
+The existing website uses Nuxt with a Directus CMS and is run in a Docker environment with a Traefik proxy server.
+When I created this setup I was the only person managing the server, and building the website. As the company grew, I
+knew we had to make some changes. One of the changes was switching from Nuxt to Next, the main reason for this change
+was that I had started training employees to use React, as that is more prevalent in the industry than Vue. Other
+reasons are SSR, the new App Directory, React Server Components and the ease of deploying to the edge. The
+[website preview](https://bdkinc-bskimball.vercel.app/) is running on Vercel, and was an easy choice since they created
+Next.js. I have used Cloudflare in the past, and I really like it, but I also wanted to try something new.
+
+Moving the frontend to the edge addressed performance and the ability to deploy from GitHub.
+It also moved the
+responsibility of the proxy and web server to the edge provider.
+We still had directus as the CMS, which had pushed a
+new version.
+I wanted to upgrade it but wanted to give the marketing person a say in the backend.
+I suggested a few
+different CMS.
+They ended up wanting Wordpress because their comfort levels.
+Using headless WordPress, we would be
+able to use Next.js on the edge and the content creators could use a platform they were familiar.
+
+#### Long Term
+
+One of the advantages of separating the frontend from the CMS would be easier integrations with other products. As
+an example, the "Meet the Team" page could pull the employee information from our Microsoft 365 environment. Allowing
+users to only have to be updated in 1 place. Another strategy was to funnel all contact form and request quote
+information directly to our CRM. To give the sales people an easier way to sell packages.
+
+<Gallery
+  slides={[
+    { src: '/static/images/bdkinc-preview.png' },
+    { src: '/static/images/bdkinc-website-blog.png' },
+    { src: '/static/images/bdkinc-website-opportunity.png' },
+  ]}
+/>

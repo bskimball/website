@@ -1,0 +1,48 @@
+---
+title: Prototype Demographic Application
+date: '2023-07-16'
+tags: ['development', 'react.js', 'feathers.js', 'typescript']
+draft: false
+summary: 'A modern full-stack application. A feathers backend with a vite spa frontend.'
+---
+
+![feathers-ibm-banner](/static/images/reach-app-home.png)
+
+[Github Repo](https://github.com/bskimball/reach)
+
+[App Demo](https://poc.lam.bdkcloud.com)
+
+## Preface
+
+This was built as a proof of concept for a potential client. The idea was to build their customer database and
+easily attach demographic data to their customer. This would be able to send courtesy emails on upcoming
+anniversaries or birthdays. There are other services that do that now, but they wanted something that would tie into
+their other software.
+
+### Technical Decisions
+
+The <strong>backend</strong> is written in Typescript and uses [feathers.js](https://feathersjs.com/). Feathers
+provides an easy way to stand up a node server with a rest api and web sockets. It was easy to create services and
+hooks allowing me to rapidly prototype CRUD operations.
+
+The <strong>frontend</strong> is written in Typescript using vite and [react.js](https://react.dev/). SSR (server side
+rendering) was not needed, so I decided to skip the complexity and just use [vite](https://vitejs.dev/) to bundle an
+SPA (single page application). For UI (user interface) I use the fantastic [shadcn/ui](https://ui.shadcn.com/) which
+marries together my favorite styling library [tailwind](https://tailwindcss.com/) and accessibility components in
+[radix ui](https://www.radix-ui.com/primitives/docs/overview/introduction).
+
+The <strong>infrastructure</strong> is built on Docker. The database is MySQL and the proxy server is
+[traefik](https://traefik.io/traefik/). I've used Traefik in the past as it's easy to connect to docker containers.
+
+<div className="flex space-x-8">
+  <div>![blog preview](/static/images/reach-app-form.png)</div>
+  <div>![opportunity form](/static/images/reach-app-customer-view.png)</div>
+</div>
+
+<Gallery
+  slides={[
+    { src: '/static/images/reach-app-home.png' },
+    { src: '/static/images/reach-app-form.png' },
+    { src: '/static/images/reach-app-customer-view.png' },
+  ]}
+/>
