@@ -1,12 +1,12 @@
 ---
 title: Node Automation
-date: '2023-08-13'
+pubDate: '2023-08-13'
 tags: ['development', 'node']
 draft: false
-summary: Building node applications that run on a schedule
+description: Building node applications that run on a schedule
+heroImage: /static/images/ide-screenshot.png
 ---
-
-![node-automation-banner](/static/images/ide-screenshot.png)
+import Gallery from '@/components/Gallery.tsx'
 
 ### Intro
 
@@ -41,7 +41,7 @@ prefer ['knex']('https://knexjs.org/') as a query builder. I have also used the 
 raw SQL. All these apps have sensitive data so they are published to private repo. Once the application is tested
 and working, I will write a CL program that executes on the scheduler of the operating system.
 
-<Gallery
+<Gallery client:load
   slides={[
     { src: '/static/images/node-automation-model.png' },
     { src: '/static/images/amazon-sp-api.png' },

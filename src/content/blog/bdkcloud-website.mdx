@@ -1,12 +1,12 @@
 ---
 title: BDKcloud Website
-date: '2022-01-14'
-tags: ['design', 'next.js']
+pubDate: '2022-01-14'
+tags: ['design', 'nextjs']
 draft: false
-summary: 'The website for BDKcloud'
+description: 'The website for BDKcloud'
+heroImage: /static/images/bdkcloud-preview.png
 ---
-
-![tailwind-nextjs-banner](/static/images/bdkcloud-preview.png)
+import Gallery from '@/components/Gallery.tsx'
 
 [Website](https://bdkcloud.com/)
 
@@ -30,7 +30,7 @@ It's a website so SEO and performance are absolutely mandatory. I chose to go wi
 Next continues to be the easiest and most performant way to build websites using React. The website itself is
 running in a Docker environment, with a Traefik proxy.
 
-<Gallery
+<Gallery client:load
   slides={[
     { src: '/static/images/bdkcloud-preview.png' },
     { src: '/static/images/bdkcloud-contact-form.png' },

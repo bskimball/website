@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content'
+import TagLink from '@/components/TagLink.astro'
+
+const tags = await getCollection('tags')
+---
+
+<div class="flex flex-col gap-1">
+  <div>
+    <h4
+      class="font-semibold text-lg inline-flex border-b-4 border-emerald-500 leading-loose mb-4"
+    >
+      Tags
+    </h4>
+  </div>
+  {
+    tags.map((tag) => (
+      <TagLink href={`/${tag.collection}/${tag.id}`}>{tag.data.name}</TagLink>
+    ))
+  }
+</div>

@@ -1,18 +1,23 @@
 ---
-
 title: Life Update
-date: 2024-6-1
+pubDate: 2024-6-1
 tags: ['life']
 draft: false
-summary: I have been busy, but I am working on some things.
-
+description: I have been busy, but I am working on some things.
+heroImage: '/static/images/wedding-photo.jpg'
 ---
 
-## Life Update
+import Gallery from '@/components/Gallery.tsx'
 
 So, I've been pretty busy lately. I haven't written any technical content, but I have some things I am working on. My last blog post was in January about working with Go (golang). Since then, I married the love of my life in February. Then in May we welcomed our baby boy into the world. As you can imagine, we have been a little busy.
 
-<Gallery slides={[{ src: '/static/images/wedding-photo.jpg' }, { src: '/static/images/our-baby.jpg' }]} />
+<Gallery
+  client:load
+  slides={[
+    { src: '/static/images/wedding-photo.jpg' },
+    { src: '/static/images/our-baby.jpg' },
+  ]}
+/>
 
 ### What am I working on?
 

@@ -1,50 +1,119 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import BaseHead from '@/components/BaseHead.astro'
+import Header from '@/components/Header.astro'
+import Footer from '@/components/Footer.astro'
+import { SITE_TITLE, SITE_DESCRIPTION } from '@/consts'
+import Backdrop from '@/components/Backdrop.astro'
+import { getCollection } from 'astro:content'
+import { Image } from 'astro:assets'
+import FormattedDate from '@/components/FormattedDate.astro'
+import { FaCalendar } from 'react-icons/fa6'
+import WordRotator from '../components/WordRotator.tsx'
+import Aurora from '../components/Aurora.astro'
+
+const posts = (await getCollection('blog')).filter((post) => !post.data.draft)
+
+// const heroImages = posts
+//   .filter((post) => !!post.data.heroImage)
+//   .map((post) => post.data.heroImage)
+
+const latestPosts = posts
+  .sort((a, b) =>
+    a.data.updatedDate && b.data.updatedDate
+      ? b.data.updatedDate?.valueOf() - a.data.updatedDate?.valueOf()
+      : b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  )
+  .slice(0, 5)
 ---
 
-<!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body class="bg-background text-foreground antialiased">
+    <Backdrop />
+    <Header />
+    <main class="container">
+      <div class="flex flex-col gap-8">
+        <div>
+          <div class="w-full mb-8">
+            <Aurora>
+              <div class="text-4xl">Welcome to my</div>
+              <WordRotator
+                words={[
+                  'website',
+                  'blog',
+                  'articles',
+                  'projects',
+                  'piece of the internet',
+                ]}
+                client:load
+                className="text-8xl font-bold"
+              />
+            </Aurora>
+            <p class="prose text-foreground text-xl">
+              This is a collection of my writings, projects, and other things.
+              Mostly technical content with a bit of personal stuff thrown in.
+            </p>
+          </div>
+          <!--<div class="overflow-hidden mb-8">-->
+          <!--  <div class="-ml-24 -mr-24 flex flex-wrap">-->
+          <!--    {-->
+          <!--      heroImages.length > 0-->
+          <!--        ? heroImages.map((image, index) => (-->
+          <!--            <Image-->
+          <!--              key={index}-->
+          <!--              src={image}-->
+          <!--              alt={`hero thumbnail image`}-->
+          <!--              width={120}-->
+          <!--              height={120}-->
+          <!--            />-->
+          <!--          ))-->
+          <!--        : null-->
+          <!--    }-->
+          <!--  </div>-->
+          <!--</div>-->
+        </div>
+        <div>
+          <h3 class="text-amber-500 text-4xl font-bold">Latest</h3>
+        </div>
+        {
+          latestPosts.map((post) => (
+            <div>
+              <a
+                href={`/blog/${post.slug}`}
+                class="flex gap-8 p-6 rounded-lg border bg-background/60 backdrop-opacity-60 shadow-lg"
+              >
+                {post.data.heroImage && (
+                  <div class="max-w-[120px] max-h-[120px] overflow-hidden">
+                    <Image
+                      src={post.data.heroImage}
+                      alt={`${post.data.title} thumbnail image`}
+                      width={120}
+                      height={120}
+                    />
+                  </div>
+                )}
+                <div class="animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500">
+                  <h4 class="inline-block py-1 text-2xl font-semibold">
+                    {post.data.title}
+                  </h4>
+                  <div>
+                    <div class="inline-flex gap-2 items-center rounded bg-violet-100 dark:bg-violet-900 text-violet-900 dark:text-violet-200 px-2 py-1 text-xs animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500 delay-150">
+                      <FaCalendar />
+                      <FormattedDate date={post.data.pubDate} />
+                    </div>
+                  </div>
+                  <div class="prose animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500 delay-300 text-gray-800 dark:text-gray-200">
+                    <p>{post.data.description}</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          ))
+        }
+      </div>
+    </main>
+    <Footer />
+  </body>
 </html>

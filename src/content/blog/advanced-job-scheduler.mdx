@@ -1,13 +1,11 @@
 ---
 title: Advanced Job Scheduler
-date: '2023-10-12'
-tags: ['IBMi']
+pubDate: '2023-10-12'
+tags: ['ibmi']
 draft: false
-summary: Hourly jobs on the IBMi are possible thanks to Advanced Job Scheduler
+description: Hourly jobs on the IBMi are possible thanks to Advanced Job Scheduler
+heroImage: /static/images/advanced-job-scheduler-banner.png
 ---
-
-![advanced-job-scheduler-banner](/static/images/advanced-job-scheduler-banner.png)
-
 ## Hourly jobs on the IBMi?
 
 A lot of the backend projects I have been working on lately are pulling data from an API and inserting it into a
@@ -23,7 +21,7 @@ a limited amount of options and in the past I have seen people do things like cr
 entries or write a CL program to work around these limitations. I have a linux background, so I have
 always done this using a CRON job where you can specify intervals for recurring tasks.
 
-### Enter 5770-JS1 IBM's Advanced Job Scheduler
+### 5770-JS1 IBM's Advanced Job Scheduler
 
 The advanced job scheduler is a licensed program that has been available since IBMi v7r2. The program is 5770-JS1
 and can be installed, but you need a license to use it. It is separate from the original Job Scheduler and is

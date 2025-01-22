@@ -1,0 +1,12 @@
+---
+import ProfilePhoto from './ProfilePhoto'
+import SocialLinks from './SocialLinks.astro'
+---
+
+<div class="inline-block">
+  <div class="flex flex-col gap-3">
+    <ProfilePhoto client:load />
+    <div class="text-lg font-semibold text-center">Brian Kimball</div>
+    <SocialLinks />
+  </div>
+</div>

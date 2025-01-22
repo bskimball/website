@@ -1,111 +1,91 @@
 ---
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../../components/FormattedDate.astro';
+import BaseHead from '../../components/BaseHead.astro'
+import Header from '../../components/Header.astro'
+import Footer from '../../components/Footer.astro'
+import { SITE_DESCRIPTION } from '../../consts'
+import { getCollection } from 'astro:content'
+import FormattedDate from '../../components/FormattedDate.astro'
+import { FaCalendar, FaShuffle } from 'react-icons/fa6'
+import Backdrop from '@/components/Backdrop.astro'
+import { Image } from 'astro:assets'
+import Aurora from '../../components/Aurora.astro'
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+function shuffleArray<Type>(arr: Type[]): Type[] {
+  for (let i = 0; i < arr.length; i++) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+
+  return arr
+}
+
+const posts = shuffleArray(
+  (await getCollection('blog')).filter((post) => !post.data.draft)
+)
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.slug}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title="Blog" description={SITE_DESCRIPTION} />
+  </head>
+  <body class="bg-background text-foreground antialiased">
+    <Backdrop />
+    <Header />
+    <main class="container">
+      <section class="flex flex-col">
+        <div>
+          <Aurora class="flex justify-between items-end">
+            <h1
+              class="leading-tight text-8xl font-bold animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-1000"
+            >
+              Blog
+            </h1>
+            <small class="flex items-center gap-2">
+              <FaShuffle size={1} />
+              <span>Posts are randomized and not sorted by date.</span>
+            </small>
+          </Aurora>
+        </div>
+        <div class="md:columns-2 lg:columns-3 gap-4">
+          {
+            posts.map((post) => (
+              <div class="mb-6">
+                <a
+                  href={`/blog/${post.slug}`}
+                  class="flex flex-col gap-4 p-6 border rounded-lg break-inside-avoid-column bg-background/60 backdrop-opacity-60 shadow-lg"
+                >
+                  <div>
+                    {post.data.heroImage && (
+                      <Image
+                        width={1024}
+                        height={360}
+                        src={post.data.heroImage}
+                        alt={`${post.data.title} hero image`}
+                      />
+                    )}
+                  </div>
+                  <div class="animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500">
+                    <h4 class="inline-block py-1 text-2xl font-semibold">
+                      {post.data.title}
+                    </h4>
+                    <div>
+                      <div class="inline-flex gap-2 items-center rounded bg-violet-100 dark:bg-violet-900 text-violet-900 dark:text-violet-200 px-2 py-1 text-xs animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500 delay-150">
+                        <FaCalendar />
+                        <FormattedDate date={post.data.pubDate} />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="prose animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500 delay-300 text-gray-800 dark:text-gray-200">
+                    <p>{post.data.description}</p>
+                  </div>
+                </a>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </body>
 </html>

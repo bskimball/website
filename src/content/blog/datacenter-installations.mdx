@@ -1,10 +1,13 @@
 ---
 title: Datacenter Installations
-date: '2023-10-13'
+pubDate: '2023-10-13'
 tags: ['datacenter', 'installation']
 draft: false
-summary: Building a data center from scratch
+description: Building a data center from scratch
+heroImage: /static/images/datacenter-install-2.jpg
 ---
+
+import Gallery from '@/components/Gallery.tsx'
 
 ## Preface
 
@@ -64,6 +67,7 @@ datacenter to the new datacenter. We scheduled a weekend to make the move, and w
 the middle of the night.
 
 <Gallery
+  client:load
   slides={[
     { src: '/static/images/datacenter-install-1.jpg' },
     { src: '/static/images/datacenter-install-2.jpg' },

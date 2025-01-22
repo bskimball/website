@@ -1,25 +1,27 @@
 ---
-import type { HTMLAttributes } from 'astro/types';
+import type { HTMLAttributes } from 'astro/types'
+import { checkLinkActive } from '../lib/utils'
 
-type Props = HTMLAttributes<'a'>;
+type Props = HTMLAttributes<'a'>
 
-const { href, class: className, ...props } = Astro.props;
+const { href, class: className, ...props } = Astro.props as Props
 
-const { pathname } = Astro.url;
-const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + subpath?.[0];
+const { pathname } = Astro.url
+const isActive = checkLinkActive({ pathname, href })
 ---
 
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
-	<slot />
+<a
+  href={href}
+  class:list={[
+    className,
+    'py-6 inline-block no-underline',
+    { 'active font-semibold': isActive },
+    { 'text-amber-500': isActive && href === '/' },
+    { 'text-sky-500': isActive && href === '/about' },
+    { 'text-violet-500': isActive && href === '/blog' },
+    { 'text-emerald-500': isActive && href === '/tags' },
+  ]}
+  {...props}
+>
+  <slot />
 </a>
-<style>
-	a {
-		display: inline-block;
-		text-decoration: none;
-	}
-	a.active {
-		font-weight: bolder;
-		text-decoration: underline;
-	}
-</style>

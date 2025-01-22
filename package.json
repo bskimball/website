@@ -11,16 +11,34 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^3.1.9",
-    "@astrojs/rss": "^4.0.9",
+    "@astrojs/mdx": "^4.0.6",
+    "@astrojs/prism": "^3.2.0",
+    "@astrojs/react": "^4.1.5",
+    "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.2.1",
-    "@astrojs/tailwind": "^5.1.2",
-    "astro": "^4.16.12",
-    "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3"
+    "@astrojs/tailwind": "^5.1.4",
+    "@radix-ui/react-avatar": "^1.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.1",
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "astro": "^5.1.7",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss": "^3.4.16",
+    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-hero-patterns": "^0.1.2",
+    "typescript": "^5.7.2",
+    "yet-another-react-lightbox": "^3.21.7"
   },
   "devDependencies": {
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1"
   }
 }

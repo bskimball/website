@@ -1,12 +1,12 @@
 ---
 title: Network Mapper
-date: '2022-08-12'
-tags: ['development', 'solid.js', 'fastify.js']
+pubDate: '2022-08-12'
+tags: ['development', 'solidjs', 'fastify']
 draft: false
-summary: 'An app to install and gather network information as well as domain information.'
+description: 'An app to install and gather network information as well as domain information.'
+heroImage: /static/images/network-mapper-dashboard.png
 ---
-
-![feathers-ibm-banner](/static/images/network-mapper-dashboard.png)
+import Gallery from '@/components/Gallery.tsx'
 
 [Github Repo](https://github.com/bskimball/network-mapper)
 
@@ -35,7 +35,7 @@ and the fastest libraries I could find for a JS app. I decided to use Fastify fo
 This is a great minimal stack for full-stack JS applications. The frontend communicates with a rest api provided by
 fastify; then live scans can be pushed to the client using web-sockets.
 
-<Gallery
+<Gallery client:load
   slides={[
     { src: '/static/images/network-mapper-dashboard.png' },
     { src: '/static/images/network-mapper-domains.png' },

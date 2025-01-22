@@ -1,12 +1,12 @@
 ---
 title: Prototype Demographic Application
-date: '2023-07-16'
-tags: ['development', 'react.js', 'feathers.js', 'typescript']
+pubDate: '2023-07-16'
+tags: ['development', 'reactjs', 'feathersjs', 'typescript']
 draft: false
-summary: 'A modern full-stack application. A feathers backend with a vite spa frontend.'
+description: 'A modern full-stack application. A feathers backend with a vite spa frontend.'
+heroImage: /static/images/reach-app-home.png
 ---
-
-![feathers-ibm-banner](/static/images/reach-app-home.png)
+import Gallery from '@/components/Gallery.tsx'
 
 [Github Repo](https://github.com/bskimball/reach)
 
@@ -39,7 +39,7 @@ The <strong>infrastructure</strong> is built on Docker. The database is MySQL an
   <div>![opportunity form](/static/images/reach-app-customer-view.png)</div>
 </div>
 
-<Gallery
+<Gallery client:load
   slides={[
     { src: '/static/images/reach-app-home.png' },
     { src: '/static/images/reach-app-form.png' },

@@ -1,12 +1,12 @@
 ---
 title: Inventory Tracker
-date: '2022-01-08'
-tags: ['development', 'vue.js', 'laravel']
+pubDate: '2022-01-08'
+tags: ['development', 'vuejs', 'laravel']
 draft: false
-summary: A full stack application that tracks inventory; built using Laravel with a separate Vue SPA
+description: A full stack application that tracks inventory; built using Laravel with a separate Vue SPA
+heroImage: /static/images/inventory-tracker-scanning.png
 ---
-
-![feathers-ibm-banner](/static/images/inventory-tracker-scanning.png)
+import Gallery from '@/components/Gallery.tsx'
 
 [Github Repo](https://github.com/bskimball/inventory-tracker)
 
@@ -33,7 +33,7 @@ I'm using Docker to deploy the frontend and backend to an ubuntu server. There i
 to the containers. I am using nginx behind the traefik proxy so I can run both applications from the same domain.
 That can be done through Traefik, but having an NGINX container available makes the application more portable.
 
-<Gallery
+<Gallery client:load
   slides={[
     { src: '/static/images/inventory-tracker-scanning.png' },
     { src: '/static/images/inventory-tracker-lookup.png' },

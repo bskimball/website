@@ -1,12 +1,12 @@
 ---
 title: BDKinc Website Prototype
-date: '2023-9-24'
-tags: ['design', 'next.js']
+pubDate: '2023-9-24'
+tags: ['design', 'nextjs']
 draft: false
-summary: 'The frontend built for the BDKinc website'
+description: 'The frontend built for the BDKinc website'
+heroImage: /static/images/bdkinc-preview.png
 ---
-
-![BDKinc Home Page](/static/images/bdkinc-preview.png)
+import Gallery from '@/components/Gallery.tsx'
 
 [Website Preview](https://bdkinc-bskimball.vercel.app/)
 
@@ -48,7 +48,7 @@ an example, the "Meet the Team" page could pull the employee information from ou
 users to only have to be updated in 1 place. Another strategy was to funnel all contact form and request quote
 information directly to our CRM. To give the sales people an easier way to sell packages.
 
-<Gallery
+<Gallery client:load
   slides={[
     { src: '/static/images/bdkinc-preview.png' },
     { src: '/static/images/bdkinc-website-blog.png' },
