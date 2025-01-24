@@ -35,7 +35,7 @@ const posts = shuffleArray(
     <main class="container">
       <section class="flex flex-col">
         <div>
-          <Aurora class="flex justify-between items-end">
+          <Aurora class="flex flex-wrap lg:justify-between lg:items-end">
             <h1
               class="leading-tight text-8xl font-bold animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-1000"
             >
@@ -47,7 +47,7 @@ const posts = shuffleArray(
             </small>
           </Aurora>
         </div>
-        <div class="md:columns-2 lg:columns-3 gap-4">
+        <div class="lg:columns-2 xl:columns-3 gap-4">
           {
             posts.map((post) => (
               <div class="mb-6">
