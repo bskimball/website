@@ -68,7 +68,7 @@ const latestPosts = posts
                 class="flex flex-col lg:flex-row justify-center align-center lg:justify-start lg:align-start gap-8 p-6 rounded-lg border bg-background/60 backdrop-opacity-60 shadow-lg"
               >
                 {post.data.heroImage && (
-                  <div class="lg:max-w-[120px] lg:max-h-[120px] overflow-hidden m-auto">
+                  <div class="lg:max-w-[120px] lg:max-h-[120px] overflow-hidden m-auto lg:m-0">
                     <Image
                       src={post.data.heroImage}
                       alt={`${post.data.title} thumbnail image`}
