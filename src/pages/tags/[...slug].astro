@@ -58,7 +58,7 @@ const posts = allPosts
           </span>
         </h1>
       </Aurora>
-      <div class="grid grid-cols-5 gap-32">
+      <div class="grid lg:grid-cols-5 gap-32">
         <section class="col-span-3">
           <div class="flex flex-col gap-8">
             {
@@ -67,7 +67,7 @@ const posts = allPosts
                   class="animate-in fill-mode-both fade-in slide-in-from-bottom-2 duration-500  border rounded-lg break-inside-avoid-column bg-background/60 backdrop-opacity-60 shadow-lg"
                   style={{ animationDelay: `${index * 7 ** 2 + 200}ms` }}
                 >
-                  <a href={`/blog/${post.slug}`} class="flex gap-8 p-6">
+                  <a href={`/blog/${post.slug}`} class="flex flex-col-reverse lg:flex-col gap-4 p-6 border rounded-lg break-inside-avoid-column bg-background/60 backdrop-opacity-60 shadow-lg">
                     <div class="flex flex-col gap-4 flex-1">
                       <div>
                         <h4 class="text-xl font-bold">{post.data.title}</h4>

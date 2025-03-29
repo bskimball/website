@@ -56,23 +56,6 @@ const latestPosts = posts
               Mostly technical content with a bit of personal stuff thrown in.
             </p>
           </div>
-          <!--<div class="overflow-hidden mb-8">-->
-          <!--  <div class="-ml-24 -mr-24 flex flex-wrap">-->
-          <!--    {-->
-          <!--      heroImages.length > 0-->
-          <!--        ? heroImages.map((image, index) => (-->
-          <!--            <Image-->
-          <!--              key={index}-->
-          <!--              src={image}-->
-          <!--              alt={`hero thumbnail image`}-->
-          <!--              width={120}-->
-          <!--              height={120}-->
-          <!--            />-->
-          <!--          ))-->
-          <!--        : null-->
-          <!--    }-->
-          <!--  </div>-->
-          <!--</div>-->
         </div>
         <div>
           <h3 class="text-amber-500 text-4xl font-bold">Latest</h3>
@@ -82,10 +65,10 @@ const latestPosts = posts
             <div>
               <a
                 href={`/blog/${post.slug}`}
-                class="flex gap-8 p-6 rounded-lg border bg-background/60 backdrop-opacity-60 shadow-lg"
+                class="flex flex-col lg:flex-row justify-center align-center lg:justify-start gap-8 p-6 rounded-lg border bg-background/60 backdrop-opacity-60 shadow-lg"
               >
                 {post.data.heroImage && (
-                  <div class="max-w-[120px] max-h-[120px] overflow-hidden">
+                  <div class="lg:max-w-[120px] lg:max-h-[120px] overflow-hidden m-auto">
                     <Image
                       src={post.data.heroImage}
                       alt={`${post.data.title} thumbnail image`}
