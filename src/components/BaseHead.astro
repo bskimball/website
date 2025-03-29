@@ -59,7 +59,25 @@ function gtag() {
   }
 gtag("js", new Date());
 
+gtag("consent", "default", {
+  ad_storage: "denied",
+  ad_user_data: "denied",
+  ad_personalization: "denied",
+  analytics_storage: "denied",
+  });
+
 gtag("config", "G-7QESKGKYB4");
+</script>
+
+<script is:inline data-category="analytics">
+function updateConsents() {
+  gtag('consent', 'update', {
+    ad_storage: 'granted',
+    ad_user_data: 'granted',
+    ad_personalization: 'granted',
+    analytics_storage: 'granted',
+    });
+  }
 </script>
 
 <script is:inline>
