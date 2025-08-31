@@ -1,0 +1,57 @@
+---
+title: Fastify + Astro starter
+pubDate: 2024-7-25
+tags: ['development', 'fastify', 'astro', 'typescript']
+draft: false
+description: This is an example of a starter app for TS projects.
+---
+
+[Github Repo](https://github.com/bskimball/astro-fastify-starter)
+
+### Latest Update
+
+Since the announcement of Lucia being [deprecated](https://github.com/lucia-auth/lucia/discussions/1707), I went ahead
+and switched the sessions to the guide mentioned at [lucia-next.pages.dev](https://lucia-next.pages.dev/). I also added
+a few other fixes and niceties. I fixed an issue with screen flashes for dark mode.
+
+
+### Why?
+
+I am normally working on projects where I am the solo developer. I started building apps using Laravel, but I
+generally like writing javascript/typescript more than PHP. A lot of the JavaScript apps I have built typically have
+separated server and client builds. There is nothing wrong with this, and in many cases is the correct configuration.
+After all, the client is for the browser, and the server is on the server, so the builds should be optimized for
+different environments. Handling state on the client and server can often be complex, and I kinda miss generating
+from the server and enriching the client. Most people will use a meta-framework with SSR to handle this in the JS
+ecosystem. There are many solutions available for this like Next, Remix, Nuxt and Astro.
+
+### Decisions
+
+I really like what Astro is doing with their framework, especially with ViewTransitions and SPA mode. They have
+great examples and can be used with a variety of frontend frameworks. I'm also looking for that fullstack experience,
+so I like a more robust backend. Fastify is usually my "go-to" for this sort of thing.
+
+When I was looking for Fastify + Astro integrations, I essentially found two different approaches:
+
+The first approach is creating an Astro adapter for Fastify. I found this
+[repo](https://github.com/matthewp/astro-fastify) which looked promising. Doing a little background, I can see it
+had contributions from both Astro maintainers and Fastify maintainers. It unfortunately did not work out of the box,
+so I [forked the repository](https://github.com/matthewp/astro-fastify) and got at least the dev mode working.
+Production mode, unfortunately, does not work as well.
+
+The second approach is found in the Astro docs under the Node Adapter section. They give the
+[middleware instructions](https://docs.astro.build/en/guides/integrations-guide/node/#middleware) with an example
+configuration. This is nice and I like the separation from the Astro build. The downfall is the server is not in
+typescript. I wanted to use TRPC and Drizzle, so it seems silly for the backend to not be written in Typescript.
+
+I thought about re-configuring the adapter approach but realized, I could just update my npm scripts and use TSX for
+watching and rollup for the build. It gives a much more flexible configuration and uses the same tools as Vite does
+under the hood. This stays much closer to the setup recommended in the Astro docs.
+
+### Summary
+
+This starter uses Astro, Fastify, TRPC, Lucia, React, NextUI, Drizzle and is configured with both Login and
+Registration forms and endpoints. This gives you typescript throughout, for type safety, session based auth through
+Lucia. Check out my [Github Repo](https://github.com/bskimball/astro-fastify-starter) and let me know
+if it works or where it can improve.
+

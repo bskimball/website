@@ -1,0 +1,97 @@
+---
+title: Datacenter Installations
+pubDate: '2023-10-13'
+tags: ['datacenter', 'installation']
+draft: false
+description: Building a data center from scratch
+heroImage: /static/images/datacenter-install-2.jpg
+---
+
+import Gallery from '@/components/Gallery.tsx'
+
+## Preface
+
+One of the most challenging and fulfilling projects I have worked on in my professional career is a datacenter design
+and implementation. It's been 3 years since we installed the current iteration of the datacenter. This is not the
+first iteration, as this is the 3rd location that was moved. We went from Evoswitch in Manassas, VA to AiNET in
+Beltsville, MD and then to Coresite in Reston, VA.
+
+## Initially in Manassas
+
+The first datacenter installation was just a single rack in a co-location. We always had to keep an eye on our time,
+so we would not get caught in rush hour traffic on 495. It was a simple set-up. A single ASA firewall an IBM
+pureflex system, and a couple IBM power servers and a couple Windows servers. All the VLANs and networking were
+done on Cisco switches and tied into the PureFlex ASM. IBM would later discontinue the Flex system. At the time, it
+was a way for us to manage power nodes and intel nodes through a single pane of glass.
+
+## Next was AiNET
+
+We had grown in Manassas, but the drive and management issues at the facility caused us to look for other vendors. We
+settled on a location closer to the main office. Since the Flex system was discontinued, we only had a few servers to
+actually move to the new data center. We also switched to redundant firewall configurations using PFSense. We liked
+a lot of things about PFSense better than the ASA, especially the flexibility to run it as a virtual machine on
+VMWare. We used VMWare as the hypervisor for our Intel-based workloads and the IBMi for Power workloads. We had
+gotten very good at configuring IBMi as a hypervisor and virtualizing the workloads. We no longer had a single pane
+of glass for servers, as we used vcenter for vmware and the HMC for the power servers. As we grew, we bought more
+racks and continued to expand.
+
+At this point, the networking was done by Bill Harrison, and the IBM Power configurations were done by me. We both
+worked together on vmware stuff since we both knew the technology. I understood networking at the time, but I was not
+proficient with Cisco CLI and Bill was, and we managed to get everything up and running. We hosted mail servers,
+websites, private servers, all separated by vlans and virtual firewalls. We even used DoD addresses in between the
+virtuals and the main firewall (this caused some nat-t issues). We learned a lot from this setup. Bill went on to
+work for the State Dept. It was solely on me to maintain the data center that we had built. By then, I had learned
+enough about Cisco and vlans to grow the infrastructure.
+
+## On to Coresite
+
+Before we moved to Coresite, we had hired Tim, who is really strong at networking. He was a Cisco certified
+instructor. By then I was well versed in the datacenter, knew a lot about networking and had learned quite a few
+things from our previous installations. We made a plan to move all our equipment from AiNET to Coresite for various
+reasons. Tim and I spent months on the network design and infrastructure. We needed 2 of everything. We needed fast
+equipment. We needed to get rid of the DoD addresses. Tim also grew to love the PFSense software as I had, but we
+wanted to use the Netgate hardware and no more virtual firewalls. We needed every server to have multiple
+connections to each switch.
+
+Once we got the new networking hardware, we could begin the installation. Each rack had a pair of Netgate firewalls
+and a pair of Cisco nexus switches. The firewalls are all set up as HA using PFSense, a built-in HA solution. We set up
+lagg groups between the switches and the firewalls for redundancy. We defined the VLANs and prepped for the known
+networks. On the switches we set the ports as needed, with mostly trunk mode as to allow for multiple vlans on the
+same port. This would be critical in a virtualized environment. We set up VPC on the switches to help
+communications and conformity in the switch stack.
+
+We had bought some new servers that we were able to get installed and test to make sure everything we had set up was
+working as expected. We were seeing excellent throughput through our networking. We had tested our power redundancy
+to make sure if either power supply goes down, we stayed operational. We were ready to move the servers from our old
+datacenter to the new datacenter. We scheduled a weekend to make the move, and we had 12 hours to get them moved in
+the middle of the night.
+
+<Gallery
+  client:load
+  slides={[
+    { src: '/static/images/datacenter-install-1.jpg' },
+    { src: '/static/images/datacenter-install-2.jpg' },
+    { src: '/static/images/datacenter-install-3.jpg' },
+  ]}
+/>
+
+Tim and I grabbed a co-worker named Jesse, we all drove to Beltsville to un-rack the equipment. We worked as
+quickly as possible to take down the equipment in limited time. We packed it all up in the vans, and we drove it all
+to Reston, VA, which was about a 45-minute nerve-racking drive. Once we got there, we began racking the equipment.
+The power servers all needed to be connected to the switches via a [lagg](/blog/ibmi-lagg) group. We used the LACP
+configuration on
+both the IBMi and the Nexus switches. At the time, we did not know if this would work, and IBM's documentation
+stated this configuration had only ever been tested on a catalyst series switch. We were able to get them running,
+we could put the hypervisor on one network and each customer LPAR would have its own vlan assigned through the HMC.
+The intel servers all had vmware hypervisors; we would configure the network inside vmware to load balance,
+surpassing the need to create lagg groups on the vmware servers. Once tested and confirmed running, we were able to
+head home as we had met our deadline.
+
+## Looking Back
+
+I am really pleased with the configuration we landed on. Maintenance is much easier and trainable to new people.
+Documentation was a primary concern. We could easily add new networks and new customers with minimal configuration.
+All the IBMi power servers had 4 ports configured as a lagg, and we were seeing less that 1ms latency to other public
+services. Our vmware stack eventually turned into a vsan solution. All servers have SSD (some NVMe) drives that
+allow for speed and redundancy. We can perform some maintenance tasks during the day. We can apply firmware
+without losing any up-time. This has been one of the best things I have done throughout my IT career.

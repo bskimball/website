@@ -1,0 +1,126 @@
+---
+title: Learning Go part 2
+pubDate: 2024-1-20
+tags: ['development', 'golang']
+draft: false
+description: After some time with Go I really like it
+heroImage: /static/images/learning-go-ide-screenshot.png
+---
+
+## Update
+
+I really, really, like Go. It is not a challenging language to pick up. The standard library has most of what you need, and the syntax is easy to follow by design. I have been re-writing my network-mapper app, and Go is the correct choice for the server portion. The unfortunate portion is Go (nor rust) will run on the IBMi. Even though there is a PASE environment based on AIX, Go will not run. It has to do with mmap and other portions of the IFS. You can read more about it in this
+[github issue](https://github.com/golang/go/issues/45017). IBM is aware of this, and I hope in the future Rust and Go can run and be compiled on the IBMi. Until then I will use Go in linux environments and stick with Node or Python on the IBMi.
+
+### The App
+Firstly, I have not yet posted the code to GitHub. Even if I do, I will maintain a private repo. The name is changed to Gatherer and is meant to be used for quick network and MSP client evaluations. The server portion uses the [Echo framework,](https://echo.labstack.com/) which is a popular http framework. The application itself makes heavy use of scanning tools like nmap and whois for domain information. These tasks run in the background, and the app needs real-time data. I decided on an event-driven architecture and using web sockets to communicate from server to client. Client to server communications uses a rest api, I'm using GORM as the orm, so filtering is fairly easy using Echo and Gorm. I looked up some different Event pub/sub libraries but ended up rolling my own. The availability of channels in Go makes it pretty easy to have a Pub/Sub system.
+
+I initially started the frontend using Solid.js as an SPA built with vite. I quickly reverted back to React. I like Solid but it's so similar to React that my IDE gets confused. It's also hard to beat the React ecosystem, so I thought it's best to switch to React. For react it's the usual suspects, react-query, react-router-dom, react-hooks-form. I decided to switch up my usual Radix ui config and try to react-aria-components. I am also using daisy ui so I have some components in css. I really like this set up. It cuts down on css classes, and the two play well together for a nice looking a11y app.
+
+I may post some code snippets down the road, but here is the Event bus I am using. It is based off some examples in the Revel framework. I've isolated the to having separate "rooms" that I can broadcast and subscribe to.
+
+```go
+package events
+
+import (
+	"container/list"
+	"time"
+)
+
+var rooms = make(map[string]Room)
+
+type Room struct {
+	Name        string `json:"name"`
+	subscribe   chan (chan<- Subscription)
+	unsubscribe chan (<-chan Event)
+	publish     chan Event
+	Subscription
+}
+
+func NewRoom(name string) Room {
+	r, ok := rooms[name]
+
+	if ok {
+		return r
+	}
+
+	var (
+		subscribe   = make(chan (chan<- Subscription), archiveSize)
+		unsubscribe = make(chan (<-chan Event), archiveSize)
+		publish     = make(chan Event, archiveSize)
+	)
+	room := Room{Name: name, subscribe: subscribe, unsubscribe: unsubscribe, publish: publish}
+	room.init()
+	rooms[name] = room
+	return rooms[name]
+}
+
+func (r *Room) drain(ch <-chan Event) {
+	for {
+		select {
+		case _, ok := <-ch:
+			if !ok {
+				return
+			}
+		default:
+			return
+		}
+	}
+}
+
+func (r *Room) Cancel() {
+	r.unsubscribe <- r.Subscription.New
+	r.drain(r.Subscription.New)
+}
+
+func (r *Room) Broadcast(typ string, data interface{}) {
+	r.publish <- Event{Type: typ, User: "go", Timestamp: int(time.Now().Unix()), Data: data}
+}
+
+func (r *Room) Subscribe() Subscription {
+	resp := make(chan Subscription)
+	r.subscribe <- resp
+	return <-resp
+}
+
+func (r *Room) work() {
+	archive := list.New()
+	subscribers := list.New()
+
+	for {
+		select {
+		case ch := <-r.subscribe:
+			var events []Event
+			for e := archive.Front(); e != nil; e = e.Next() {
+				events = append(events, e.Value.(Event))
+			}
+			subscriber := make(chan Event, archiveSize)
+			subscribers.PushBack(subscriber)
+			ch <- Subscription{events, subscriber}
+
+		case event := <-r.publish:
+			for ch := subscribers.Front(); ch != nil; ch = ch.Next() {
+				ch.Value.(chan Event) <- event
+			}
+			if archive.Len() >= archiveSize {
+				archive.Remove(archive.Front())
+			}
+			archive.PushBack(event)
+
+		case unsub := <-r.unsubscribe:
+			for ch := subscribers.Front(); ch != nil; ch = ch.Next() {
+				if ch.Value.(chan Event) == unsub {
+					subscribers.Remove(ch)
+					break
+				}
+			}
+		}
+	}
+}
+
+func (r *Room) init() {
+	go r.work()
+}
+```
+
+Any questions just hit me up!

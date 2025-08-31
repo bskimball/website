@@ -1,0 +1,37 @@
+---
+title: Life Update
+pubDate: 2024-6-1
+tags: ['life']
+draft: false
+description: I have been busy, but I am working on some things.
+heroImage: '/static/images/wedding-photo.jpg'
+---
+
+import Gallery from '@/components/Gallery.tsx'
+
+So, I've been pretty busy lately. I haven't written any technical content, but I have some things I am working on. My last blog post was in January about working with Go (golang). Since then, I married the love of my life in February. Then in May we welcomed our baby boy into the world. As you can imagine, we have been a little busy.
+
+<Gallery
+  client:load
+  slides={[
+    { src: '/static/images/wedding-photo.jpg' },
+    { src: '/static/images/our-baby.jpg' },
+  ]}
+/>
+
+### What am I working on?
+
+Right now, I am working on Gatherer (name subject to change). Gatherer is the next iteration of what I once referred
+to as [Network Mapper](/blog/network-mapper). The original intention was a discovery tool that can run on a Raspberry
+Pi device. I have since decided to make it a stand-alone app geared specifically to MSPs. I also changed it from a
+full on node app to a [wails](https://wails.io) app (go + vite + react). I felt Go had a better std lib for interacting
+with TCP/UDP communications. I will have a more in-depth blog post about the technology stack.
+
+When I have Gatherer ready for more testing, I intend to revisit my [Time Tracker App](/blog/time-tracker). This is
+an App that uses [Laravel](https://laravel.com). Its goal is to allow a time entry system for people working in
+warehouses or fulfillment centers.
+
+Lastly, I intend to get some Cisco certifications. I have been working with networking and Cisco for 14 years. I
+should probably have a certification or two.
+
+Thanks for reading, I hope to have some more technical content available soon!

@@ -1,0 +1,30 @@
+---
+import AuroraItem from './AuroraItem.astro'
+import { twMerge } from 'tailwind-merge'
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<div class:list={[twMerge('relative overflow-hidden pb-8', className)]}>
+  <slot />
+  <div
+    class="absolute top-0 left-0 w-full h-full z-2 mix-blend-lighten dark:mix-blend-darken pointer-events-none"
+  >
+    <AuroraItem
+      class="top[-50%] animate-[aurora-border_6s_ease-in-out_infinite,aurora-1_12s_ease-in-out_infinite_alternate]"
+    />
+    <AuroraItem
+      class="bg-sky-500 right-0 top-0 animate-[aurora-border_6s_ease-in-out_infinite,aurora-2_12s_ease-in-out_infinite_alternate]"
+    />
+    <AuroraItem
+      class="bg-amber-500 left-0 bottom-0 animate-[aurora-border_6s_ease-in-out_infinite,aurora-3_8s_ease-in-out_infinite_alternate]"
+    />
+    <AuroraItem
+      class="bg-emerald-500 right-0 bottom-[50%] animate-[aurora-border_6s_ease-in-out_infinite,aurora-4_24s_ease-in-out_infinite_alternate]"
+    />
+  </div>
+</div>

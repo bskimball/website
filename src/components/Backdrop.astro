@@ -1,0 +1,101 @@
+---
+import { getRandomNumber } from '@/lib/utils'
+
+type Shooter = {
+  size: number
+  color: number
+  top: number
+  left: number
+  duration: number
+  delay: number
+}
+
+type Dot = {
+  size: number
+  color: number
+  top: number
+  left: number
+  opacity: number
+  duration: number
+}
+
+const dots: Dot[] = []
+const shooters: Shooter[] = []
+
+for (let i = 0; i < 420; i++) {
+  dots.push({
+    size: getRandomNumber(1, 4),
+    color: getRandomNumber(1, 4),
+    top: getRandomNumber(0, 100),
+    left: getRandomNumber(0, 100),
+    opacity: getRandomNumber(50, 100) / 100,
+    duration: getRandomNumber(1000, 3000),
+  })
+}
+
+for (let i = 0; i < 169; i++) {
+  shooters.push({
+    size: getRandomNumber(1, 4),
+    color: getRandomNumber(1, 4),
+    top: getRandomNumber(0, 80),
+    left: getRandomNumber(0, 80),
+    duration: getRandomNumber(4000, 8000),
+    delay: getRandomNumber(1000, 20000),
+  })
+}
+---
+
+<div class="-z-1 absolute top-0 left-0 bottom-0 right-0 overflow-hidden">
+  <div
+    class="absolute top-0 left-0 bottom-0 right-0 heropattern-topography-sky-300 opacity-20 animate-slow-pulse duration-[5s]"
+  >
+  </div>
+  {
+    dots.map((dot, index) => (
+      <div
+        class:list={[
+          'absolute rounded-full',
+          {
+            'bg-amber-500 shadow-amber-500': dot.color === 1,
+            'bg-sky-500 shadow-sky-500': dot.color === 2,
+            'bg-violet-500 shadow-violet-500': dot.color === 3,
+            'bg-emerald-500 shadow-emerald-500': dot.color === 4,
+          },
+          index % 2 == 0 ? 'animate-pulse' : '',
+        ]}
+        style={{
+          height: `${dot.size}px`,
+          width: `${dot.size}px`,
+          top: `${dot.top}%`,
+          left: `${dot.left}%`,
+          animationDuration: `${dot.duration}ms`,
+          opacity: dot.opacity,
+          animationDelay: `${dot.duration}ms`,
+        }}
+      />
+    ))
+  }
+  {
+    shooters.map((shooter) => (
+      <div
+        class:list={[
+          'absolute animate-shooter rounded-full',
+          {
+            'bg-amber-500 shadow-amber-500': shooter.color === 1,
+            'bg-sky-500 shadow-sky-500': shooter.color === 2,
+            'bg-violet-500 shadow-violet-500': shooter.color === 3,
+            'bg-emerald-500 shadow-emerald-500': shooter.color === 4,
+          },
+        ]}
+        style={{
+          height: `${shooter.size}px`,
+          width: `${shooter.size}px`,
+          top: `${shooter.top}%`,
+          left: `${shooter.left}%`,
+          animationDuration: `${shooter.duration}ms`,
+          animationDelay: `${shooter.delay}ms`,
+        }}
+      />
+    ))
+  }
+</div>

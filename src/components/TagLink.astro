@@ -1,0 +1,23 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import { checkLinkActive } from '../lib/utils'
+
+type Props = HTMLAttributes<'a'>
+
+const { href, class: className, ...props } = Astro.props as Props
+
+const { pathname } = Astro.url
+const isActive = checkLinkActive({ pathname, href })
+---
+
+<a
+  href={href}
+  class:list={[
+    className,
+    'hover:text-emerald-500 focus:text-emerald-500 transition duration-150',
+    { 'active font-semibold text-emerald-500': isActive },
+  ]}
+  {...props}
+>
+  <slot />
+</a>
