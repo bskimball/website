@@ -1,27 +1,27 @@
 ---
-import BaseHead from '../../components/BaseHead.astro'
-import Header from '../../components/Header.astro'
-import Footer from '../../components/Footer.astro'
-import { SITE_DESCRIPTION } from '../../consts'
-import { getCollection } from 'astro:content'
-import FormattedDate from '../../components/FormattedDate.astro'
-import { FaCalendar, FaShuffle } from 'react-icons/fa6'
-import Backdrop from '@/components/Backdrop.astro'
-import { Image } from 'astro:assets'
-import Aurora from '../../components/Aurora.astro'
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_DESCRIPTION } from "../../consts";
+import { getCollection } from "astro:content";
+import FormattedDate from "../../components/FormattedDate.astro";
+import { FaCalendar, FaShuffle } from "react-icons/fa6";
+import Backdrop from "@/components/Backdrop.astro";
+import { Image } from "astro:assets";
+import Aurora from "../../components/Aurora.astro";
 
 function shuffleArray<Type>(arr: Type[]): Type[] {
   for (let i = 0; i < arr.length; i++) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 
-  return arr
+  return arr;
 }
 
 const posts = shuffleArray(
-  (await getCollection('blog')).filter((post) => !post.data.draft)
-)
+  (await getCollection("blog")).filter((post) => !post.data.draft)
+);
 ---
 
 <!doctype html>

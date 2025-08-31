@@ -1,42 +1,42 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content'
-import BaseHead from '@/components/BaseHead.astro'
-import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts'
-import Header from '@/components/Header.astro'
-import Footer from '@/components/Footer.astro'
-import FormattedDate from '@/components/FormattedDate.astro'
-import SidebarTags from '@/components/SidebarTags.astro'
-import Backdrop from '@/components/Backdrop.astro'
-import { FaCalendar } from 'react-icons/fa6'
-import { Image } from 'astro:assets'
-import Aurora from '../../components/Aurora.astro'
+import { type CollectionEntry, getCollection } from "astro:content";
+import BaseHead from "@/components/BaseHead.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import SidebarTags from "@/components/SidebarTags.astro";
+import Backdrop from "@/components/Backdrop.astro";
+import { FaCalendar } from "react-icons/fa6";
+import { Image } from "astro:assets";
+import Aurora from "../../components/Aurora.astro";
 
 export async function getStaticPaths() {
-  const allPosts = await getCollection('blog')
-  const allTags = await getCollection('tags')
+  const allPosts = await getCollection("blog");
+  const allTags = await getCollection("tags");
 
   return allTags.map((tag) => {
     const filteredPosts = allPosts.filter(
       (post) =>
-        post.data.tags && post.data.tags.map((t) => t.id).includes(tag.id),
-    )
+        post.data.tags && post.data.tags.map((t) => t.id).includes(tag.id)
+    );
 
     return {
       params: { slug: tag.id },
       props: { tag, posts: filteredPosts },
-    }
-  })
+    };
+  });
 }
 
 type Props = {
-  tag: CollectionEntry<'tags'>
-  posts: CollectionEntry<'blog'>[]
-}
+  tag: CollectionEntry<"tags">;
+  posts: CollectionEntry<"blog">[];
+};
 
-const { posts: allPosts, tag } = Astro.props as Props
+const { posts: allPosts, tag } = Astro.props as Props;
 const posts = allPosts
   .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <!doctype html>
@@ -67,7 +67,10 @@ const posts = allPosts
                   class="animate-in fill-mode-both fade-in slide-in-from-bottom-2 duration-500  border rounded-lg break-inside-avoid-column bg-background/60 backdrop-opacity-60 shadow-lg"
                   style={{ animationDelay: `${index * 7 ** 2 + 200}ms` }}
                 >
-                  <a href={`/blog/${post.slug}`} class="flex flex-col-reverse lg:flex-col gap-4 p-6 border rounded-lg break-inside-avoid-column bg-background/60 backdrop-opacity-60 shadow-lg">
+                  <a
+                    href={`/blog/${post.slug}`}
+                    class="flex flex-col-reverse lg:flex-col gap-4 p-6 border rounded-lg break-inside-avoid-column bg-background/60 backdrop-opacity-60 shadow-lg"
+                  >
                     <div class="flex flex-col gap-4 flex-1">
                       <div>
                         <h4 class="text-xl font-bold">{post.data.title}</h4>
@@ -78,7 +81,7 @@ const posts = allPosts
                           <FormattedDate date={post.data.pubDate} />
                         </div>
                       </div>
-                      <div class="prose">
+                      <div class="prose text-foreground">
                         <p>{post.data.description}</p>
                       </div>
                     </div>
