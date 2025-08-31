@@ -1,7 +1,5 @@
 ---
 import { ClientRouter } from 'astro:transitions'
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
 import '../styles/global.css'
 
 interface Props {
@@ -52,33 +50,17 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
 <!-- Analytics -->
-<script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-7QESKGKYB4"></script>
+<script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-7QESKGKYB4"
+></script>
 <script is:inline>
-window.dataLayer = window.dataLayer || [];
-function gtag() {
-  dataLayer.push(arguments);
+  window.dataLayer = window.dataLayer || []
+  function gtag() {
+    dataLayer.push(arguments)
   }
-gtag("js", new Date());
+  gtag('js', new Date())
 
-<!--gtag("consent", "default", {-->
-<!--  ad_storage: "denied",-->
-<!--  ad_user_data: "denied",-->
-<!--  ad_personalization: "denied",-->
-<!--  analytics_storage: "denied",-->
-<!--  });-->
-
-gtag("config", "G-7QESKGKYB4");
+  gtag('config', 'G-7QESKGKYB4')
 </script>
-//<script is:inline data-category="analytics">
-//function updateConsents() {
-//  gtag('consent', 'update', {
-//    ad_storage: 'granted',
-//    ad_user_data: 'granted',
-//    ad_personalization: 'granted',
-//    analytics_storage: 'granted',
-//    });
-//  }
-//</script>
 
 <script is:inline>
   function setDarkMode(document) {
