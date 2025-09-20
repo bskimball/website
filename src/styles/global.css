@@ -80,9 +80,15 @@
     font-size: 0.875em;
   }
   a {
-    @apply text-violet-500 underline;
+    @apply text-blue-500 underline;
     &:hover {
-      @apply text-violet-600;
+      @apply text-blue-600;
+    }
+    &:visited {
+      @apply text-purple-500;
+      &:hover {
+        @apply text-purple-600;
+      }
     }
   }
 }

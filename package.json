@@ -16,7 +16,6 @@
     "@astrojs/react": "4.3.0",
     "@astrojs/rss": "4.0.12",
     "@astrojs/sitemap": "3.5.1",
-    "@astrojs/tailwind": "6.0.2",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.6",
