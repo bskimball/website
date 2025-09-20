@@ -66,6 +66,27 @@
   --color-chart-5: hsl(var(--chart-5));
 }
 
+.prose {
+  color: var(--color-foreground);
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-foreground);
+    font-weight: 700;
+  }
+  code {
+    color: var(--muted-foreground);
+    background-color: var(--muted);
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+  a {
+    @apply text-violet-500 underline;
+    &:hover {
+      @apply text-violet-600;
+    }
+  }
+}
+
 /* Container utilities - v4 style (replaces theme.container config) */
 @layer utilities {
   .container {

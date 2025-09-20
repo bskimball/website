@@ -1,29 +1,34 @@
 ---
-title: IBMi Adapter for Knex
-pubDate: '2023-8-15'
+title: IBM i (DB2) Dialect for Knex
+pubDate: '2025-9-20'
 tags: ['typescript', 'development', 'ibmi']
 draft: false
-description: 'An IBMi adapter for knex. It uses and ODBC connection under the hood.'
+description: 'A production‑ready IBM i DB2 dialect for Knex: streaming, transactions, returning emulation, custom migrations, multi‑row insert strategies, TypeScript + ESM/CJS.'
 heroImage: /static/images/knex-ibmi-npm.png
 ---
 [Github Repo](https://github.com/bdkinc/knex-ibmi)
 
 [NPM Package](https://www.npmjs.com/package/@bdkinc/knex-ibmi)
 
-Previously when building node based applications that run on the IBMi, I have used the
-[node-odbc](https://github.com/markdirish/node-odbc/) and has served me well. When working with other databases I normally reach for a query
-builder or even an ORM. It helps being able to write SQL queries closer to resemble the business logic. Knex is a
-popular query builder, and is used by other frameworks such as [feathers.js](https://feathersjs.com/).
+When building Node.js applications on IBM i I traditionally reached straight for the low‑level
+[node-odbc](https://github.com/IBM/node-odbc) driver. That works, but for most projects I prefer expressing data access with a query
+builder (or ORM) that maps more closely to business intent. Knex is a popular, lightweight query builder and is used under the hood by other
+frameworks (for example [Feathers](https://feathersjs.com/)).
 
-To make life easier, I decided to write an adapter for Knex that essentially wraps the node-odbc library. This would
-allow us to use knex on the IBMi. We could use frameworks like feathers and use the default knex based adapter as
-opposed to customizing the feathers services.
+This project implements a first‑class Knex dialect for IBM i DB2 over ODBC. It started as a fork of the long unmaintained
+[knex-db2](https://github.com/henryjw/knex-db2) but was ultimately a ground‑up rewrite in TypeScript with modern packaging (ESM + CJS builds, type defs) and IBM i specific behavior.
 
-```typescript
+The current version (see NPM badge) is significantly beyond the original scope: it includes a custom migration runner tailored for IBM i, multi‑row insert strategies, returning emulation for UPDATE/DELETE, streaming with adaptive fetch sizing, improved error handling, and pragmatic identity retrieval.
+
+Below is an updated overview of what the dialect offers today.
+
+## Quick Start
+
+```ts
 import { knex } from 'knex'
-import { DB2Config, DB2Dialect } from '@bdkinc/knex-ibmi'
+import { DB2Dialect, DB2Config } from '@bdkinc/knex-ibmi'
 
-export const config: DB2Config = {
+const config: DB2Config = {
   client: DB2Dialect,
   connection: {
     database: '*LOCAL',
@@ -33,24 +38,135 @@ export const config: DB2Config = {
     password: 'password',
     driver: 'IBM i Access ODBC Driver',
     connectionStringParams: {
+      DBQ: 'MYLIB',
       CMT: 0,
       NAM: 1,
+      ALLOWPROCCALLS: 1,
     },
   },
-  pool: {
-    max: 10,
-    min: 2,
-  },
+  pool: { min: 2, max: 10 },
+  ibmi: { multiRowInsert: 'auto' },
 }
 
-export const db = knex(config!)
+export const db = knex(config)
 ```
 
-The project started as forking an older library that had not been updated in 5 years.
-[Knex-db2](https://github.com/henryjw/knex-db2) is the original package, but was outdated. I ended up re-writing the entire package, so I
-could have just started fresh. I wrote the package in Typescript and bundle it using [tsup](https://tsup.egoist.dev/)
-, I wanted to make sure I supported typescript, common js and esm. I added transaction support and made sure my
-returning values all worked.
+---
 
-The library is still in an alpha status. I have been using it in production and run into few issues. It could be
-moved to a Beta status soon. The error messages and logging could be better and will be my next area of focus.
+## Feature Highlights
+
+- Query building + execution fully integrated with Knex 3
+- Transactions (including custom transaction class)
+- Adaptive streaming (`.stream({ fetchSize })`) with cursor + async iteration support
+- Multi‑row insert strategies: `auto`, `sequential`, `disabled`
+- Emulated `returning` for `INSERT`, `UPDATE`, `DELETE`
+- Sequential identity retrieval using `IDENTITY_VAL_LOCAL()`
+- IBM i specific migration runner (bypasses fragile Knex locking on DB2)
+- Configurable per‑row transactional sequential inserts
+- Lenient identifier handling (no forced quoting / case issues)
+- Enhanced error classification (connection / timeout / SQL) with optional DEBUG logging
+- Fully typed (TypeScript), ESM + CJS exports, ships its own CLI
+
+---
+
+## Multi‑Row Insert Strategies
+
+Configure via the `ibmi.multiRowInsert` option:
+
+```ts
+const db = knex({
+  client: DB2Dialect,
+  connection: {/* ... */},
+  ibmi: { multiRowInsert: 'auto' } // 'auto' | 'sequential' | 'disabled'
+})
+```
+
+- `auto`: Single INSERT with multiple VALUES. Returns all rows (fallback) when safe.
+- `sequential`: Inserts rows individually; captures identity each time. Optional transactional wrapping via `ibmi.sequentialInsertTransactional`.
+- `disabled`: Backwards compatible single‑row behavior.
+
+Use `sequential` when you need deterministic identity values per row; `auto` for highest throughput.
+
+---
+
+## Emulated Returning
+
+Because native `RETURNING` is not broadly exposed via ODBC, the dialect emulates it:
+
+- INSERT (auto): wraps insert (internally may leverage `FINAL TABLE`) to surface inserted rows or all columns when unspecified.
+- INSERT (sequential): per‑row insert + `IDENTITY_VAL_LOCAL()`.
+- UPDATE: executes the update then re‑selects affected rows using the original WHERE.
+- DELETE: selects rows first, then deletes, returning the previously selected data.
+
+Return only the columns you need (`.returning(['ID','STATUS'])`) to reduce overhead.
+
+---
+
+## Streaming
+
+Large result sets can be consumed via a cursor stream with adaptive fetch sizing:
+
+```ts
+const stream = await db('LARGETABLE').select('*').stream({ fetchSize: 200 })
+for await (const row of stream) {
+  // process row
+}
+```
+
+Complex analytical queries (joins / aggregates / order) auto‑bump fetch size; you can still override manually.
+
+---
+
+## Migration Runner (IBM i Specific)
+
+Standard Knex migrations struggle on IBM i due to auto‑commit DDL + locking. This dialect ships a purpose‑built runner:
+
+```ts
+import { createIBMiMigrationRunner } from '@bdkinc/knex-ibmi'
+const runner = createIBMiMigrationRunner(db, {
+  directory: './migrations',
+  tableName: 'KNEX_MIGRATIONS',
+  schemaName: 'MYSCHEMA'
+})
+await runner.latest()
+```
+
+CLI usage:
+
+```bash
+npx ibmi-migrations migrate:latest
+npx ibmi-migrations migrate:rollback
+npx ibmi-migrations migrate:status
+```
+
+Supports JS, TS, MJS, CJS migration files; tracks batches; provides rollback, status, current version, pending list.
+
+---
+
+## Error Handling & Debugging
+
+Errors are classified (connection / timeout / SQL). Set `DEBUG=true` to see concise debug output including timing and statement preparation diagnostics (especially around migration table creation & DML returning emulation paths).
+
+---
+
+## Current Maturity
+
+The library has moved beyond early alpha; it has been running in production with stability. Remaining areas of ongoing improvement:
+
+- Even richer diagnostic logging (structured log hooks)
+- Additional edge‑case tuning for large batch sequential inserts
+- Potential Beta tag soon once broader community feedback is incorporated
+
+If you try it and hit an edge case: open an issue—real‑world feedback helps solidify the API.
+
+---
+
+## Closing Thoughts
+
+Knex becomes a much more attractive option on IBM i when you can rely on correct streaming, transaction semantics, pragmatic returning emulation, and safe migrations. This dialect aims to give you those building blocks without forcing heavy abstractions.
+
+Give it a spin and let me know what you build with it.
+
+– Brandon
+
+
