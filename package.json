@@ -33,7 +33,6 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.12",
     "tailwindcss-animated": "^2.0.0",
-    "tailwindcss-hero-patterns": "^0.1.2",
     "typescript": "^5.9.2",
     "yet-another-react-lightbox": "^3.25.0"
   },
