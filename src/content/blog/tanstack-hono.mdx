@@ -7,7 +7,7 @@ description: 'A SSR monolith web framework for TypeScript and JavaScript, built 
 heroImage: /static/images/tanstack-hono.png
 ---
 
-Preface:
+## Preface:
 
 I've been using TanStack Router and Hono for a while and appreciate how well their philosophies align: TanStack Router gives you a strongly typed, data‑aware routing core; Hono provides a tiny, fast, standards‑leaning HTTP layer that runs comfortably on Node or edge platforms.
 
@@ -19,7 +19,13 @@ Repo: [github.com/bskimball/tanstack-hono](https://github.com/bskimball/tanstack
 
 Development uses the Hono dev server with Vite powering both the client bundle and the server entry, so hot reloading applies across routes, server handlers, and shared types.
 
----
+## Why Hono?
+
+Hono is a minimalist web framework that emphasizes performance and simplicity. It has a small footprint, making it ideal for serverless and edge environments. Its middleware system is straightforward, allowing for easy composition of request handlers. With its middleware, it's easy to have RPC, Zod validations, and an OpenAPI compatible REST API.
+
+## Why Tanstack Router?
+
+TanStack Router is a powerful routing library that provides strong typing and data awareness. It allows for nested routes, route loaders, and seamless integration with React. Its focus on type safety helps catch errors at compile time, making it a great fit for TypeScript projects. Additionally, TanStack Router's flexibility allows it to be used in various environments, including SSR and CSR, making it a versatile choice for building web applications.
 
 ## Why a "Monolith"?
 
@@ -55,8 +61,8 @@ This pattern mirrors the official TanStack Router SSR example, replacing Express
 
 ```
 src/           # createRouter(), renderToString(), HTML template
-  	components/   # Shared React components
-    	Header.tsx      # Example shared header
+  components/   # Shared React components
+    Header.tsx      # Example shared header
 	routes/
 		__root.tsx         # Root route with layout + <Outlet />
 		index.tsx          # / home route
@@ -71,65 +77,3 @@ src/           # createRouter(), renderToString(), HTML template
 	entry-client.tsx   # Hydration entry
 	entry-server.tsx   # Server render entry (invoked by ssr.ts)
 ```
-
-## RPC / Type Safety Options
-
-Options for client ↔ server data flow inside this monolith:
-
-- Plain REST style Hono handlers (`/api/...`)
-- Zod validated request/response contracts shared between `api/` and `routes/`
-- A thin wrapper that maps a function name to a POST body (DIY tRPC‑lite)
-- Or adopt a full RPC layer (e.g. tRPC) if you want code‑gen inference—Hono integrates fine via adapters
-
-Early on I prefer the middle option: explicit Hono endpoints + Zod schemas for a minimal dependency footprint.
-
----
-
-## Vite Integration
-
-Using the Hono dev server means Vite is already compiling the React code. For SSR you typically:
-
-1. Create a Vite build with `manifest.json` enabled for production.
-2. Read the manifest in SSR code to inject hashed asset URLs.
-3. In dev, rely on the Vite dev server middleware (or Hono adapter) for on‑the‑fly transforms.
-
-Key benefits:
-
-- Fast HMR for routes & components
-- Single dependency graph; no duplicate bundlers
-- Easier to reason about relative imports & aliasing
-
----
-
-## Comparison: Express vs Hono for This Use Case
-
-| Aspect | Express | Hono |
-| ------ | ------- | ---- |
-| Bundle size (edge) | Heavier | Very small |
-| Middleware style | Classic, broad ecosystem | Modern, minimal, Web Standard flavored |
-| TypeScript ergonomics | Manual typings | Built with TS, better generics |
-| Edge/Workers deploy | Extra libs needed | First‑class (Cloudflare, etc.) |
-| Performance | Good | Often faster in microbenchmarks |
-
-For a lean SSR stack that might later target edge runtimes, Hono is a solid fit.
-
----
-
-## Deployment Notes
-
-You can push this monolith to several targets:
-
-- Node server (traditional) – simplest path, run built server + static assets
-- Cloudflare Workers / Pages – if avoiding Node APIs, ensure any Node‑only modules (fs, path) are gated or replaced
-- Fly.io / Render / Railway – containerize, expose port
-
-Production build considerations:
-
-```bash
-vite build --ssr src/server/entry-server.tsx
-vite build               # client
-```
-
-Then serve with a small bootstrap that loads the SSR bundle, reads the client manifest, and instantiates the Hono app.
-
-Edge runtime targets may need a streaming strategy using Web Streams instead of Node streams.
