@@ -12,7 +12,7 @@ const structuredData = {
 		"@type": "BlogPosting",
 		headline: data.title,
 		description: data.description,
-		image: data.image ? new URL(data.image, Astro.site).toString() : undefined,
+		image: data.image ? new URL(data.image as string, Astro.site).toString() : undefined,
 		datePublished: data.pubDate,
 		dateModified: data.updatedDate || data.pubDate,
 		author: {
