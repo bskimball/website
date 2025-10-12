@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect, type HTMLAttributes } from 'react'
+import { useState, useLayoutEffect, useCallback, type HTMLAttributes } from 'react'
 import { getRandomNumber, cn } from '@/lib/utils'
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
@@ -8,7 +8,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 export default function WordRotator({ words, className }: Props) {
   const [word, setWord] = useState<string[]>(['website'])
 
-  const changeWord = () => {
+  const changeWord = useCallback(() => {
     const timeoutId = setTimeout(
       () => {
         setWord((prevWord) => {
@@ -23,15 +23,17 @@ export default function WordRotator({ words, className }: Props) {
       getRandomNumber(4000, 10000),
     )
     return () => clearTimeout(timeoutId)
-  }
+  }, [words])
 
   useLayoutEffect(() => {
-    changeWord()
-  }, [])
+    const cleanup = changeWord()
+    return cleanup
+  }, [changeWord])
 
   useLayoutEffect(() => {
-    changeWord()
-  }, [word])
+    const cleanup = changeWord()
+    return cleanup
+  }, [word, changeWord])
 
   return (
     <div className="relative h-24">

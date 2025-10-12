@@ -10,6 +10,8 @@ const blog = defineCollection({
     heroImage: z.string().optional(),
     tags: z.array(reference('tags')).optional(),
     draft: z.boolean().optional(),
+    author: z.string().default('Brian Kimball'),
+    keywords: z.string().optional(),
   }),
 })
 

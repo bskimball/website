@@ -1,6 +1,6 @@
 import { AvatarImage, Avatar, AvatarFallback } from '@/components/ui/avatar.tsx'
 
-export default function () {
+export default function ProfilePhoto() {
   return (
     <Avatar className="w-32 h-32">
       <AvatarImage

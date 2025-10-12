@@ -1,0 +1,52 @@
+---
+interface Props {
+	type: "article" | "website" | "person";
+	data: Record<string, unknown>;
+}
+
+const { type, data } = Astro.props;
+
+const structuredData = {
+	"@context": "https://schema.org",
+	...(type === "article" && {
+		"@type": "BlogPosting",
+		headline: data.title,
+		description: data.description,
+		image: data.image ? new URL(data.image, Astro.site).toString() : undefined,
+		datePublished: data.pubDate,
+		dateModified: data.updatedDate || data.pubDate,
+		author: {
+			"@type": "Person",
+			name: data.author || "Brian Kimball",
+			url: "https://brian-kimball.com/about",
+		},
+		publisher: {
+			"@type": "Organization",
+			name: "Brian Kimball",
+			logo: {
+				"@type": "ImageObject",
+				url: new URL("/favicon.svg", Astro.site).toString(),
+			},
+		},
+		mainEntityOfPage: {
+			"@type": "WebPage",
+			"@id": new URL(Astro.url.pathname, Astro.site).toString(),
+		},
+		keywords: data.keywords,
+	}),
+	...(type === "website" && {
+		"@type": "WebSite",
+		name: data.name,
+		description: data.description,
+		url: new URL(Astro.url.pathname, Astro.site).toString(),
+	}),
+	...(type === "person" && {
+		"@type": "Person",
+		name: data.name,
+		url: data.url,
+		sameAs: data.sameAs || [],
+	}),
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

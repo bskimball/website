@@ -10,16 +10,40 @@ import BlockAuthor from "../components/BlockAuthor.astro";
 import BlockPostTags from "../components/BlockPostTags.astro";
 import Backdrop from "@/components/Backdrop.astro";
 import Aurora from "../components/Aurora.astro";
+import StructuredData from "@/components/StructuredData.astro";
 
 type Props = CollectionEntry<"blog">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags, author, keywords } = Astro.props;
+
+// Generate keywords from tags if not provided
+const keywordsString = keywords || tags?.map(tag => tag.id).join(', ')
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} />
+    <BaseHead
+      title={title}
+      description={description}
+      image={heroImage}
+      author={author}
+      keywords={keywordsString}
+      publishedTime={pubDate?.toISOString()}
+      modifiedTime={updatedDate?.toISOString()}
+    />
+    <StructuredData
+      type="article"
+      data={{
+        title,
+        description,
+        image: heroImage,
+        pubDate: pubDate?.toISOString(),
+        updatedDate: updatedDate?.toISOString(),
+        author,
+        keywords: keywordsString,
+      }}
+    />
   </head>
 
   <body class="bg-background text-foreground antialiased">

@@ -13,7 +13,7 @@ export function checkLinkActive({
   pathname: string
   href: string | URL | null | undefined
 }): boolean {
-  const subpath = pathname.match(/[^\/]+/g)
+  const subpath = pathname.match(/[^/]+/g)
   return href === pathname || href === '/' + subpath?.[0]
 }
 

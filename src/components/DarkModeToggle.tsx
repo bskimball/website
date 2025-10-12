@@ -19,21 +19,33 @@ function Icon({ mode }: { mode: string }) {
   return null
 }
 
+function applyMode(mode: string) {
+  if (mode === 'dark') {
+    document.documentElement.classList.add('dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
+}
+
 export default function DarkModeToggle() {
-  const [mode, setMode] = useState(getMode())
+  const [mode, setMode] = useState(() => {
+    const initialMode = getMode()
+    if (typeof window !== 'undefined') {
+      applyMode(initialMode)
+    }
+    return initialMode
+  })
 
   useEffect(() => {
     const initialMode = getMode()
-    setMode(initialMode)
+    applyMode(initialMode)
   }, [])
 
   useEffect(() => {
+    if (!mode) return
+    
     localStorage.theme = mode
-    if (mode === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
+    applyMode(mode)
   }, [mode])
 
   return (
