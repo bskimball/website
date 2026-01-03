@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button.tsx'
 import { cn } from '@/lib/utils.ts'
 
 function getMode() {
-  return typeof window == 'undefined'
+  return typeof window === 'undefined'
     ? ''
     : localStorage.theme === 'dark' ||
         (!('theme' in localStorage) &&

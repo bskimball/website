@@ -3,95 +3,90 @@ import BaseHead from '@/components/BaseHead.astro'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
 import { SITE_TITLE, SITE_DESCRIPTION } from '@/consts'
-import Backdrop from '@/components/Backdrop.astro'
 import { getCollection } from 'astro:content'
-import { Image } from 'astro:assets'
-import FormattedDate from '@/components/FormattedDate.astro'
-import { FaCalendar } from 'react-icons/fa6'
-import WordRotator from '../components/WordRotator'
-import Aurora from '../components/Aurora.astro'
+import BentoCard from '@/components/BentoCard.astro'
+import SectionDivider from '@/components/SectionDivider.astro'
 
-const posts = (await getCollection('blog')).filter((post) => !post.data.draft)
-
-const latestPosts = posts
-  .sort((a, b) =>
-    a.data.updatedDate && b.data.updatedDate
-      ? b.data.updatedDate?.valueOf() - a.data.updatedDate?.valueOf()
-      : b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  )
-  .slice(0, 5)
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 9) // Limit to 9 posts for the home page grid
 ---
 
 <html lang="en">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
-  <body class="bg-background text-foreground antialiased">
-    <Backdrop />
+  <body
+    class="bg-background text-foreground antialiased selection:bg-primary selection:text-background"
+  >
+    <div class="noise-overlay"></div>
     <Header />
-    <main class="container">
-      <div class="flex flex-col gap-8">
-        <div>
-          <div class="w-full mb-8">
-            <Aurora>
-              <div class="text-4xl">Welcome to my</div>
-              <WordRotator
-                words={[
-                  'website',
-                  'blog',
-                  'articles',
-                  'projects',
-                  'piece of the internet',
-                ]}
-                client:load
-                className="text-8xl font-bold"
-              />
-            </Aurora>
-            <p class="prose text-foreground text-xl">
-              This is a collection of my writings, projects, and other things.
-              Mostly technical content with a bit of personal stuff thrown in.
-            </p>
+    <main>
+      <section
+        class="min-h-screen flex flex-col justify-center relative overflow-hidden"
+      >
+        <div
+          class="container relative flex flex-col justify-center min-h-screen"
+        >
+          <!-- Center Headline -->
+          <div class="relative z-10">
+            <h1
+              class="font-serif text-[15vw] lg:text-[13rem] leading-[0.85] tracking-tighter mix-blend-difference"
+            >
+              Brian<br />
+              <span class="text-primary">Kimball</span>
+            </h1>
+          </div>
+
+          <!-- Bottom Right CTA & Spec -->
+          <!-- <div class="absolute bottom-12 right-8 flex flex-col items-end gap-8">
+            <div class="font-mono text-xs tracking-[0.2em] text-primary/70 text-right leading-relaxed">
+              Portfolio 2026 // <br/>
+              Personal Archive
+            </div>
+            <a 
+              href="/blog" 
+              class="group relative px-10 py-5 border border-primary text-primary font-mono text-sm tracking-[0.3em] hover:bg-primary hover:text-background transition-all duration-300 no-underline"
+            >
+              Enter Archive
+            </a>
+          </div> -->
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      <!-- Bento Grid -->
+      <section class="py-24">
+        <div class="container">
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 auto-rows-[minmax(240px,auto)]"
+          >
+            {
+              posts.map((post, index) => {
+                let colSpan = 'lg:col-span-3'
+                let rowSpan = ''
+
+                if (index === 0) {
+                  colSpan = 'md:col-span-2 lg:col-span-6'
+                  rowSpan = 'row-span-2'
+                } else if (index === 1 || index === 2) {
+                  colSpan = 'md:col-span-1 lg:col-span-3'
+                }
+
+                return (
+                  <BentoCard
+                    post={post}
+                    class={`${colSpan} ${rowSpan}`}
+                    featured={index === 0}
+                  />
+                )
+              })
+            }
           </div>
         </div>
-        <div>
-          <h3 class="text-amber-500 text-4xl font-bold">Latest</h3>
-        </div>
-        {
-          latestPosts.map((post) => (
-            <div>
-              <a
-                href={`/blog/${post.slug}`}
-                class="flex flex-col lg:flex-row justify-center align-center lg:justify-start lg:align-start gap-8 p-6 rounded-lg border bg-background/60 backdrop-opacity-60 shadow-lg"
-              >
-                {post.data.heroImage && (
-                  <div class="lg:max-w-[120px] lg:max-h-[120px] overflow-hidden m-auto lg:m-0">
-                    <Image
-                      src={post.data.heroImage}
-                      alt={`${post.data.title} thumbnail image`}
-                      width={120}
-                      height={120}
-                    />
-                  </div>
-                )}
-                <div class="animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500">
-                  <h4 class="inline-block py-1 text-2xl font-semibold">
-                    {post.data.title}
-                  </h4>
-                  <div>
-                    <div class="inline-flex gap-2 items-center rounded bg-violet-100 dark:bg-violet-900 text-violet-900 dark:text-violet-200 px-2 py-1 text-xs animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500 delay-150">
-                      <FaCalendar />
-                      <FormattedDate date={post.data.pubDate} />
-                    </div>
-                  </div>
-                  <div class="prose animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500 delay-300 text-gray-800 dark:text-gray-200">
-                    <p>{post.data.description}</p>
-                  </div>
-                </div>
-              </a>
-            </div>
-          ))
-        }
-      </div>
+      </section>
     </main>
     <Footer />
   </body>

@@ -5,11 +5,8 @@ import BaseHead from "@/components/BaseHead.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
-import { FaArrowLeft, FaCalendar } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa6";
 import BlockAuthor from "../components/BlockAuthor.astro";
-import BlockPostTags from "../components/BlockPostTags.astro";
-import Backdrop from "@/components/Backdrop.astro";
-import Aurora from "../components/Aurora.astro";
 
 type Props = CollectionEntry<"blog">["data"];
 
@@ -22,76 +19,94 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
     <BaseHead title={title} description={description} />
   </head>
 
-  <body class="bg-background text-foreground antialiased">
-    <Backdrop />
+  <body class="bg-background text-foreground antialiased selection:bg-primary selection:text-background">
+    <div class="noise-overlay"></div>
     <Header />
-    <main class="container">
+    <main class="container py-12 lg:py-20">
       <article>
-        <div>
-          <div>
-            <div class="inline-flex">
-              <div class="mb-12">
-                <Aurora>
-                  <h1 class="lg:leading-loose text-4xl lg:text-6xl font-bold">
-                    {title}
-                  </h1>
-                </Aurora>
-                <div>
-                  {
-                    pubDate && (
-                      <div class="gap-2 items-center rounded inline-flex bg-violet-100 dark:bg-violet-900 text-violet-900 dark:text-violet-200 mb-2 py-1 px-2 text-shadow">
-                        <FaCalendar />
-                        <FormattedDate date={pubDate} />
-                      </div>
-                    )
-                  }
-                  {
-                    updatedDate && (
-                      <div class="last-updated-on">
-                        Last updated on <FormattedDate date={updatedDate} />
-                      </div>
-                    )
-                  }
-                </div>
-              </div>
+        <div class="flex flex-col gap-12">
+          <!-- Header Section -->
+          <div class="flex flex-col gap-8 border-b border-white/10 pb-12">
+            <div class="flex flex-col gap-6">
+              <a
+                href="/blog"
+                class="w-fit flex gap-2 items-center font-mono text-xs tracking-widest text-primary/70 hover:text-primary transition-colors no-underline"
+              >
+                <FaArrowLeft /><span>Back to Index</span>
+              </a>
+              
+              <h1 class="font-serif text-5xl lg:text-7xl leading-none text-foreground">
+                {title}
+              </h1>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-6 font-mono text-xs tracking-widest text-foreground/60">
+              {
+                pubDate && (
+                  <div class="flex items-center gap-2">
+                    <span class="text-primary">Date:</span>
+                    <FormattedDate date={pubDate} />
+                  </div>
+                )
+              }
+              {
+                updatedDate && (
+                  <div class="flex items-center gap-2">
+                    <span class="text-primary">Updated:</span>
+                    <FormattedDate date={updatedDate} />
+                  </div>
+                )
+              }
             </div>
           </div>
-          <div class="grid lg:grid-cols-3 xl:grid-cols-5 gap-16">
-            <section
-              class="lg:col-span-2 xl:col-span-4 prose text-foregound overflow-x-auto overflow-y-hidden"
-            >
-              <div
-                class:list={[
-                  "hero-image",
-                  { hidden: !heroImage, "mb-16": heroImage },
-                ]}
-              >
-                {
-                  heroImage && (
-                    <Image
-                      class="w-full h-auto"
-                      src={heroImage}
-                      width={1280}
-                      height={720}
-                      alt={`${title} Hero Image`}
-                    />
-                  )
-                }
-              </div>
+
+          <div class="grid lg:grid-cols-12 gap-12 lg:gap-24">
+            <!-- Main Content -->
+            <section class="lg:col-span-8 prose prose-invert prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary/80 prose-blockquote:border-l-primary prose-img:border-2 prose-img:border-white/10">
+              {
+                heroImage && (
+                  <div class="mb-12 not-prose">
+                    <div class="border-2 border-white/10 p-2 bg-secondary">
+                      <Image
+                        class="w-full h-auto grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
+                        src={heroImage}
+                        width={1280}
+                        height={720}
+                        alt={`${title} Hero Image`}
+                      />
+                    </div>
+                  </div>
+                )
+              }
               <slot />
             </section>
-            <aside class="col-span-1 flex flex-col gap-16">
-              <div>
-                <BlockAuthor />
-              </div>
-              {tags && tags.length > 0 && <BlockPostTags tags={tags} />}
-              <div>
-                <a
-                  href="/blog"
-                  class="flex gap-2 items-center text-violet-500 hover:text-violet-600"
-                >
-                  <FaArrowLeft /><span>Blog</span>
-                </a>
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-4 flex flex-col gap-12 h-fit lg:sticky lg:top-32">
+              <div class="border-l-2 border-white/10 pl-6 flex flex-col gap-8">
+                <div>
+                  <span class="font-mono text-xs tracking-widest text-primary block mb-4">Author</span>
+                  <BlockAuthor />
+                </div>
+                
+                {tags && tags.length > 0 && (
+                  <div>
+                    <span class="font-mono text-xs tracking-widest text-primary block mb-4">Tags</span>
+                    <div class="flex flex-wrap gap-2">
+                      {tags.map((tag) => {
+                        const tagId = typeof tag === 'object' ? tag.id : tag;
+                        return (
+                          <a 
+                            href={`/tags/${tagId}`}
+                            class="font-mono text-xs border border-white/20 px-3 py-1 hover:bg-primary hover:text-background hover:border-primary transition-colors no-underline"
+                          >
+                            {tagId}
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </aside>
           </div>

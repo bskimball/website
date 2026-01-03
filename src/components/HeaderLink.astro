@@ -16,10 +16,7 @@ const isActive = checkLinkActive({ pathname, href })
     className,
     'py-6 inline-block no-underline',
     { 'active font-semibold': isActive },
-    { 'text-amber-500': isActive && href === '/' },
-    { 'text-sky-500': isActive && href === '/about' },
-    { 'text-violet-500': isActive && href === '/blog' },
-    { 'text-emerald-500': isActive && href === '/tags' },
+    { 'text-primary': isActive },
   ]}
   {...props}
 >

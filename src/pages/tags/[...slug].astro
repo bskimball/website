@@ -4,12 +4,8 @@ import BaseHead from "@/components/BaseHead.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import FormattedDate from "@/components/FormattedDate.astro";
-import SidebarTags from "@/components/SidebarTags.astro";
-import Backdrop from "@/components/Backdrop.astro";
-import { FaCalendar } from "react-icons/fa6";
-import { Image } from "astro:assets";
-import Aurora from "../../components/Aurora.astro";
+
+import BentoCard from "@/components/BentoCard.astro";
 
 export async function getStaticPaths() {
   const allPosts = await getCollection("blog");
@@ -44,66 +40,22 @@ const posts = allPosts
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
-  <body class="bg-background text-foreground antialiased">
-    <Backdrop />
+  <body class="bg-background text-foreground antialiased selection:bg-primary selection:text-background">
+    <div class="noise-overlay"></div>
     <Header />
-    <main class="container">
-      <Aurora>
-        <h1 class="text-3xl leading-loose mb-6">
-          Posts about
-          <span
-            class="font-bold animate-in fill-mode-both fade-in slide-in-from-bottom-2 duration-1000"
-          >
-            {tag.data.name}
-          </span>
+    <main class="container py-20">
+      <div class="flex flex-col gap-12">
+        <h1 class="text-6xl md:text-8xl font-serif leading-tight animate-in fill-mode-both fade-in slide-in-from-bottom-2 duration-1000">
+          Tag / {tag.data.name}
         </h1>
-      </Aurora>
-      <div class="grid lg:grid-cols-5 gap-32">
-        <section class="col-span-3">
-          <div class="flex flex-col gap-8">
-            {
-              posts.map((post, index) => (
-                <div
-                  class="animate-in fill-mode-both fade-in slide-in-from-bottom-2 duration-500  border rounded-lg break-inside-avoid-column bg-background/60 backdrop-opacity-60 shadow-lg"
-                  style={{ animationDelay: `${index * 7 ** 2 + 200}ms` }}
-                >
-                  <a
-                    href={`/blog/${post.slug}`}
-                    class="flex flex-col-reverse lg:flex-col gap-4 p-6 border rounded-lg break-inside-avoid-column bg-background/60 backdrop-opacity-60 shadow-lg"
-                  >
-                    <div class="flex flex-col gap-4 flex-1">
-                      <div>
-                        <h4 class="text-xl font-bold">{post.data.title}</h4>
-                      </div>
-                      <div>
-                        <div class="inline-flex gap-2 items-center rounded bg-violet-100 dark:bg-violet-900 text-violet-900 dark:text-violet-200 px-2 py-1 text-xs animate-in fill-mode-both fade-in slide-in-from-bottom-1 duration-500 delay-150">
-                          <FaCalendar />
-                          <FormattedDate date={post.data.pubDate} />
-                        </div>
-                      </div>
-                      <div class="prose text-foreground">
-                        <p>{post.data.description}</p>
-                      </div>
-                    </div>
-                    {post.data.heroImage && (
-                      <div class="w-1/4 overflow-hidden">
-                        <Image
-                          width={160}
-                          height={160}
-                          src={post.data.heroImage}
-                          alt=""
-                        />
-                      </div>
-                    )}
-                  </a>
-                </div>
-              ))
-            }
-          </div>
-        </section>
-        <aside class="col-span-2">
-          <SidebarTags />
-        </aside>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {
+            posts.map((post) => (
+              <BentoCard post={post} />
+            ))
+          }
+        </div>
       </div>
     </main>
     <Footer />

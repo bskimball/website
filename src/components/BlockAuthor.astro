@@ -1,12 +1,21 @@
 ---
-import ProfilePhoto from './ProfilePhoto'
 import SocialLinks from './SocialLinks.astro'
 ---
 
-<div class="inline-block">
-  <div class="flex flex-col gap-3">
-    <ProfilePhoto client:load />
-    <div class="text-lg font-semibold text-center">Brian Kimball</div>
-    <SocialLinks />
+<div class="flex flex-col gap-6">
+  <div class="grayscale hover:grayscale-0 transition-all duration-500 border-2 border-white/20 p-2 bg-secondary w-fit">
+    <img 
+      src="/static/images/me_website_2025.png" 
+      alt="Brian Kimball" 
+      class="w-48 h-auto aspect-square object-cover"
+    />
+  </div>
+  
+  <div class="flex flex-col gap-2">
+    <div class="font-serif text-xl">Brian Kimball</div>
+    <div class="font-mono text-xs tracking-widest text-primary/70">Systems Engineer / Developer</div>
+    <div class="mt-2">
+      <SocialLinks />
+    </div>
   </div>
 </div>

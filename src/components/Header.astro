@@ -3,20 +3,18 @@ import HeaderLink from './HeaderLink.astro'
 import DarkModeToggle from './DarkModeToggle.tsx'
 ---
 
-<header>
-  <div class="container flex gap-8 mb-8">
-    <nav class="flex-1 flex items-center gap-8">
-      <div class="flex items-center gap-6">
-        <HeaderLink href="/">Home</HeaderLink>
-        <HeaderLink href="/about">About</HeaderLink>
-        <HeaderLink href="/blog">Blog</HeaderLink>
-        <HeaderLink href="/tags">Tags</HeaderLink>
+<header class="sticky top-0 z-50 w-full backdrop-blur-md border-b-2 border-white/10 bg-background/80">
+  <div class="container flex justify-between items-center h-20">
+    <a href="/" class="font-serif font-black text-3xl tracking-tighter text-primary no-underline">
+      ::
+    </a>
+    <nav class="flex items-center gap-8">
+      <HeaderLink href="/blog" class="font-mono text-xs tracking-widest hover:text-primary transition-colors">Blog</HeaderLink>
+      <HeaderLink href="/tags" class="font-mono text-xs tracking-widest hover:text-primary transition-colors">Tags</HeaderLink>
+      <HeaderLink href="/about" class="font-mono text-xs tracking-widest hover:text-primary transition-colors">About</HeaderLink>
+      <div class="pl-4 border-l border-white/10">
+        <DarkModeToggle client:load />
       </div>
     </nav>
-    <div>
-      <div class="py-6">
-        <DarkModeToggle client:only="react" />
-      </div>
-    </div>
   </div>
 </header>
