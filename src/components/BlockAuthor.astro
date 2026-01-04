@@ -1,13 +1,15 @@
 ---
 import SocialLinks from './SocialLinks.astro'
+import { Image } from 'astro:assets';
+import meImg from '../assets/me_website_2026.png';
 ---
 
 <div class="flex flex-col gap-6">
   <div
     class="grayscale hover:grayscale-0 transition-all duration-500 border-2 border-foreground/20 p-2 bg-secondary w-fit rounded-full"
   >
-    <img
-      src="/static/images/me_website_2026.jpg"
+    <Image
+      src={meImg}
       alt="Brian Kimball"
       class="w-48 h-auto aspect-square object-cover rounded-full"
     />
