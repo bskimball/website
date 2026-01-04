@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
+import { Image } from 'astro:assets'
 import FormattedDate from './FormattedDate.astro'
 
 interface Props {
@@ -19,11 +20,13 @@ const { post, class: className, featured } = Astro.props
   ]}
 >
   {
-    post.data.heroImage && (
+    (post.data.heroImageOptimized || post.data.heroImage) && (
       <div class="absolute inset-0 z-0 opacity-20 grayscale transition-all duration-500 group-hover:opacity-40 group-hover:grayscale-0">
-        <img
-          src={post.data.heroImage}
+        <Image
+          src={(post.data.heroImageOptimized || post.data.heroImage) as any}
           alt=""
+          width={800}
+          height={600}
           class="h-full w-full object-cover"
         />
       </div>
