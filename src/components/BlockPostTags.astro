@@ -18,15 +18,12 @@ const tagLinks = tags
 ---
 
 <div>
-  <div class="text-neutral-700 dark:text-neutral-300 mb-1 text-xl">Tags</div>
+  <div class="text-foreground/70 mb-1 text-xl">Tags</div>
   <div class="flex flex-col gap-1">
     {
       tags &&
         tagLinks.map((tag) => (
-          <a
-            href={tag.href}
-            class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-500"
-          >
+          <a href={tag.href} class="text-primary hover:text-primary/80">
             {tag.name}
           </a>
         ))

@@ -6,36 +6,32 @@ draft: false
 description: 'An app to install and gather network information as well as domain information.'
 heroImage: /static/images/network-mapper-dashboard.png
 ---
+
 import Gallery from '@/components/Gallery.tsx'
 
 [Github Repo](https://github.com/bskimball/network-mapper)
 
 ## Preface
 
-In an MSP (managed service provider), gathering information when on-boarding a new account is critical. Often times,
-this can be non-billable work and will usually take a couple of hours to get the necessary information. Some of the
-information gathering can be automated. I built a node application that would run these routine tasks.
+For Managed Service Providers (MSPs), gathering detailed network information during client onboarding is critical. This process is often time-consuming and non-billable. To solve this, I built a Node.js application to automate routine discovery tasks.
 
-The idea is to install the app on a Raspberry PI and plug in to the prospective customers network.
-Once initiated,
-the app runs an NMap scan on the known local networks.
-Alongside the NMAP scan, the app will run WHOIS lookups on
-the configured domains.
-Using the WHOIS information and DNS information, we can look up things like MX records.
-The
-MX record gives us information for which email service the domain uses.
-The last piece is a form where the tech
-could submit the gathered information to a central collection repository.
+The concept: install the app on a Raspberry Pi, connect it to the prospective client's network, and initiate a scan. The app runs `nmap` to discover local devices and performs `whois` lookups on configured domains. It also queries DNS records (like MX records) to identify email providers. Finally, technicians can submit the gathered data to a central repository via a form.
 
 ### Technical Decisions
 
-This is a monolithic JS application. There is no compilation step on the server as it is just JS with ESM imports.
-It communicates to a Postgres database running in a docker container. I wanted to use the most performant
-and the fastest libraries I could find for a JS app. I decided to use Fastify for the server and Solid.js for the UI.
-This is a great minimal stack for full-stack JS applications. The frontend communicates with a rest api provided by
-fastify; then live scans can be pushed to the client using web-sockets.
+**Architecture**
+I built this as a monolithic JavaScript application using ESM imports, with no server-side compilation step. It connects to a PostgreSQL database running in Docker.
 
-<Gallery client:load
+**Stack**
+I prioritized performance and speed.
+
+- **Server:** [Fastify](https://fastify.io/), for its low overhead.
+- **UI:** [Solid.js](https://www.solidjs.com/), for its fine-grained reactivity and small bundle size.
+
+This minimal full-stack JavaScript setup is highly efficient. The frontend consumes a REST API from Fastify, while WebSockets push live scan updates to the client.
+
+<Gallery
+  client:load
   slides={[
     { src: '/static/images/network-mapper-dashboard.png' },
     { src: '/static/images/network-mapper-domains.png' },

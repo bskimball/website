@@ -6,42 +6,37 @@ draft: false
 description: Building node applications that run on a schedule
 heroImage: /static/images/ide-screenshot.png
 ---
+
 import Gallery from '@/components/Gallery.tsx'
 
 ### Intro
 
-In businesses there are many applications or processes that run on a schedule. There are things like MRP (Material
-Resource Planning) reports, EDI (Electronic Data Interchange) transactions, etc. These either run at night as to not
-interfere with normal business processes or need to run on a schedule throughout the day. I find myself writing a
-lot of these programs that interact with a database or some kind of api.
+Many business processes run on a schedule—MRP reports, EDI transactions, and database synchronizations. These tasks often run at night or at specific intervals to avoid disrupting operations. I frequently write programs to handle these automated interactions between databases and APIs.
 
-### Why Node?
+### Why Node.js?
 
-The main reason is packages and training (I also just enjoy the language). The Node ecosystem contains many packages
-that interface with APIs. Have a Shopify website or a WooCommerce website that you need to retrieve orders? There's
-a package for that. The other main reason is training, as there are plenty of training resources online for
-javascript/typescript/node
-programming. It's easy for people to pick up and find training. Most operating systems, the installation of Node is
-very simple and most applications can be run via command line.
+**Ecosystem & Packages**
+The Node.js ecosystem is vast. Need to retrieve orders from Shopify or WooCommerce? There's likely a package for that. This availability significantly speeds up development compared to other languages.
 
-### Currently
+**Training & Accessibility**
+JavaScript/TypeScript and Node.js have immense training resources. It's easy for new developers to pick up, and installation is straightforward on most operating systems.
 
-I get sent a lot of stuff that is written in Lansa. Either the API has changed or some other reason the older
-application(s) are not working. Nothing against Lansa but they don't have the training or the ecosystem that Node has.
-Things like oauth and api definitions are manually implemented and take more time. Instead of fixing the Lansa
-program, it's just easier to switch to a Node application.
+### Current Landscape
 
-### What does it look like?
+I often replace legacy applications written in Lansa. When APIs change or older apps fail, updating them in Lansa is often difficult due to a lack of modern libraries (like OAuth or standardized API clients). Rebuilding these integrations in Node.js is often faster and more maintainable.
 
-I have been writing most of these apps using Javascript and ESM imports. JSDocs can work for types, but when
-creating these apps I feel it's nice to not have to worry about a compilation step. I also will use a traditional
-MVC architecture, even though these apps don't really have a view layer. Most of these apps are pulling api
-information and inserting the data into a database for use by other applications. For the database interactions, I
-prefer ['knex']('https://knexjs.org/') as a query builder. I have also used the ['node-odbc']('https://github.com/markdirish/node-odbc/') package and written
-raw SQL. All these apps have sensitive data so they are published to private repo. Once the application is tested
-and working, I will write a CL program that executes on the scheduler of the operating system.
+### Architecture
 
-<Gallery client:load
+I typically write these as JavaScript applications using ESM imports.
+
+- **No Compilation:** JSDoc provides sufficient typing without the need for a build step.
+- **Structure:** Traditional MVC architecture, even without a view layer, keeps code organized.
+- **Database:** I prefer [Knex](https://knexjs.org/) as a query builder, though I've also used [node-odbc](https://github.com/markdirish/node-odbc/) for raw SQL.
+
+Since these applications handle sensitive data, they reside in private repositories. Once tested, a CL program triggers them via the operating system's scheduler.
+
+<Gallery
+  client:load
   slides={[
     { src: '/static/images/node-automation-model.png' },
     { src: '/static/images/amazon-sp-api.png' },

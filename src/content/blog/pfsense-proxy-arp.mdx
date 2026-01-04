@@ -7,54 +7,39 @@ description: Setting up a Proxy ARP virtual IP on the PFSense
 heroImage: /static/images/proxy-arp_diagram.png
 ---
 
-## What is Proxy Arp?
+## What is Proxy ARP?
 
 <figure>
   <blockquote>
-    Proxy ARP is a technique by which a proxy server on a given network answers the Address Resolution Protocol (ARP)
-    queries for an IP address that is not on that network.
+    Proxy ARP is a technique by which a proxy server on a given network answers
+    the Address Resolution Protocol (ARP) queries for an IP address that is not
+    on that network.
   </blockquote>
   <figcaption>- Wikipedia</figcaption>
 </figure>
 
-There are a variety of reasons you may want to configure a proxy arp. You may want to disguise the other network, or
-you may have a firewall configuration that is strict on a particular network. I most commonly use as a way to
-firewall off a network and allow access to certain resources. The example shows traffic to a connected IPSEC tunnel,
-but it could really be any other network like a DMZ network, for example.
+Proxy ARP allows a firewall to answer requests for IP addresses that don't belong to it physically but are routed through it. I commonly use this to firewall off specific networks or allow access to resources across VPN tunnels—like the IPSec tunnel in this example.
 
-## IPSEC tunnel
+## IPSec Tunnel
 
-I already have the tunnel established between two networks, and have verified data flow. I will not go into detail
-about setting up the tunnel, but the key to ipsec tunnels is making sure your configuration is the same on both
-sides. More details can be found on
-[the PFSense docs](https://docs.netgate.com/pfsense/en/latest/recipes/ipsec-s2s-psk.html).
+First, establish and verify the tunnel between the two networks. Ensuring identical configurations on both sides is key. For details, refer to the [pfSense IPSec documentation](https://docs.netgate.com/pfsense/en/latest/recipes/ipsec-s2s-psk.html).
 
 ![IPSEC tunnel](/static/images/proxy-arp_ipsec.png)
 
 ## Local Network
 
-The LAN in this scenario is a simple class C subnet in 192.168.1.0/24. The screenshots are taken from a production
-network, but I have used Photoshop to change the IP ranges. On the PFSense you will want to add a new virtual IP,
-with the virtual ip type being "Proxy ARP".
+In this scenario, the LAN is `192.168.1.0/24`. We will add a new **Proxy ARP** Virtual IP on the pfSense.
 
 ![Virtual IP](/static/images/proxy-arp_virtual-ip.png)
 
-This scenario is just a single IP address, so we maintain the /32 bitmask. This will add an ARP entry to the ARP
-table on the firewall. It is only an ARP entry, so if you try to ping the IP, you will not get a response. Traffic to
-that address will, however, be sent to the firewall, so it can be routed to the correct destination.
+Since we are defining a single IP, use a `/32` bitmask. This adds an entry to the firewall's ARP table. While the firewall won't reply to ICMP pings for this address, it will accept and route traffic destined for it.
 
 ## Forwarding to the Remote Network
 
-Now that we have the Proxy ARP configured on our LAN, we need to send the traffic over to our remote network. The
-remote network is another C class network of 192.168.2.0/24. We already have it connected via the IPSEC tunnel. On
-that network we have a server with the IP address of 192.168.2.30. The goal is that a user on the LAN should be able
-to access the 192.168.1.30 address and the firewall proxy the traffic to the server at 192.168.2.30. To
-accomplish this, we set up a port-forwarding rule to send traffic destined for 192.168.1.30 to 192.168.2.30.
+The goal is to forward traffic from a LAN address (`192.168.1.30`) to a server on the remote network (`192.168.2.30`) across the tunnel.
+
+We achieve this with a **Port Forwarding** rule.
 
 ![Port Forwarding](/static/images/proxy-arp_port-forward.png)
 
-In this scenario, we are forwarding all TCP, UDP and ICMP traffic to the remote server. We could narrow it down to
-fewer ports if we wanted to. Once the rule is in place users on the LAN should be able to access the remote server
-using the LAN address.
-
-
+Configure the rule to forward traffic (TCP, UDP, ICMP, or specific ports) from the local Proxy ARP address to the remote server's IP. Once active, LAN users can access the remote server using the local address.

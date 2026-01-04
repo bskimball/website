@@ -1,59 +1,59 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import FormattedDate from './FormattedDate.astro';
+import type { CollectionEntry } from 'astro:content'
+import FormattedDate from './FormattedDate.astro'
 
 interface Props {
-	post: CollectionEntry<'blog'>;
-	class?: string;
-	featured?: boolean;
+  post: CollectionEntry<'blog'>
+  class?: string
+  featured?: boolean
 }
 
-const { post, class: className, featured } = Astro.props;
+const { post, class: className, featured } = Astro.props
 ---
 
 <a
-	href={`/blog/${post.slug}`}
-	class:list={[
-		'group relative overflow-hidden border-2 border-white/10 bg-secondary p-6 flex flex-col justify-between h-full transition-all duration-300 hover:border-primary hover:bg-primary hover:text-black no-underline',
-		className,
-	]}
+  href={`/blog/${post.slug}`}
+  class:list={[
+    'group relative overflow-hidden border-2 border-foreground/10 bg-secondary p-6 flex flex-col justify-between h-full transition-all duration-300 hover:border-primary hover:bg-primary hover:text-background no-underline',
+    className,
+  ]}
 >
-	{
-		post.data.heroImage && (
-			<div class="absolute inset-0 z-0 opacity-20 grayscale transition-all duration-500 group-hover:opacity-40 group-hover:grayscale-0">
-				<img
-					src={post.data.heroImage}
-					alt=""
-					class="h-full w-full object-cover"
-				/>
-			</div>
-		)
-	}
+  {
+    post.data.heroImage && (
+      <div class="absolute inset-0 z-0 opacity-20 grayscale transition-all duration-500 group-hover:opacity-40 group-hover:grayscale-0">
+        <img
+          src={post.data.heroImage}
+          alt=""
+          class="h-full w-full object-cover"
+        />
+      </div>
+    )
+  }
 
-	<div class="relative z-10 flex justify-end">
-		<div
-			class="font-mono text-xs border border-white/20 px-2 py-1 rounded-none transition-colors duration-300 group-hover:border-black group-hover:text-black"
-		>
-			<FormattedDate date={post.data.pubDate} />
-		</div>
-	</div>
+  <div class="relative z-10 flex justify-end">
+    <div
+      class="font-mono text-xs border border-foreground/20 px-2 py-1 rounded-none transition-colors duration-300 group-hover:border-background group-hover:text-background"
+    >
+      <FormattedDate date={post.data.pubDate} />
+    </div>
+  </div>
 
-	<div class="relative z-10">
-		<h3
-			class:list={[
-				'font-serif leading-none transition-transform duration-300 group-hover:translate-x-2',
-				featured ? 'text-4xl md:text-6xl' : 'text-2xl md:text-3xl',
-			]}
-		>
-			{post.data.title}
-		</h3>
-		<p
-			class:list={[
-				'mt-4 line-clamp-2 text-sm opacity-70 group-hover:text-black/80',
-				featured && 'md:text-base md:line-clamp-3',
-			]}
-		>
-			{post.data.description}
-		</p>
-	</div>
+  <div class="relative z-10">
+    <h3
+      class:list={[
+        'font-serif leading-none transition-transform duration-300 group-hover:translate-x-2',
+        featured ? 'text-4xl md:text-6xl' : 'text-2xl md:text-3xl',
+      ]}
+    >
+      {post.data.title}
+    </h3>
+    <p
+      class:list={[
+        'mt-4 line-clamp-2 text-sm opacity-70 group-hover:text-background/80',
+        featured && 'md:text-base md:line-clamp-3',
+      ]}
+    >
+      {post.data.description}
+    </p>
+  </div>
 </a>

@@ -6,49 +6,36 @@ draft: false
 description: I have decided to take the time to learn the Go programming language
 heroImage: /static/images/learning-go-ide-screenshot.png
 ---
+
 ## Preface
 
-I've been doing web development for roughly 20 years. When I was in college, we were using Macromedia Flash and
-Macromedia dreamweaver. Yes, you read that right, this is before Adobe bought Macromedia. Aside from the html and
-css that are on every website; the first programming language I used was PHP and javascript for dom manipulation
-(jquery). Since that time, I have dabbled in Ruby, Python, Node and Elixir. My favorite of the languages is
-Javascript (or Typescript), as I enjoy the syntax and the number of packages available. Being able to write
-javascript server side and client side is nice. Despite my joy of JS, I know it may not be the best for all jobs.
-One of the languages I see heralded online for its performance and DX (developer experience) is Go or Golang from
-Google.
+I've been a web developer for roughly 20 years, starting with Macromedia Flash and Dreamweaver. My journey began with PHP and jQuery, moving through Ruby, Python, Node, and Elixir. While JavaScript/TypeScript is my favorite for its syntax and ecosystem, I know it's not always the best tool.
+
+Recently, I've seen Go (Golang) heralded for its performance and Developer Experience (DX).
 
 ### What is Go?
 
 <figure>
   <blockquote>
-    Go was designed at Google in 2007 to improve programming productivity in an era of multicore,
-    networked machines and large codebases.
+    Go was designed at Google in 2007 to improve programming productivity in an
+    era of multicore, networked machines and large codebases.
   </blockquote>
   <figcaption>- Wikipedia</figcaption>
 </figure>
 
-Wikipedia goes on to say the designers were motivated by the dislike of the C++ language. C++ is on my list of
-things to spend more time with but for now, I will focus on using Go. The standard library has most of what any
-developer would need and keeps them for having to reach for third party tools. The static typing allows for great
-IDE support. It does not require a VM and has sound uses in networking and CLI.
+Designed partially out of frustration with C++, Go offers a robust standard library, static typing with excellent IDE support, and no VM requirement. It excels in networking and CLI applications.
 
 ### What will I use it for?
 
-I went through the walk-thru on the website, and I do enjoy the language and syntax. I find it easier to read than
-some of the other languages I have worked through. To help learn the language, I found this
-(GitHub repo)[https://github.com/miguelmota/golang-for-nodejs-developers]. It helps keep track of the syntax
-differences which has made learning it go much faster.
+After completing the website walkthrough, I found Go's syntax readable and intuitive. To accelerate my learning, I used this [GitHub repo](https://github.com/miguelmota/golang-for-nodejs-developers) which highlights syntax differences for Node.js developers.
 
-I am going to re-write an App that I had started working on that I called
-(network-mapper)[/blog/network-mapper]. The (GitHub repo)[https://github.com/bskimball/network-mapper] shows that
-this is a javascript application using fastify for the backend and Solid.js for the frontend. I had noticed some
-performance issues running nmap scans in the original app, so I am wondering if using Go resolves that issue.
+I plan to rewrite my [network-mapper](/blog/network-mapper) app in Go. The original JavaScript application (Fastify + Solid.js) struggled with performance during `nmap` scans. I hope Go will resolve these issues.
 
-I will still keep Solid.js as my frontend, although I am switching to kobalte for the accessible components. The
-other change is I think I will scrap the postgres database for SQLite as it's more portable and easier to install. I
-decided to use the (Echo framework)[https://echo.labstack.com/]  although I also looked at Revel. I plan to serve a
-embedded vite SPA. I used
-(this guide)[https://dev.to/aryaprakasa/serving-single-page-application-in-a-single-binary-file-with-go-12ij] to set
-up the embedded SPA.
+**Plan:**
 
-I will set up a GitHub repo with the new project once I get a little further along.
+- **Frontend:** Solid.js (switching to Kobalte for accessible components).
+- **Database:** Switching from PostgreSQL to SQLite for portability.
+- **Backend:** [Echo framework](https://echo.labstack.com/).
+- **Deployment:** Embedded Vite SPA within a single Go binary (using [this guide](https://dev.to/aryaprakasa/serving-single-page-application-in-a-single-binary-file-with-go-12ij)).
+
+I will share the GitHub repo once I make more progress.

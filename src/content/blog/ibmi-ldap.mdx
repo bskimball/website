@@ -9,16 +9,15 @@ heroImage: /static/images/ibmi-ldap-properties.png
 
 ## Intro
 
-When hosting IBMi there are often other services involved such as a VPN. It would be nice for end-users if their VPN
-login was the same as their IBMi login. This is possible using the LDAP server on the IBMi.
+When hosting services alongside IBM i, such as a VPN, unifying user authentication improves the end-user experience. By configuring the LDAP server on IBM i, users can log in to other services using their existing IBM i credentials.
 
 ## Process
 
-The first thing that needs to be done is the user profiles need to be added to the System Distribution Directory.
-LDAP uses the System Distribution Directory to store the user info for LDAP, as well as other services like SMTP
-user information. It can be accessed using WRKDIRE command. One of the things you have to look out for is the
-username has an 8-character limit. This is due to an old unix limitation. Instead of keying each user individually, I
-wrote a script that transfers all IBM profiles to the System Distribution Directory.
+First, add user profiles to the System Distribution Directory. LDAP, like SMTP, uses this directory for user information. You can access it via the `WRKDIRE` command.
+
+**Note:** Usernames are limited to 8 characters due to legacy constraints.
+
+Instead of manually keying each user, I wrote a script to transfer all IBM profiles to the System Distribution Directory automatically.
 
 ```javascript
 import odbc from 'odbc'
@@ -94,17 +93,12 @@ odbc.connect(`DSN=${config.name}`, (error, db) => {
 
 ## Managing LDAP
 
-IBM integrates the Tivoli LDAP server and can be configured using the Web Navigator. The documentation is found here
-[IBMi LDAP](https://www.ibm.com/docs/en/i/7.5?topic=server-configuring-directory). It's similar to all other LDAP
-servers with common names (CN), orgnaization names (ON), etc. This can all be used by other services to authenticate
-your user.
+IBM integrates the Tivoli LDAP server, which is configurable via the Web Navigator. For detailed instructions, refer to the [IBM i LDAP documentation](https://www.ibm.com/docs/en/i/7.5?topic=server-configuring-directory). Like standard LDAP servers, it uses Common Names (CN) and Organization Names (ON) for authentication integration.
 
 ![IBMi LDAP Properties](/static/images/ibmi-ldap-properties.png)
 
 ## Implementation
 
-The most common implementation I have done is with the PFSense OpenVPN server. It's fairly easy to configure an
-authentication server via ldap. Once the authentication server is configured, you can assign it to an OpenVPN
-configuration. Many other services using LDAP are also possible.
+I most commonly use this to authenticate pfSense OpenVPN users. Configuring pfSense to authenticate against the IBM i LDAP server is straightforward. Once set up, you can assign this authentication method to your OpenVPN configuration. This approach works for many other services that support LDAP.
 
 ![PFSense LDAP](/static/images/pfsense-ldap.png)

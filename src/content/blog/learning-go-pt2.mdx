@@ -9,15 +9,31 @@ heroImage: /static/images/learning-go-ide-screenshot.png
 
 ## Update
 
-I really, really, like Go. It is not a challenging language to pick up. The standard library has most of what you need, and the syntax is easy to follow by design. I have been re-writing my network-mapper app, and Go is the correct choice for the server portion. The unfortunate portion is Go (nor rust) will run on the IBMi. Even though there is a PASE environment based on AIX, Go will not run. It has to do with mmap and other portions of the IFS. You can read more about it in this
-[github issue](https://github.com/golang/go/issues/45017). IBM is aware of this, and I hope in the future Rust and Go can run and be compiled on the IBMi. Until then I will use Go in linux environments and stick with Node or Python on the IBMi.
+I really like Go. It's easy to pick up, the standard library is comprehensive, and the syntax is intentionally simple. I've been rewriting my network-mapper app, and Go is the right choice for the server.
 
-### The App
-Firstly, I have not yet posted the code to GitHub. Even if I do, I will maintain a private repo. The name is changed to Gatherer and is meant to be used for quick network and MSP client evaluations. The server portion uses the [Echo framework,](https://echo.labstack.com/) which is a popular http framework. The application itself makes heavy use of scanning tools like nmap and whois for domain information. These tasks run in the background, and the app needs real-time data. I decided on an event-driven architecture and using web sockets to communicate from server to client. Client to server communications uses a rest api, I'm using GORM as the orm, so filtering is fairly easy using Echo and Gorm. I looked up some different Event pub/sub libraries but ended up rolling my own. The availability of channels in Go makes it pretty easy to have a Pub/Sub system.
+Unfortunately, Go (and Rust) does not run natively on IBM i. Despite the AIX-based PASE environment, issues with `mmap` and the IFS prevent execution (see this [GitHub issue](https://github.com/golang/go/issues/45017)). For now, I'll use Go in Linux environments and stick to Node or Python on IBM i.
 
-I initially started the frontend using Solid.js as an SPA built with vite. I quickly reverted back to React. I like Solid but it's so similar to React that my IDE gets confused. It's also hard to beat the React ecosystem, so I thought it's best to switch to React. For react it's the usual suspects, react-query, react-router-dom, react-hooks-form. I decided to switch up my usual Radix ui config and try to react-aria-components. I am also using daisy ui so I have some components in css. I really like this set up. It cuts down on css classes, and the two play well together for a nice looking a11y app.
+### The App: "Gatherer"
 
-I may post some code snippets down the road, but here is the Event bus I am using. It is based off some examples in the Revel framework. I've isolated the to having separate "rooms" that I can broadcast and subscribe to.
+I renamed the app to **Gatherer**. It's designed for quick network and MSP client evaluations.
+
+**Architecture**
+
+- **Server:** [Echo framework](https://echo.labstack.com/) (Go).
+- **Background Tasks:** Uses tools like `nmap` and `whois`.
+- **Real-time:** Event-driven architecture with WebSockets.
+- **Database:** GORM (ORM) for easy filtering.
+- **Pub/Sub:** Custom implementation using Go channels.
+
+**Frontend**
+I initially tried Solid.js but reverted to React due to ecosystem maturity and IDE support.
+
+- **Stack:** React, React Query, React Router, React Hook Form.
+- **UI:** [react-aria-components](https://react-spectrum.adobe.com/react-aria/index.html) + [daisyUI](https://daisyui.com/). This combination offers accessible components with clean CSS.
+
+### Event Bus Implementation
+
+Here is the custom Event Bus I implemented, inspired by the Revel framework. It supports separate "rooms" for broadcasting and subscribing.
 
 ```go
 package events

@@ -43,10 +43,10 @@ export default function DarkModeToggle() {
         className={cn([
           'rounded-full',
           mode === 'light'
-            ? 'text-amber-500 hover:text-amber-400'
+            ? 'text-primary hover:text-primary/80'
             : mode === 'dark'
-              ? 'text-sky-500 hover:text-sky-400'
-              : 'text-neutral-500',
+              ? 'text-primary hover:text-primary/80'
+              : 'text-foreground/50',
         ])}
         size="icon"
         onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}

@@ -1,16 +1,17 @@
 ---
-import { type CollectionEntry } from "astro:content";
-import { Image } from "astro:assets";
-import BaseHead from "@/components/BaseHead.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import FormattedDate from "@/components/FormattedDate.astro";
-import { FaArrowLeft } from "react-icons/fa6";
-import BlockAuthor from "../components/BlockAuthor.astro";
+import { type CollectionEntry } from 'astro:content'
+import { Image } from 'astro:assets'
+import BaseHead from '@/components/BaseHead.astro'
+import Header from '@/components/Header.astro'
+import Footer from '@/components/Footer.astro'
+import FormattedDate from '@/components/FormattedDate.astro'
+import { FaArrowLeft } from 'react-icons/fa6'
+import BlockAuthor from '../components/BlockAuthor.astro'
 
-type Props = CollectionEntry<"blog">["data"];
+type Props = CollectionEntry<'blog'>['data']
 
-const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags } =
+  Astro.props
 ---
 
 <!doctype html>
@@ -19,14 +20,23 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
     <BaseHead title={title} description={description} />
   </head>
 
-  <body class="bg-background text-foreground antialiased selection:bg-primary selection:text-background">
+  <body
+    class="bg-background text-foreground antialiased selection:bg-primary selection:text-background"
+  >
     <div class="noise-overlay"></div>
     <Header />
     <main class="container py-12 lg:py-20">
       <article>
         <div class="flex flex-col gap-12">
           <!-- Header Section -->
-          <div class="flex flex-col gap-8 border-b border-white/10 pb-12">
+          <div
+            class="flex flex-col gap-8 border-b border-foreground/10 pb-12 relative"
+          >
+            <div
+              class="absolute -top-8 left-0 font-mono text-xs tracking-widest text-foreground/40 select-none"
+            >
+              FIG 2.1 // ENTRY
+            </div>
             <div class="flex flex-col gap-6">
               <a
                 href="/blog"
@@ -34,13 +44,17 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
               >
                 <FaArrowLeft /><span>Back to Index</span>
               </a>
-              
-              <h1 class="font-serif text-5xl lg:text-7xl leading-none text-foreground">
+
+              <h1
+                class="font-serif text-5xl lg:text-7xl leading-none text-foreground"
+              >
                 {title}
               </h1>
             </div>
 
-            <div class="flex flex-wrap items-center gap-6 font-mono text-xs tracking-widest text-foreground/60">
+            <div
+              class="flex flex-wrap items-center gap-6 font-mono text-xs tracking-widest text-foreground/60"
+            >
               {
                 pubDate && (
                   <div class="flex items-center gap-2">
@@ -62,11 +76,13 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
 
           <div class="grid lg:grid-cols-12 gap-12 lg:gap-24">
             <!-- Main Content -->
-            <section class="lg:col-span-8 prose prose-invert prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary/80 prose-blockquote:border-l-primary prose-img:border-2 prose-img:border-white/10">
+            <section
+              class="lg:col-span-8 prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary/80 prose-blockquote:border-l-primary prose-img:border-2 prose-img:border-foreground/10"
+            >
               {
                 heroImage && (
                   <div class="mb-12 not-prose">
-                    <div class="border-2 border-white/10 p-2 bg-secondary">
+                    <div class="border-2 border-foreground/10 p-2 bg-secondary">
                       <Image
                         class="w-full h-auto grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
                         src={heroImage}
@@ -82,31 +98,42 @@ const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.prop
             </section>
 
             <!-- Sidebar -->
-            <aside class="lg:col-span-4 flex flex-col gap-12 h-fit lg:sticky lg:top-32">
-              <div class="border-l-2 border-white/10 pl-6 flex flex-col gap-8">
+            <aside
+              class="lg:col-span-4 flex flex-col gap-12 h-fit lg:sticky lg:top-32"
+            >
+              <div
+                class="border-l-2 border-foreground/10 pl-6 flex flex-col gap-8"
+              >
                 <div>
-                  <span class="font-mono text-xs tracking-widest text-primary block mb-4">Author</span>
+                  <span
+                    class="font-mono text-xs tracking-widest text-primary block mb-4"
+                    >Author</span
+                  >
                   <BlockAuthor />
                 </div>
-                
-                {tags && tags.length > 0 && (
-                  <div>
-                    <span class="font-mono text-xs tracking-widest text-primary block mb-4">Tags</span>
-                    <div class="flex flex-wrap gap-2">
-                      {tags.map((tag) => {
-                        const tagId = typeof tag === 'object' ? tag.id : tag;
-                        return (
-                          <a 
-                            href={`/tags/${tagId}`}
-                            class="font-mono text-xs border border-white/20 px-3 py-1 hover:bg-primary hover:text-background hover:border-primary transition-colors no-underline"
-                          >
-                            {tagId}
-                          </a>
-                        );
-                      })}
+
+                {
+                  tags && tags.length > 0 && (
+                    <div>
+                      <span class="font-mono text-xs tracking-widest text-primary block mb-4">
+                        Tags
+                      </span>
+                      <div class="flex flex-wrap gap-2">
+                        {tags.map((tag) => {
+                          const tagId = typeof tag === 'object' ? tag.id : tag
+                          return (
+                            <a
+                              href={`/tags/${tagId}`}
+                              class="font-mono text-xs border border-foreground/20 px-3 py-1 hover:bg-primary hover:text-background hover:border-primary transition-colors no-underline rounded-full"
+                            >
+                              {tagId}
+                            </a>
+                          )
+                        })}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )
+                }
               </div>
             </aside>
           </div>

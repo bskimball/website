@@ -6,6 +6,7 @@ draft: false
 description: 'The website for BDKcloud'
 heroImage: /static/images/bdkcloud-preview.png
 ---
+
 import Gallery from '@/components/Gallery.tsx'
 
 [Website](https://bdkcloud.com/)
@@ -14,23 +15,18 @@ import Gallery from '@/components/Gallery.tsx'
 
 ## Backstory
 
-There was a need to increase focus on the hosting part of operations. The idea was to have a site specific to
-hosting that marketing could promote. I created the design and used actual images from the data center used to house
-the equipment. It was just a landing page with a contact form.
+We needed to sharpen our focus on hosting operations. The goal was a dedicated, marketable website for our hosting services. I designed the landing page using actual images from the data center that houses our equipment.
 
 ### Technical Decisions
 
-Previously I had been using Nuxt.js for websites. Nuxt is a great meta framework for Vue that provides SSR and
-developer experience out of the box. I love the performance of Vue but there's just something about being able to
-return JSX from a function that I like more than using templates. Since I switched to using tailwind, there was no
-longer a need for the style section in Vue's SFC. React is more prevalent in the industry. As the lead training
-resource, I thought it would be of benefit to switch to React and minimize the training footprint.
+I previously used Nuxt.js for websites—a great meta-framework for Vue with out-of-the-box SSR. While I love Vue's performance, I prefer the flexibility of returning JSX from functions over templates. Switching to Tailwind CSS also removed the need for Vue's style sections.
 
-It's a website so SEO and performance are absolutely mandatory. I chose to go with Next.js for SSR and a React ui.
-Next continues to be the easiest and most performant way to build websites using React. The website itself is
-running in a Docker environment, with a Traefik proxy.
+Since React is more prevalent in the industry, and I lead training resources, switching to React minimized our training footprint.
 
-<Gallery client:load
+For a website, SEO and performance are mandatory. I chose Next.js for its SSR capabilities and React UI. Next.js remains the easiest and most performant way to build React websites. The site runs in a Docker environment behind a Traefik proxy.
+
+<Gallery
+  client:load
   slides={[
     { src: '/static/images/bdkcloud-preview.png' },
     { src: '/static/images/bdkcloud-contact-form.png' },

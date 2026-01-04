@@ -14,8 +14,8 @@ const isActive = checkLinkActive({ pathname, href })
   href={href}
   class:list={[
     className,
-    'hover:text-emerald-500 focus:text-emerald-500 transition duration-150',
-    { 'active font-semibold text-emerald-500': isActive },
+    'hover:text-primary focus:text-primary transition duration-150',
+    { 'active font-semibold text-primary': isActive },
   ]}
   {...props}
 >

@@ -8,41 +8,32 @@ description: I am experimenting with using a Map instead of an array in React ap
 
 ## Client Side Data State
 
-For many years, I have held fetched data in state as an array. This does not have to be React state, you
-could be using react-query or swr or some other data fetching library. Normally, I reach for tanstack-query
-(react-query), but for simplification we will just use React state. I build applications that utilize web sockets or
-server sent events for real-time updates. A lot of times we listen to an event and update the client state based
-on that event.
+For years, I stored fetched data in arrays—whether using React state, React Query, or SWR. While fetching libraries like TanStack Query are my go-to, let's look at a simple `useState` example. In applications using WebSockets or Server-Sent Events (SSE), we often need to update this state in real-time based on incoming events.
 
-An example of using an array to hold state:
+**Using an Array:**
 
 ```javascript
 // react component
 function ListComponent() {
-  // our data state
   const [items, setItems] = useState([])
 
   useEffect(() => {
-    // fetch data and add to state
+    // Initial fetch
     socket
       .service('items')
       .find()
-      .then(({ data }) => {
-        setItems(data)
-      })
+      .then(({ data }) => setItems(data))
   }, [])
 
   useEffect(() => {
+    // Listeners
     socket.service('items').on('created', (item) => {
-      // on created append new item to array
       setItems([...items, item])
     })
     socket.service('items').on('patched', (item) => {
-      // on patched map through items and replace item with the same id
       setItems(items.map((t) => (t.id === item.id ? item : t)))
     })
     socket.service('items').on('removed', (item) => {
-      // on removed filter out the entry with the same id
       setItems(items.filter((t) => t.id !== item.id))
     })
   })
@@ -57,46 +48,36 @@ function ListComponent() {
 }
 ```
 
-There is nothing inherently wrong with the code above. Maybe it's a bit verbose, but it should be pretty clear what it
-does and what is happening. It certainly works, but it feels a bit awkward to map the entire array on a "patched"
-event or filter on a "removed" event.
+This works, but mapping over the entire array for every patch or filter for every removal feels inefficient and verbose.
 
-In ES6 the Map object was introduced. You can read the details on the
-[Mozilla Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map). A Map will
-hold key/value pairs. You can use your "id" field as a key, and the rest of the item as a value in the pairing.
-Below is the same example as above, except we are using a Map instead of an array.
+**Using a Map:**
 
-An example of using a Map to hold state:
+ES6 introduced the `Map` object (see [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)), which holds key-value pairs. Using the `id` as the key simplifies updates significantly.
 
 ```javascript
 // react component
 function ListComponent() {
-  // our data state
   const [items, setItems] = useState(new Map())
 
   useEffect(() => {
-    // fetch data and add to state
     socket
       .service('items')
       .find()
       .then(({ data }) => {
-        // use the id as the key and the full item as the value
+        // Create Map from array: [id, item]
         setItems(new Map(data.map((d) => [d.id, d])))
       })
   }, [])
 
   useEffect(() => {
-    // listen for each event
-    ['created', 'patched', 'removed'].forEach((event) => {
+    ;['created', 'patched', 'removed'].forEach((event) => {
       socket.service('items').on(event, (item) => {
         if (event === 'removed') {
-          // if removed, delete the key from the map
           items.delete(item.id)
         } else {
-          // created or patched scenarios we just set the appropriate key
           items.set(item.id, item)
         }
-        // set state with a new map
+        // Trigger re-render with new Map reference
         setItems(new Map(items))
       })
     })
@@ -112,7 +93,6 @@ function ListComponent() {
 }
 ```
 
-The trick here is you have to create a new Map when the state is updated. So far, I like using this solution. It
-seems to simplify the code. I don't have to map or filter the entire array to update or remove an entry. If you have
-any questions, comments or improvements, reach out to me on
-[twitter](https://twitter.com/_bskimball)
+The key is creating a new `Map` reference (`new Map(items)`) to trigger the state update. This approach simplifies the logic—no more mapping or filtering the entire collection just to update one item.
+
+If you have feedback, reach out on [Twitter](https://twitter.com/_bskimball).

@@ -8,30 +8,28 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 export default function WordRotator({ words, className }: Props) {
   const [word, setWord] = useState<string[]>(['website'])
 
-  const changeWord = () => {
-    const timeoutId = setTimeout(
-      () => {
-        setWord((prevWord) => {
-          const newWord = words[Math.floor(Math.random() * words.length)]
-          if (prevWord[0] === newWord) {
-            return [...prevWord]
-          } else {
+  useLayoutEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>
+
+    const rotate = () => {
+      timeoutId = setTimeout(
+        () => {
+          setWord((prevWord) => {
+            const newWord = words[Math.floor(Math.random() * words.length)]
+            if (prevWord[0] === newWord) {
+              return [...prevWord]
+            }
             return [newWord, prevWord[0]]
-          }
-        })
-      },
-      getRandomNumber(4000, 10000),
-    )
+          })
+          rotate()
+        },
+        getRandomNumber(4000, 10000),
+      )
+    }
+
+    rotate()
     return () => clearTimeout(timeoutId)
-  }
-
-  useLayoutEffect(() => {
-    changeWord()
-  }, [])
-
-  useLayoutEffect(() => {
-    changeWord()
-  }, [word])
+  }, [words])
 
   return (
     <div className="relative h-24">

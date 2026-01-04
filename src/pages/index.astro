@@ -29,6 +29,12 @@ const posts = (await getCollection('blog'))
         <div
           class="container relative flex flex-col justify-center min-h-screen"
         >
+          <div
+            class="absolute top-12 left-8 md:top-24 font-mono text-xs tracking-widest text-foreground/40 select-none"
+          >
+            FIG 1.0 // IDENTITY
+          </div>
+
           <!-- Center Headline -->
           <div class="relative z-10">
             <h1
@@ -37,28 +43,22 @@ const posts = (await getCollection('blog'))
               Brian<br />
               <span class="text-primary">Kimball</span>
             </h1>
-          </div>
-
-          <!-- Bottom Right CTA & Spec -->
-          <!-- <div class="absolute bottom-12 right-8 flex flex-col items-end gap-8">
-            <div class="font-mono text-xs tracking-[0.2em] text-primary/70 text-right leading-relaxed">
-              Portfolio 2026 // <br/>
-              Personal Archive
-            </div>
-            <a 
-              href="/blog" 
-              class="group relative px-10 py-5 border border-primary text-primary font-mono text-sm tracking-[0.3em] hover:bg-primary hover:text-background transition-all duration-300 no-underline"
+            <div
+              class="mt-12 font-mono text-sm md:text-base tracking-widest text-foreground/60 max-w-lg"
             >
-              Enter Archive
-            </a>
-          </div> -->
+              SYSTEMS ENGINEER / DEVELOPER
+              <span class="block text-primary mt-2"
+                >BUILDING FROM THE METAL UP</span
+              >
+            </div>
+          </div>
         </div>
       </section>
 
       <SectionDivider />
 
       <!-- Bento Grid -->
-      <section class="py-24">
+      <section class="py-20">
         <div class="container">
           <div
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 auto-rows-[minmax(240px,auto)]"

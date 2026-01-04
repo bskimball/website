@@ -2,7 +2,16 @@
 // src/components/SectionDivider.astro
 ---
 
-<div class="flex flex-col items-center justify-center gap-1.5 py-16 w-full">
-  <div class="w-full max-w-2xl h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"></div>
-  <div class="w-full max-w-2xl h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"></div>
+<div class="w-full py-20 flex items-center justify-center">
+  <div class="container flex items-center gap-4">
+    <!-- Marker -->
+    <div
+      class="font-mono text-[10px] tracking-[0.3em] text-foreground/40 uppercase select-none whitespace-nowrap"
+    >
+      DIV 1.0 // SEPARATOR
+    </div>
+
+    <!-- Line -->
+    <div class="h-px w-full bg-foreground/20 dark:bg-primary/20"></div>
+  </div>
 </div>

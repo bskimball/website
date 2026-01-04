@@ -7,73 +7,66 @@ description: 'A SSR monolith web framework for TypeScript and JavaScript, built 
 heroImage: /static/images/tanstack-hono.png
 ---
 
-## Preface:
+## Preface
 
-I've been using TanStack Router and Hono for a while and appreciate how well their philosophies align: TanStack Router gives you a strongly typed, data‑aware routing core; Hono provides a tiny, fast, standards‑leaning HTTP layer that runs comfortably on Node or edge platforms.
+I've been using TanStack Router and Hono for a while and appreciate their shared philosophy: TanStack Router offers a strongly typed, data-aware routing core, while Hono provides a tiny, fast, standards-based HTTP layer.
 
-This project explores combining them into a single SSR + CSR monolith for TypeScript: one process (in dev) that can server‑render React routes, hydrate on the client, and expose lightweight API/RPC endpoints without jumping to a heavier meta‑framework.
+This project explores combining them into a single TypeScript SSR + CSR monolith. It runs as one process in development, handling server-rendered React routes, client hydration, and lightweight RPC endpoints without the weight of a full meta-framework.
 
-Rather than serving the router purely as an SPA (what I had previously done) or using Hono/JSX, I adapted the official TanStack Router SSR example—swapping Express for Hono and layering in a typed API example to illustrate a simple RPC style.
+I adapted the official TanStack Router SSR example, swapping Express for Hono and adding a typed RPC API.
 
 Repo: [github.com/bskimball/tanstack-hono](https://github.com/bskimball/tanstack-hono)
 
-Development uses the Hono dev server with Vite powering both the client bundle and the server entry, so hot reloading applies across routes, server handlers, and shared types.
+Development relies on the Hono dev server with Vite, ensuring hot reloading works across routes, server handlers, and shared types.
 
 ## Why Hono?
 
-Hono is a minimalist web framework that emphasizes performance and simplicity. It has a small footprint, making it ideal for serverless and edge environments. Its middleware system is straightforward, allowing for easy composition of request handlers. With its middleware, it's easy to have RPC, Zod validations, and an OpenAPI compatible REST API.
+Hono is a minimalist, high-performance web framework. Its small footprint makes it ideal for serverless and edge environments. Its middleware system makes composing request handlers, RPCs, Zod validations, and OpenAPI-compatible REST APIs straightforward.
 
-## Why Tanstack Router?
+## Why TanStack Router?
 
-TanStack Router is a powerful routing library that provides strong typing and data awareness. It allows for nested routes, route loaders, and seamless integration with React. Its focus on type safety helps catch errors at compile time, making it a great fit for TypeScript projects. Additionally, TanStack Router's flexibility allows it to be used in various environments, making it a versatile choice for building web applications.
+TanStack Router is a powerful routing library with first-class type safety and data awareness. It supports nested routes, route loaders, and seamless React integration. Its type safety catches errors at compile time, and its flexibility allows it to run in various environments.
 
 ## Why a "Monolith"?
 
-Monolith here simply means: one repository + one runtime process (in dev) that handles:
+Here, "Monolith" means a single repository and runtime process handling:
 
-- HTTP routing (API + SSR HTML responses)
-- React server rendering + hydration delivery
-- Static asset compilation (Vite)
-- Type‑safe internal RPC style endpoints
+- HTTP routing (API + SSR HTML).
+- React server rendering + hydration.
+- Static asset compilation (Vite).
+- Type-safe internal RPC endpoints.
 
-The goal is to keep operational complexity low while still enabling progressive enhancement and dynamic UI.
+The goal: low operational complexity with progressive enhancement and dynamic UI.
 
 ---
 
 ## Architecture Overview
 
-High level flow:
-
-1. Request enters Hono.
-2. Path is checked against API / RPC routes (e.g. `/api/todos`). If matched: handler runs, JSON returned.
-3. Otherwise SSR handler:
-	 - Creates a TanStack Router instance with the route tree
-	 - Resolves the matching route elements (no framework‑specific loader layer)
-	 - Renders React to string / stream
-	 - Injects serialized router state + asset tags
-4. Client hydrates the router instance; subsequent navigation is client‑side.
-
-This pattern mirrors the official TanStack Router SSR example, replacing Express with Hono and integrating its middleware ergonomics + performance.
+1.  **Request enters Hono.**
+2.  **API/RPC Check:** Matches against routes like `/api/todos`. If matched, returns JSON.
+3.  **SSR Fallback:**
+    - Creates a TanStack Router instance.
+    - Resolves route elements (no framework-specific loaders).
+    - Renders React to string/stream.
+    - Injects serialized router state and asset tags.
+4.  **Hydration:** Client hydrates the router; subsequent navigation is client-side.
 
 ---
 
-## File / Responsibility Layout (Conceptual)
+## File Layout
 
 ```
-src/           # createRouter(), renderToString(), HTML template
-  components/   # Shared React components
-    Header.tsx      # Example shared header
-	routes/
-		__root.tsx         # Root route with layout + <Outlet />
-		index.tsx          # / home route
-		about.tsx          # /about
-		todos/
-			index.tsx        # /todos list
-			$id.tsx          # /todos/:id detail
-	api/
-		todos.ts           # Example Hono route or RPC style handler
-	shared/
-		types.ts           # Shared Zod / TS types for API + UI
-  entry-client.tsx   # Hydration entry
-  entry-server.tsx   # Server render entry (invoked by ssr.ts)
+src/
+  components/      # Shared React components
+  routes/          # TanStack Router file-routes
+    __root.tsx
+    index.tsx
+    about.tsx
+    todos/
+  api/             # Hono handlers / RPC
+    todos.ts
+  shared/          # Shared Types / Zod schemas
+    types.ts
+  entry-client.tsx # Hydration entry
+  entry-server.tsx # Server render entry
 ```

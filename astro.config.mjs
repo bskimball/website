@@ -9,11 +9,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   site: 'https://brian-kimball.com',
   trailingSlash: 'never',
-  integrations: [
-    mdx(),
-    sitemap(),
-    react(),
-  ],
+  integrations: [mdx(), sitemap(), react()],
   prefetch: {
     prefetchAll: true,
   },
