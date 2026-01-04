@@ -20,16 +20,28 @@ const { post, class: className, featured } = Astro.props
   ]}
 >
   {
-    (post.data.heroImageOptimized || post.data.heroImage) && (
+    post.data.heroImageOptimized ? (
       <div class="absolute inset-0 z-0 opacity-20 grayscale transition-all duration-500 group-hover:opacity-40 group-hover:grayscale-0">
         <Image
-          src={(post.data.heroImageOptimized || post.data.heroImage) as any}
+          src={post.data.heroImageOptimized}
           alt=""
           width={800}
           height={600}
           class="h-full w-full object-cover"
         />
       </div>
+    ) : (
+      post.data.heroImage && (
+        <div class="absolute inset-0 z-0 opacity-20 grayscale transition-all duration-500 group-hover:opacity-40 group-hover:grayscale-0">
+          <Image
+            src={post.data.heroImage}
+            alt=""
+            width={800}
+            height={600}
+            class="h-full w-full object-cover"
+          />
+        </div>
+      )
     )
   }
 

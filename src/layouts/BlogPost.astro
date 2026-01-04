@@ -88,12 +88,12 @@ const {
               class="lg:col-span-8 prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-a:text-primary prose-a:no-underline hover:prose-a:text-primary/80 prose-blockquote:border-l-primary prose-img:border-2 prose-img:border-foreground/10"
             >
               {
-                (heroImageOptimized || heroImage) && (
+                heroImageOptimized ? (
                   <div class="mb-12 not-prose flex flex-col gap-4">
                     <div class="border-2 border-foreground/10 p-2 bg-secondary">
                       <Image
                         class="w-full h-auto grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
-                        src={heroImageOptimized || heroImage}
+                        src={heroImageOptimized}
                         width={1280}
                         height={720}
                         alt={`${title} Hero Image`}
@@ -113,6 +113,33 @@ const {
                       </div>
                     )}
                   </div>
+                ) : (
+                  heroImage && (
+                    <div class="mb-12 not-prose flex flex-col gap-4">
+                      <div class="border-2 border-foreground/10 p-2 bg-secondary">
+                        <Image
+                          class="w-full h-auto grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
+                          src={heroImage}
+                          width={1280}
+                          height={720}
+                          alt={`${title} Hero Image`}
+                        />
+                      </div>
+                      {fullImage && (
+                        <div class="flex justify-end">
+                          <a
+                            href={fullImage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="font-mono text-[10px] tracking-[0.2em] uppercase text-foreground/40 hover:text-primary transition-colors flex items-center gap-2 group"
+                          >
+                            <span class="w-8 h-[1px] bg-foreground/20 group-hover:bg-primary/40 transition-colors" />
+                            Full Scale // Download Schematic
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )
                 )
               }
               <slot />
