@@ -20,14 +20,14 @@ function Icon({ mode }: { mode: string }) {
 }
 
 export default function DarkModeToggle() {
-  const [mode, setMode] = useState(getMode())
+  const [mode, setMode] = useState('')
 
   useEffect(() => {
-    const initialMode = getMode()
-    setMode(initialMode)
+    setMode(getMode())
   }, [])
 
   useEffect(() => {
+    if (!mode) return
     localStorage.theme = mode
     if (mode === 'dark') {
       document.documentElement.classList.add('dark')

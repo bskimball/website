@@ -2,8 +2,8 @@
 import BaseHead from '@/components/BaseHead.astro'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
-import { Image } from 'astro:assets';
-import meImg from '../assets/me_website_2026.png';
+import { Image } from 'astro:assets'
+import meImg from '../assets/me_website_2026.png'
 ---
 
 <!doctype html>
@@ -72,6 +72,8 @@ import meImg from '../assets/me_website_2026.png';
                 src={meImg}
                 alt="Brian Kimball"
                 class="w-64 h-auto aspect-square object-cover rounded-full"
+                quality="max"
+                format="png"
               />
             </div>
             <div class="font-mono text-sm tracking-widest text-primary">

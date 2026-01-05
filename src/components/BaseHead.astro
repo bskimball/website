@@ -51,6 +51,7 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props
 <script is:inline>
   window.dataLayer = window.dataLayer || []
   function gtag() {
+    // eslint-disable-next-line prefer-rest-params
     dataLayer.push(arguments)
   }
   gtag('js', new Date())
