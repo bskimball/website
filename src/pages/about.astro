@@ -66,12 +66,12 @@ import meImg from '../assets/me_website_2026.png'
             class="col-span-2 flex flex-col items-center lg:items-end gap-8"
           >
             <div
-              class="grayscale hover:grayscale-0 transition-all duration-500 border-2 border-white/20 p-2 bg-secondary rounded-full"
+              class="transition-all duration-500 border-2 border-foreground/10 p-2 bg-secondary rounded-full"
             >
               <Image
                 src={meImg}
                 alt="Brian Kimball"
-                class="w-64 h-auto aspect-square object-cover rounded-full"
+                class="w-64 h-auto aspect-square object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500"
                 quality="max"
                 format="png"
                 widths={[256, 512, 1024]}
