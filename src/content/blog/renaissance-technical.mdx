@@ -11,48 +11,47 @@ draft: false
 
 I recently pushed a major update to this website's design system, dubbing it **"Renaissance Technical."**
 
-The goal was specific: avoid the generic "SaaS" look and the overly harsh "Brutalist" trend. I wanted something that felt like **Da Vinci's Notebook**—a blend of classical humanism and mechanical precision. It sits at the intersection of the organic and the engineered.
+While I enjoyed my previous design, I felt the itch to switch things up and explore a new creative direction. I wanted to build something that felt less like a standard portfolio and more like a personal expression of my background.
 
-## The Design Philosophy
+In college, I studied Art, and I was always drawn to the **Renaissance** period. There was no distinction then between the artist and the engineer. Da Vinci didn't choose between painting and mechanics; he did both. I wanted a design that reflected that duality.
 
-The core conflict in this design is **Circle vs. Square**:
+## The Inspiration
 
-- **The Grid (Square):** Layouts, cards, and dividers are rigid, schematic, and precise. They represent the "Engineered" side of my background.
-- **The Human (Circle):** Buttons, avatars, and tags are perfect circles or pills. They represent the organic, human element interacting with the machine.
+I was heavily inspired by the work at [AmpCode](https://ampcode.com), specifically their fearless use of bold colors and whimsical artwork. They proved that technical content doesn't have to look "technical."
+
+I wanted to move away from the outer space aesthetic and shooting star motifs of my previous design. I wanted something that felt like a **sketchbook**—a place where the organic (art) crashes into the engineered (code).
+
+## The Philosophy: Da Vinci's Notebook
+
+The core aesthetic is **"Renaissance Technical"**. It sits at the intersection of the biological and the mechanical.
+
+- **The Grid (The Engineer):** Rigid layouts, schematic lines, and monospaced "FIG" annotations. This represents the structure of code.
+- **The Soul (The Artist):** Serif typography (`Tenor Sans`), organic circles, and deep, parchment-like textures. This represents the human element.
+
+It’s a visual conflict between the "Square" (logic) and the "Circle" (emotion).
 
 ## The Workflow: AI as Creative Partner
 
-This redesign wasn't just about CSS; it was an experiment in a new workflow using **OpenCode** as my harness.
+This redesign was an experiment in a new workflow using **OpenCode** and the **Gemini** family of models. I've found Gemini to be exceptionally strong in creativity, making it my go-to choice for writing, design, and coding.
 
-### 1. Plan Mode & Ideation
+### 1. Ideation (Gemini Pro)
 
-I started by working with the **Gemini Pro** model in "Plan Mode." We didn't write a single line of code at first. Instead, we iterated on the _vibe_. I acted as the **Creative Director**, pitching abstract concepts ("Da Vinci," "Drafting Table," "Sonar"). The AI returned concrete art directions.
+I start by working with **Gemini Pro** to iterate on ideas. I often use prompts like, _"As a group of designers, let's explore ideas to..."_ allowing us to brainstorm without writing a single line of code.
 
-We went back and forth. I rejected the "Cyber" look. I rejected the "Landscape" look. We settled on "The Drafting Table"—technical schematics, compass arcs, and grid lines.
+We explore different vibes, get feedback, and refine concepts purely at the abstract level. This creates a sandbox where I can act as the Creative Director rather than the implementer.
 
-### 2. The Harness
+### 2. The Plan (Gemini Pro)
 
-Once the plan was set, I used OpenCode to execute. This is where the magic happens. I could describe a complex component (like the SVG background in the footer), and the system would build it.
+Once we settle on a direction (in this case, "Renaissance Technical"), I use Gemini Pro to formalize it into a plan. The goal is to create concise, actionable tasks that can be executed in parallel. This turns a vague creative vision into a structured engineering roadmap.
 
-### 3. Pro vs. Flash
+### 3. Execution (Gemini Flash)
 
-I utilized a tiered approach to intelligence:
+The actual building is handled by subagents powered by **Gemini Flash**. These agents take the tasks from the plan and execute them. Flash is incredibly fast and accurate—scoring highly on SWE-bench benchmarks—which allows it to handle the bulk of the implementation work efficiently while I maintain high-level oversight.
 
-- **Pro Model:** Used for high-level reasoning, design decisions, and complex architectural changes.
-- **Subagents (Interns/Flash):** Once the rules were established (e.g., "All buttons must be `rounded-full`"), I offloaded the tedious implementation tasks to faster, cheaper subagents. They audited the codebase, fixed border radii, and standardized colors without me having to touch every file.
+## The Human in the Loop
 
-## The "Creative Director" Role
+This process reaffirmed something important: **AI is the brush, not the painter.**
 
-This process highlighted a shift in how we build software. I wasn't getting bogged down in the syntax of `border-radius` or `z-index`. I was making **decisions**.
+The AI could generate the grid, but it couldn't decide _why_ the grid mattered. It couldn't feel the nostalgia for my college art classes. It couldn't make the decision to embrace the "Renaissance" aesthetic over a safer, more modern choice.
 
-- "Make the buttons circular."
-- "Change the footer to look like a blueprint."
-- "Add technical annotations (FIG 1.0) to every page."
-
-I acted as the conductor; the AI was the orchestra. This ability to quickly prototype, visualize, and iterate allows for a level of creative exploration that used to be too "expensive" (in terms of time) to justify for a personal blog.
-
-## What's Next?
-
-I intend to write more about this workflow. The ability to use AI to quickly prototype ideas is a game-changer, but it's crucial to remember: **the human makes the decisions.**
-
-I am the Creative Director. The AI is the tool. And together, we built something that feels uniquely me.
+I acted as the conductor; the AI was the orchestra. And together, we brought this new vision to life, creating a design that I'm truly excited to share.
