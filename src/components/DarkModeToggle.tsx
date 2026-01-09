@@ -1,16 +1,29 @@
-import { useState, useEffect } from 'react'
+import { useSyncExternalStore } from 'react'
 import { FaMoon, FaSun } from 'react-icons/fa6'
 import { Button } from '@/components/ui/button.tsx'
 import { cn } from '@/lib/utils.ts'
 
 function getMode() {
-  return typeof window === 'undefined'
-    ? ''
-    : localStorage.theme === 'dark' ||
-        (!('theme' in localStorage) &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches)
-      ? 'dark'
-      : 'light'
+  if (typeof window === 'undefined') return ''
+  return localStorage.theme === 'dark' ||
+    (!('theme' in localStorage) &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ? 'dark'
+    : 'light'
+}
+
+function subscribe(callback: () => void) {
+  window.addEventListener('storage', callback)
+  window.addEventListener('theme-change', callback)
+
+  const query = window.matchMedia('(prefers-color-scheme: dark)')
+  query.addEventListener('change', callback)
+
+  return () => {
+    window.removeEventListener('storage', callback)
+    window.removeEventListener('theme-change', callback)
+    query.removeEventListener('change', callback)
+  }
 }
 
 function Icon({ mode }: { mode: string }) {
@@ -20,21 +33,19 @@ function Icon({ mode }: { mode: string }) {
 }
 
 export default function DarkModeToggle() {
-  const [mode, setMode] = useState('')
+  const mode = useSyncExternalStore(subscribe, getMode, () => '')
 
-  useEffect(() => {
-    setMode(getMode())
-  }, [])
-
-  useEffect(() => {
-    if (!mode) return
-    localStorage.theme = mode
-    if (mode === 'dark') {
+  const toggleMode = () => {
+    const newMode = mode === 'light' ? 'dark' : 'light'
+    localStorage.theme = newMode
+    if (newMode === 'dark') {
       document.documentElement.classList.add('dark')
     } else {
       document.documentElement.classList.remove('dark')
     }
-  }, [mode])
+    window.dispatchEvent(new Event('theme-change'))
+    window.dispatchEvent(new Event('storage'))
+  }
 
   return (
     <div className="flex items-center">
@@ -49,7 +60,7 @@ export default function DarkModeToggle() {
               : 'text-foreground/50',
         ])}
         size="icon"
-        onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+        onClick={toggleMode}
       >
         <Icon mode={mode} />
       </Button>
