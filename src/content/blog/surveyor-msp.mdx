@@ -1,0 +1,46 @@
+---
+title: Surveyor MSP
+pubDate: '2026-01-19'
+tags: ['development', 'golang', 'reactjs', 'networking']
+draft: false
+description: 'A field-tested network discovery tool for MSPs, evolving from the original Network Mapper project.'
+heroImage: /static/images/surveyor-screenshot.png
+heroImageOptimized: '../../assets/surveyor-screenshot.png'
+---
+
+[Download and Instructions](https://surveyor-msp.com)
+
+## Evolution
+
+This project is the spiritual and technical successor to the [Network Mapper](/blog/network-mapper/) tool I started a couple of years ago. It has gone through several iterations—briefly known as "Gatherer"—before maturing into **Surveyor**.
+
+While the original goal remains the same—simplifying network discovery for Managed Service Providers (MSPs)—this version is a complete reimagining based on real-world usage and field techniques.
+
+## Field-Tested Discovery
+
+Surveyor is designed to be the first tool a technician runs when stepping onto a new site. It replaces the need to manually memorize and execute `nmap` flags or `nslookup` commands, streamlining the onboarding process.
+
+Key capabilities include:
+
+- **Stealth Scanning:** Utilizes techniques to evade firewalls and gather data without triggering immediate alarms.
+- **RFC 1918 Discovery:** Automatically scans all local private network ranges to find devices across subnets.
+- **Network Discovery:** Identifies other networks and potential pivots.
+
+The tool is actively used by the MSP team at my current company, ensuring that features are driven by actual field requirements rather than just theory.
+
+## Technical Architecture
+
+We made significant changes to the stack to leverage a more robust ecosystem and improve maintainability.
+
+- **Backend:** We stuck with **Wails** but rewrote the core network tools in **Go**. We still rely on the battle-tested **nmap** for the heavy lifting of scanning.
+- **Frontend:** We migrated from SolidJS to **React**. This allows us to tap into a wider ecosystem, specifically using **React Aria Components** and **Tailwind CSS** for our design system.
+- **Monorepo:** The project is now structured as a monorepo. This configuration allows us to share the design system across the application and the marketing site, and automatically updates the website version when we build the app.
+
+## AI-Assisted Development
+
+This project reached the finish line with significant help from AI agents.
+
+- **Design:** We utilized **Gemini Pro** with a specialized frontend-design skill to architect the design system.
+- **Backend:** **OpenAI's GPT Codex** was instrumental in writing much of the Go backend logic.
+
+Surveyor represents a modern approach to tool building: combining battle-hardened binaries like nmap with modern UI frameworks and AI-accelerated development.
