@@ -400,17 +400,6 @@ const PhysicalLayerAnimation = () => {
           REPLICATION
         </div>
       </div>
-
-      <style>{`
-        @keyframes dash {
-          to {
-            stroke-dashoffset: -20;
-          }
-        }
-        .animate-dash {
-          animation: dash 1s linear infinite;
-        }
-      `}</style>
     </div>
   )
 }

@@ -1,17 +1,11 @@
 import { useState, useEffect } from 'react'
-import {
-  User,
-  Globe,
-  Server,
-  Database,
-  AlertCircle,
-  XCircle,
-} from 'lucide-react'
+import { User, Globe, Server, Database, XCircle } from 'lucide-react'
+
+// Cycle: OK -> A_DOWN -> OK -> B_DOWN
+const steps = ['ALL_OK', 'APP_A_DOWN', 'ALL_OK', 'APP_B_DOWN'] as const
 
 const LogicalLayerAnimation = () => {
   const [stepIndex, setStepIndex] = useState(0)
-  // Cycle: OK -> A_DOWN -> OK -> B_DOWN
-  const steps = ['ALL_OK', 'APP_A_DOWN', 'ALL_OK', 'APP_B_DOWN'] as const
   const status = steps[stepIndex]
 
   // Automatically cycle status every 3 seconds
@@ -136,7 +130,7 @@ const LogicalLayerAnimation = () => {
           </svg>
 
           {/* 1. User (Col 1 - Center 12.5%) */}
-          <div className="flex flex-col items-center gap-2 justify-self-center z-20 bg-background">
+          <div className="flex flex-col items-center gap-2 justify-self-center z-20 bg-background p-2 rounded-lg border border-border shadow-sm">
             <div className="w-12 h-12 rounded-full border border-primary bg-primary/10 flex items-center justify-center">
               <User className="w-6 h-6 text-primary" />
             </div>
@@ -242,27 +236,6 @@ const LogicalLayerAnimation = () => {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes flow-right {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        .animate-flow-right {
-          animation: flow-right 1.5s linear infinite;
-        }
-        @keyframes dash {
-          to {
-            stroke-dashoffset: -20;
-          }
-        }
-        .animate-dash {
-          animation: dash 1s linear infinite;
-        }
-        .animate-dash-fast {
-          animation: dash 0.5s linear infinite;
-        }
-      `}</style>
     </div>
   )
 }
