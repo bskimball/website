@@ -13,7 +13,7 @@ const { post, class: className, featured } = Astro.props
 ---
 
 <a
-  href={`/blog/${post.slug}`}
+  href={`/blog/${post.id}`}
   class:list={[
     'group relative overflow-hidden border-2 border-foreground/10 bg-secondary p-6 flex flex-col justify-between h-full transition-all duration-300 hover:border-primary hover:bg-primary hover:text-background no-underline',
     className,

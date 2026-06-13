@@ -9,6 +9,8 @@ tags: ['design', 'ai', 'astro', 'development']
 draft: false
 ---
 
+import Gallery from '@/components/Gallery.tsx'
+
 I recently pushed a major update to this website's design system, dubbing it **"Renaissance Technical."**
 
 While I enjoyed my previous design, I felt the itch to switch things up and explore a new creative direction. I wanted to build something that felt less like a standard portfolio and more like a personal expression of my background.
@@ -33,6 +35,17 @@ It’s a visual conflict between the "Square" (logic) and the "Circle" (emotion)
 ## The Workflow: AI as Creative Partner
 
 This redesign was an experiment in a new workflow using **OpenCode** and the **Gemini** family of models. I've found Gemini to be exceptionally strong in creativity, making it my go-to choice for writing, design, and coding.
+
+<Gallery
+  client:load
+  slides={[
+    {
+      src: '/static/images/renaissance-technical-1.png',
+    },
+    { src: '/static/images/renaissance-technical-2.png' },
+    { src: '/static/images/renaissance-technical-3.png' },
+  ]}
+/>
 
 ### 1. Ideation (Gemini Pro)
 
