@@ -1,98 +1,69 @@
 # AGENTS.md
 
-## Design System: "Renaissance Technical"
+## Design System: "Atomic Drafting Room"
 
-This document outlines the design philosophy, themes, and conventions for the `my-blog` project. All future agents should adhere to these standards.
+This document defines the design philosophy, tokens, and conventions for `my-blog`. All future agents should adhere to these standards.
 
-### 1. Philosophy: "Da Vinci's Notebook"
+Stack: **Astro + React islands**, **Tailwind v4** (`@theme` in `src/styles/global.css`), **shadcn/ui** components. The shadcn token contract (`--background`, `--foreground`, `--primary`, `--secondary`, `--muted`, `--accent`, `--border`, `--ring`, `--radius`, …) is the source of truth — reskin by editing token **values**, never by renaming tokens, or shadcn components break.
 
-The design aesthetic blends classical humanism with mechanical precision. It is **not** purely Brutalist. It sits at the intersection of the organic and the engineered.
+### 1. Philosophy: "Raygun Gothic"
 
-- **The Conflict:** Rigid architectural grids (Layouts, Lines) vs. Perfect organic circles (Buttons, Avatars, Tags).
-- **The Vibe:** Sketchbook, Technical Schematic, Biological Specimen, "From the Metal Up."
+Atomic-age optimism meets the engineer's drafting table. The page should feel like a 1950s vision of tomorrow — Googie signage, sputnik starbursts, boomerang curves — drawn with the precision of a systems schematic.
+
+- **The Subject:** Brian Kimball, Systems Engineer / Developer. "Building from the metal up."
+- **The Conflict:** Atomic, optimistic, _colorful_ ornament (starbursts, boomerangs, chrome) vs. the disciplined grid and mono annotations of a technical document.
+- **The Vibe:** Tomorrowland terminal, space-age brochure, confident and readable — never sterile, never neon-synthwave.
+
+Spend boldness in **one** place: the sputnik starburst is the signature. Everything around it stays quiet.
 
 ### 2. Themes
 
-The website supports two distinct modes, switching automatically or via the header toggle.
+Two modes, toggled in the header.
 
-#### **Dark Mode: "Night Draft"**
+#### Light Mode: "Daytime Atomic"
 
-- **Vibe:** Deep Jungle, Bioluminescence, Sonar, Retro-Futurism.
-- **Palette:**
-  - **Background:** Void Green (`--background: 171 80% 4%`)
-  - **Primary:** Acid Lime (`--primary: 72 100% 50%`)
-  - **Secondary:** Canopy Green (`--secondary: 171 55% 13%`)
-  - **Foreground:** Bone White (`--foreground: 220 13% 91%`)
-- **Footer SVG:** Technical schematic wireframes in faint lime.
+- **Vibe:** Atomic-age print brochure on warm paper.
+- **Palette:** Atomic Cream `#F4ECD8` (bg) · Jet Ink (fg) · Turquoise `#1FB8B0` (primary, deepened to `hsl(177 74% 36%)` for contrast) · Coral Ray `#FF5E4D` (accent) · Chrome Gold `#E8B84B` (ring/ornament).
 
-#### **Light Mode: "Day Parchment"**
+#### Dark Mode: "Atomic Dusk"
 
-- **Vibe:** Architectural Blueprint, High-Quality Paper, Ink, Red Wax Seal.
-- **Palette:**
-  - **Background:** Alabaster Paper (`--background: 40 20% 98%`)
-  - **Primary:** Deep Editorial Red (`--primary: 0 72% 38%`)
-  - **Secondary:** Pale Sand/Manila (`--secondary: 35 15% 90%`)
-  - **Foreground:** Warm Deep Ink (`--foreground: 20 10% 10%`)
-- **Footer SVG:** Technical blueprint lines in faint ink.
+- **Vibe:** Deep space-teal night sky with neon atomic glow.
+- **Palette:** Deep Space Teal `hsl(196 62% 6%)` (bg) · Warm Cream (fg) · Bright Turquoise `hsl(177 78% 52%)` (primary) · Coral `hsl(6 95% 66%)` (accent) · Gold `hsl(42 90% 60%)`.
+
+Tokens are HSL triplets in `:root` / `.dark`, mapped to `--color-*` in `@theme`. Use `bg-primary`, `text-accent`, `text-gold`, `border-border`, etc. — never raw hex in markup.
 
 ### 3. Typography
 
-- **Headings:** `Tenor Sans` (Google Font). Elegant, high-stroke contrast. "The Title Block."
-  - _Usage:_ Hero titles, Article headers, Section dividers.
-  - _Class:_ `font-serif`
-- **Body:** `Inter` (Google Font). Clean, neutral sans-serif. "The Notes."
-  - _Usage:_ Article text, UI elements.
-  - _Class:_ `font-sans`
-- **Code/UI:** `Geist Mono` (or System Mono). Technical, crisp. "The Measurements."
-  - _Usage:_ Nav links, Tags, Dates, Technical Specs (`FIG 1.0 // IDENTITY`).
-  - _Class:_ `font-mono`
+Wire fonts via the Tailwind v4 `--font-*` namespace (NOT `--font-family-*`, which is inert).
 
-### 4. Shape Language (The "Circle vs. Square" Rule)
+- **Display:** `Audiowide` — the retro voice. Class `font-display`. Used **sparingly**: hero name, header logo, footer "Connect", one-word page titles.
+- **Headings:** `Outfit` (geometric, readable). Class `font-serif` (alias kept for legacy markup — it is _not_ a serif). Post titles, card titles, prose headings.
+- **Body:** `Inter`. Class `font-sans`.
+- **Mono / Data:** `Space Mono`. Class `font-mono`. FIG labels, tags, dates, technical specs.
 
-- **The Grid (Square/Hard):**
-  - Layout containers.
-  - Bento Cards (`rounded-none` or `0.5rem`).
-  - Images (unless Author).
-  - Section Dividers.
-- **The Human/Interactive (Circular/Soft):**
-  - **Buttons:** Always `rounded-full` (Pill shape).
-  - **Tags:** Always `rounded-full` (Pill shape).
-  - **Avatars:** Always `rounded-full` (Medallion style).
-  - **Global Radius:** `0.5rem` (Softened mechanical edge).
+Rule of thumb: long-form text (post titles, card titles, body) stays in readable Outfit/Inter. Reserve Audiowide for short, punchy marks.
 
-### 5. Key Components
+### 4. Shape Language
 
-#### **Hero Section**
+- **The Grid (soft-square):** Layout containers, Bento cards → `rounded-2xl`, `border-2 border-border`.
+- **The Human/Interactive (pill):** Buttons, Tags, date chips, Avatars → `rounded-full`.
+- **Global radius:** `--radius: 0.75rem`.
 
-- Massive centered typography ("Brian Kimball").
-- **Technical Annotation:** `FIG 1.0 // IDENTITY` (Top Left).
-- **Description:** Mono-spaced role definition ("SYSTEMS ENGINEER / DEVELOPER").
+### 5. Signature Elements
 
-#### **Footer**
+- **Atomic Starburst** (`src/components/Starburst.astro`): the core mark — a mid-century "sparkle" of thin spikes tapering to sharp points, alternating long/short rays (modeled on the `me_website_2026` illustration, not a chunky sputnik). Inherits `currentColor` — color it with `text-gold` / `text-accent` / `text-primary`. Pass `dots` for "electron" balls on the long-ray tips. Used at the hero (large + `animate-spin-slow` ambient), header logo, footer, and on featured cards.
+- **Atomic Backdrop** (`src/components/Backdrop.astro`): a global, fixed, very-low-opacity swirl — a teal boomerang sweep + a long gold orbital arc — sitting at `-z-10` behind all content. Include once per page body (after `.noise-overlay`).
+- **Boomerang Divider** (`.boomerang-divider`): a turquoise→gold→coral gradient line with an atomic curve at center. See `SectionDivider.astro`.
+- **Googie Skyline** (Footer): a space-age city silhouette at dusk (Theme-Building arch, Space Needle, domes, monorail) anchored as a bottom band, with a coral banded sun and a full-height sunset glow rising behind the content.
+- **Helpers:** `.atomic-glow` (neon halo for dark mode), `.text-chrome` (gold→coral gradient text), `.animate-spin-slow`, `.atomic-starburst` (pure-CSS background variant).
 
-- **Background:** "The Drafting Table" - Schematic SVG with compass arcs and grid lines.
-- **Content:** Massive "Connect" link.
+### 6. Annotations
 
-#### **Section Divider**
+The page is intentionally clean — there is **no** "FIG" technical-label system (it was removed for a less-technical, more colorful feel). Don't reintroduce mono `FIG x.x //` markers.
 
-- **Style:** "Technical Divider".
-- **Elements:**
-  - Left-aligned label: `DIV 1.0 // SEPARATOR`.
-  - Solid horizontal line.
+### 7. Code Conventions
 
-#### **The "FIG" System (Technical Annotations)**
-
-Technical labels positioned at the **Top Left** of the main container (usually `-top-8`).
-
-- **Home:** `FIG 1.0 // IDENTITY`
-- **Blog Index:** `FIG 2.0 // ARCHIVE`
-- **Blog Post:** `FIG 2.1 // ENTRY`
-- **About:** `FIG 3.0 // PROFILE`
-- **Tags:** `FIG 4.0 // INDEX`
-
-### 6. Code Conventions
-
-- **Tailwind v4:** Use the new `@theme` block in `src/styles/global.css`.
-- **Containers:** Use `.container` utility (`px-8`, `py-20`).
+- **Tailwind v4:** all theme config lives in the `@theme` block in `src/styles/global.css`.
+- **Containers:** `.container` utility (`px-8`, `py-20`).
 - **Icons:** `react-icons` (Fa6).
-- **Links:** Never use trailing slashes.
+- **Links:** never use trailing slashes.

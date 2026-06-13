@@ -1,11 +1,12 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content'
 import BaseHead from '@/components/BaseHead.astro'
-import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts'
+import { SITE_URL } from '@/consts'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
 
 import BentoCard from '@/components/BentoCard.astro'
+import Backdrop from '@/components/Backdrop.astro'
 
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog')
@@ -33,27 +34,56 @@ const { posts: allPosts, tag } = Astro.props as Props
 const posts = allPosts
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+
+const tagTitle = `Posts tagged "${tag.data.name}"`
+const tagDescription = `Articles about ${tag.data.name} — systems engineering, development, and infrastructure from Brian Kimball.`
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: SITE_URL,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Tags',
+      item: `${SITE_URL}/tags`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: tag.data.name,
+      item: `${SITE_URL}/tags/${tag.id}`,
+    },
+  ],
+}
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <BaseHead title={tagTitle} description={tagDescription} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(breadcrumbSchema)}
+    />
   </head>
   <body
     class="bg-background text-foreground antialiased selection:bg-primary selection:text-background"
   >
     <div class="noise-overlay"></div>
+    <Backdrop />
     <Header />
     <main class="container py-20">
-      <div class="flex flex-col gap-12 relative">
-        <div
-          class="absolute -top-8 left-0 font-mono text-xs tracking-widest text-foreground/40 select-none"
-        >
-          FIG 4.1 // FILTER
-        </div>
+      <div class="flex flex-col gap-12">
         <h1
-          class="text-6xl md:text-8xl font-serif leading-tight animate-in fill-mode-both fade-in slide-in-from-bottom-2 duration-1000"
+          class="text-5xl md:text-7xl font-display leading-tight animate-in fill-mode-both fade-in slide-in-from-bottom-2 duration-1000"
         >
           Tag / {tag.data.name}
         </h1>

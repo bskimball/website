@@ -1,9 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
-    <path d="M50.4 78.5a75.1 75.1 0 0 0-28.5 6.9l24.2-65.7c.7-2 1.9-3.2 3.4-3.2h29c1.5 0 2.7 1.2 3.4 3.2l24.2 65.7s-11.6-7-28.5-7L67 45.5c-.4-1.7-1.6-2.8-2.9-2.8-1.3 0-2.5 1.1-2.9 2.7L50.4 78.5Zm-1.1 28.2Zm-4.2-20.2c-2 6.6-.6 15.8 4.2 20.2a17.5 17.5 0 0 1 .2-.7 5.5 5.5 0 0 1 5.7-4.5c2.8.1 4.3 1.5 4.7 4.7.2 1.1.2 2.3.2 3.5v.4c0 2.7.7 5.2 2.2 7.4a13 13 0 0 0 5.7 4.9v-.3l-.2-.3c-1.8-5.6-.5-9.5 4.4-12.8l1.5-1a73 73 0 0 0 3.2-2.2 16 16 0 0 0 6.8-11.4c.3-2 .1-4-.6-6l-.8.6-1.6 1a37 37 0 0 1-22.4 2.7c-5-.7-9.7-2-13.2-6.2Z" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
     <style>
-        path { fill: #000; }
-        @media (prefers-color-scheme: dark) {
-            path { fill: #FFF; }
-        }
+      .starburst { fill: hsl(177 74% 36%); }
+      @media (prefers-color-scheme: dark) {
+        .starburst { fill: hsl(177 78% 52%); }
+      }
     </style>
+  </defs>
+  <!-- 16 alternating long/short spikes -->
+  <polygon class="starburst" points="52.00,3.00 50.00,50.00 48.00,3.00" />
+  <polygon class="starburst" points="53.18,26.20 50.00,50.00 50.85,24.99" />
+  <polygon class="starburst" points="71.49,15.21 50.00,50.00 68.68,18.32" />
+  <polygon class="starburst" points="71.22,37.60 50.00,50.00 69.26,37.14" />
+  <polygon class="starburst" points="97.00,48.00 50.00,50.00 97.00,52.00" />
+  <polygon class="starburst" points="73.80,50.85 50.00,50.00 74.20,53.18" />
+  <polygon class="starburst" points="84.79,71.49 50.00,50.00 81.68,68.68" />
+  <polygon class="starburst" points="62.40,71.22 50.00,50.00 62.86,69.26" />
+  <polygon class="starburst" points="48.00,97.00 50.00,50.00 52.00,97.00" />
+  <polygon class="starburst" points="46.82,73.80 50.00,50.00 49.15,75.01" />
+  <polygon class="starburst" points="28.51,84.79 50.00,50.00 31.32,81.68" />
+  <polygon class="starburst" points="28.78,62.40 50.00,50.00 30.74,62.86" />
+  <polygon class="starburst" points="3.00,52.00 50.00,50.00 3.00,48.00" />
+  <polygon class="starburst" points="26.20,49.15 50.00,50.00 25.80,46.82" />
+  <polygon class="starburst" points="15.21,28.51 50.00,50.00 18.32,31.32" />
+  <polygon class="starburst" points="37.60,28.78 50.00,50.00 37.14,30.74" />
+  <!-- Core -->
+  <circle class="starburst" cx="50" cy="50" r="3.5" />
+  <!-- Electron dots on long-ray tips -->
+  <circle class="starburst" cx="50.00" cy="3.00" r="2.5" />
+  <circle class="starburst" cx="97.00" cy="50.00" r="2.5" />
+  <circle class="starburst" cx="50.00" cy="97.00" r="2.5" />
+  <circle class="starburst" cx="3.00" cy="50.00" r="2.5" />
+  <circle class="starburst" cx="15.21" cy="28.51" r="2.5" />
+  <circle class="starburst" cx="84.79" cy="71.49" r="2.5" />
+  <circle class="starburst" cx="28.51" cy="84.79" r="2.5" />
+  <circle class="starburst" cx="71.49" cy="15.21" r="2.5" />
 </svg>

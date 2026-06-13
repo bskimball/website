@@ -1,9 +1,9 @@
 ---
-title: Prototype Demographic Application
+title: 'A Feathers.js Prototype for Customer Demographics and Automated Emails'
 pubDate: '2023-07-16'
 tags: ['development', 'reactjs', 'feathersjs', 'typescript']
 draft: false
-description: 'A modern full-stack application. A feathers backend with a vite spa frontend.'
+description: 'A proof-of-concept full-stack app using Feathers.js, React, Vite, and shadcn/ui to manage customer demographics and trigger anniversary and birthday emails.'
 heroImage: /static/images/reach-app-home.png
 heroImageOptimized: '../../assets/reach-app-home.png'
 ---
@@ -16,19 +16,22 @@ import Gallery from '@/components/Gallery.tsx'
 
 ## Preface
 
-I built this prototype as a proof of concept for a client who needed to manage customer demographic data. The goal was to attach detailed demographics to customer profiles and automate courtesy emails for anniversaries or birthdays. While existing services offer this, the client required a solution that integrated seamlessly with their custom software ecosystem.
+I built this prototype as a proof of concept for a client who needed to manage customer demographic data. The goal was to attach detailed demographics to customer profiles and automate courtesy emails for anniversaries or birthdays. Existing services do this, but the client needed something that integrated with their custom software ecosystem.
 
-### Technical Decisions
+## Technical Decisions
 
 **Backend**
+
 The backend uses **TypeScript** and **[Feathers.js](https://feathersjs.com/)**. Feathers provided a rapid way to spin up a Node.js server with REST APIs, WebSockets, and services/hooks for CRUD operations.
 
 **Frontend**
+
 The frontend is a **TypeScript** SPA built with **[Vite](https://vitejs.dev/)** and **[React](https://react.dev/)**. Since SSR wasn't required, I avoided the complexity of meta-frameworks.
 
 - **UI:** **[shadcn/ui](https://ui.shadcn.com/)**, combining **[Tailwind CSS](https://tailwindcss.com/)** for styling and **[Radix UI](https://www.radix-ui.com/primitives/docs/overview/introduction)** for accessible components.
 
 **Infrastructure**
+
 The application runs on **Docker**.
 
 - **Database:** MySQL.

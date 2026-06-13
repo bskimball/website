@@ -3,7 +3,7 @@ title: Advanced Job Scheduler
 pubDate: '2023-10-12'
 tags: ['ibmi']
 draft: false
-description: Hourly jobs on the IBMi are possible thanks to Advanced Job Scheduler
+description: 'The default IBM i job scheduler only runs daily, weekly, or monthly. Here is how the Advanced Job Scheduler finally unlocked hourly automation for my Node.js integrations.'
 heroImage: /static/images/advanced-job-scheduler-banner.png
 heroImageOptimized: '../../assets/advanced-job-scheduler-banner.png'
 ---
@@ -33,6 +33,6 @@ The Advanced Job Scheduler (licensed program 5770-JS1) has been available since 
   src="/static/images/addjobjs.png"
   style={{ float: 'right' }}
 />
-The `ADDJOBJS` screen shares many fields with the standard scheduler, but with a
-critical difference: it supports minute-based intervals. I can now schedule my
-Node.js applications to run hourly without any workarounds.
+The `ADDJOBJS` screen shares many fields with the standard scheduler, but with a critical difference: it supports minute-based intervals. I can now schedule my Node.js applications to run hourly without any workarounds.
+
+If you are running recurring integrations on IBM i and have not looked at the Advanced Job Scheduler, it is worth the license cost just to eliminate the scheduling hacks.

@@ -1,9 +1,9 @@
 ---
-title: Learning Go
+title: 'Why I Picked Up Go After 20 Years of Web Development'
 pubDate: 2023-11-16
 tags: ['development', 'golang']
 draft: false
-description: I have decided to take the time to learn the Go programming language
+description: 'After two decades of JavaScript, PHP, and Python, I am picking up Go to solve a real performance problem—and the early impressions are strong.'
 heroImage: /static/images/learning-go-ide-screenshot.png
 heroImageOptimized: '../../assets/learning-go-ide-screenshot.png'
 ---
@@ -14,7 +14,7 @@ I've been a web developer for roughly 20 years, starting with Macromedia Flash a
 
 Recently, I've seen Go (Golang) heralded for its performance and Developer Experience (DX).
 
-### What is Go?
+## Why Go?
 
 <figure>
   <blockquote>
@@ -26,17 +26,27 @@ Recently, I've seen Go (Golang) heralded for its performance and Developer Exper
 
 Designed partially out of frustration with C++, Go offers a robust standard library, static typing with excellent IDE support, and no VM requirement. It excels in networking and CLI applications.
 
-### What will I use it for?
+## Why Go?
+
+<figure>
+  <blockquote>
+    Go was designed at Google in 2007 to improve programming productivity in an
+    era of multicore, networked machines and large codebases.
+  </blockquote>
+  <figcaption>- Wikipedia</figcaption>
+</figure>
+
+Designed partially out of frustration with C++, Go offers a robust standard library, static typing with excellent IDE support, and no VM requirement. It excels in networking and CLI applications.
+
+## The Plan: Rebuilding Network Mapper
 
 After completing the website walkthrough, I found Go's syntax readable and intuitive. To accelerate my learning, I used this [GitHub repo](https://github.com/miguelmota/golang-for-nodejs-developers) which highlights syntax differences for Node.js developers.
 
-I plan to rewrite my [network-mapper](/blog/network-mapper) app in Go. The original JavaScript application (Fastify + Solid.js) struggled with performance during `nmap` scans. I hope Go will resolve these issues.
-
-**Plan:**
+I plan to rewrite my [network-mapper](/blog/network-mapper) app in Go. The original JavaScript application (Fastify + Solid.js) struggled with performance during `nmap` scans. Go should resolve these issues.
 
 - **Frontend:** Solid.js (switching to Kobalte for accessible components).
 - **Database:** Switching from PostgreSQL to SQLite for portability.
 - **Backend:** [Echo framework](https://echo.labstack.com/).
 - **Deployment:** Embedded Vite SPA within a single Go binary (using [this guide](https://dev.to/aryaprakasa/serving-single-page-application-in-a-single-binary-file-with-go-12ij)).
 
-I will share the GitHub repo once I make more progress.
+I will share the GitHub repo once I make more progress. If you are a Node developer curious about Go, the [golang-for-nodejs-developers](https://github.com/miguelmota/golang-for-nodejs-developers) cheatsheet is the fastest on-ramp I have found.

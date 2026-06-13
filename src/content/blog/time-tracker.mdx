@@ -1,26 +1,29 @@
 ---
-title: Time Tracker
+title: 'A Badge-Scanning Time Tracker for Warehouse Floors'
 pubDate: '2021-10-4'
 tags: ['development', 'vuejs', 'laravel']
 draft: false
-description: 'A full stack application that tracks time. Built using Laravel with a separate Vue SPA.'
+description: 'Warehouse employees scan badges or barcodes to log tasks. I built a Vue.js + Laravel app with URL-synced filters for easy reporting.'
 ---
 
 [GitHub Repo](https://github.com/bskimball/time-tracker)
 
 ## Preface
 
-A warehouse needed a streamlined way to track employee hours and tasks. They wanted to allow employees to scan badges or barcodes to log start and end times for specific tasks. I created an interface tailored to their workflow, including a filtering system that syncs with the URL for easy reporting and sharing.
+A warehouse needed a streamlined way to track employee hours and tasks. They wanted employees to scan badges or barcodes to log start and end times for specific tasks. I created an interface tailored to their workflow, including a filtering system that syncs with the URL for easy reporting and sharing.
 
-### Technical Decisions
+## Technical Decisions
 
 **Architecture**
+
 I chose a decoupled architecture: a Vue.js SPA frontend communicating with a Laravel API backend.
 
 **Backend**
+
 [Laravel](https://laravel.com/) provides a complete, robust framework. Inspired by Rails but built on PHP, it enables a single developer to build full-stack applications efficiently.
 
 **Frontend**
+
 The frontend uses Vue.js and Vite.
 
 - **Vite:** Faster and easier to configure than Laravel Mix or Webpack.
@@ -28,4 +31,7 @@ The frontend uses Vue.js and Vite.
 - **UI:** Bootstrap 5, which integrates well with Vite + Vue and offers utility and component classes.
 
 **Deployment**
+
 I use Docker to deploy both frontend and backend containers to an Ubuntu server. A Traefik proxy manages access, with NGINX behind it to serve both applications from the same domain. While Traefik can handle this, the NGINX container improves portability.
+
+If you are building similar warehouse tools, Laravel's queue system pairs well with barcode scanners for real-time job tracking. The repo is available if you want to see the full Docker setup.

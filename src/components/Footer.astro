@@ -1,131 +1,125 @@
 ---
+import Starburst from './Starburst.astro'
 const today = new Date()
 ---
 
 <footer
-  class="bg-secondary py-20 border-t-2 border-primary/20 mt-20 relative overflow-hidden"
+  class="bg-secondary pt-20 pb-64 border-t-2 border-primary/20 mt-20 relative overflow-hidden"
 >
-  <!-- Artsy Background Pattern (The Drafting Table / Architectural Schematics) -->
+  <!-- Sky: warm sunset glow rising from the horizon + sputnik 'stars' -->
   <div class="absolute inset-0 pointer-events-none select-none">
+    <div
+      class="absolute inset-0"
+      style="background: radial-gradient(72% 115% at 63% 100%, hsl(var(--footer-sun) / 0.4) 0%, hsl(var(--footer-sun) / 0.12) 42%, transparent 78%);"
+    >
+    </div>
+    <Starburst class="absolute top-12 right-[14%] h-6 w-6 text-gold/40" />
+    <Starburst class="absolute top-28 left-[18%] h-4 w-4 text-accent/30" />
+    <Starburst class="absolute top-16 left-[52%] h-3 w-3 text-gold/30" />
+    <Starburst class="absolute top-40 right-[36%] h-5 w-5 text-foreground/15" />
+  </div>
+
+  <!-- Googie skyline: a space-age city at dusk, anchored below the content -->
+  <div
+    class="absolute inset-x-0 bottom-0 h-64 pointer-events-none select-none"
+  >
     <svg
       class="absolute inset-0 w-full h-full"
-      viewBox="0 0 1200 400"
-      preserveAspectRatio="xMidYMid slice"
+      viewBox="0 0 1200 300"
+      preserveAspectRatio="xMidYMax slice"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <!-- Definitions for reusable patterns -->
-      <defs>
-        <pattern
-          id="grid-pattern"
-          width="40"
-          height="40"
-          patternUnits="userSpaceOnUse"
-        >
-          <path
-            d="M 40 0 L 0 0 0 40"
-            fill="none"
-            class="stroke-foreground/5 dark:stroke-primary/5"
-            stroke-width="1"></path>
-        </pattern>
-      </defs>
-
-      <!-- Layer 1: Background Grid (The Foundation) -->
-      <rect width="100%" height="100%" fill="url(#grid-pattern)"></rect>
-
-      <!-- Layer 2: Technical Geometry (The Structure) -->
-      <g fill="none" stroke-width="1">
-        <!-- Large Compass Arc (Bottom Left) -->
-        <circle
-          cx="0"
-          cy="400"
-          r="300"
-          class="stroke-foreground/10 dark:stroke-primary/10"
-          stroke-dasharray="4 4"></circle>
-        <circle
-          cx="0"
-          cy="400"
-          r="320"
-          class="stroke-foreground/5 dark:stroke-primary/5"></circle>
-
-        <!-- Large Compass Arc (Top Right) -->
-        <circle
-          cx="1200"
-          cy="0"
-          r="450"
-          class="stroke-foreground/10 dark:stroke-primary/10"></circle>
-        <circle
-          cx="1200"
-          cy="0"
-          r="200"
-          class="stroke-foreground/5 dark:stroke-primary/5"
-          stroke-dasharray="8 8"></circle>
-
-        <!-- Connecting Tangents -->
-        <line
-          x1="100"
-          y1="0"
-          x2="400"
-          y2="400"
-          class="stroke-foreground/10 dark:stroke-primary/10"></line>
-        <line
-          x1="0"
-          y1="350"
-          x2="1200"
-          y2="50"
-          class="stroke-foreground/10 dark:stroke-primary/10"></line>
+      <!-- Setting sun with retro banding -->
+      <g>
+        <circle cx="760" cy="250" r="82" fill={`hsl(var(--footer-sun))`}
+        ></circle>
+        <g fill={`hsl(var(--secondary))`}>
+          <rect x="648" y="240" width="224" height="6"></rect>
+          <rect x="648" y="226" width="224" height="7"></rect>
+          <rect x="648" y="210" width="224" height="9"></rect>
+          <rect x="648" y="192" width="224" height="11"></rect>
+        </g>
       </g>
 
-      <!-- Layer 3: Engineering Annotations (The Detail) -->
-      <g
-        class="fill-foreground/20 dark:fill-primary/20 font-mono text-[10px] tracking-widest uppercase"
-      >
-        <!-- Crosshairs -->
-        <g transform="translate(600, 200)">
-          <line
-            x1="-10"
-            y1="0"
-            x2="10"
-            y2="0"
-            class="stroke-foreground/20 dark:stroke-primary/20"></line>
-          <line
-            x1="0"
-            y1="-10"
-            x2="0"
-            y2="10"
-            class="stroke-foreground/20 dark:stroke-primary/20"></line>
-          <circle
-            r="20"
-            fill="none"
-            class="stroke-foreground/10 dark:stroke-primary/10"
-            stroke-dasharray="2 2"></circle>
-          <text x="25" y="4" class="opacity-50">REF-01</text>
-        </g>
+      <!-- Back layer: far towers + haze (faintest) -->
+      <g fill={`hsl(var(--footer-landscape-1))`}>
+        <rect x="64" y="120" width="42" height="180"></rect>
+        <rect x="118" y="150" width="30" height="150"></rect>
+        <rect x="300" y="150" width="84" height="150"></rect>
+        <path d="M300,150 a42,28 0 0 1 84,0 Z"></path>
+        <rect x="980" y="110" width="46" height="190"></rect>
+        <rect x="1036" y="144" width="34" height="156"></rect>
+      </g>
 
-        <!-- Data points -->
-        <text x="20" y="380">FIG 1.0 // SCHEMATIC</text>
-        <text x="1100" y="380" text-anchor="end">SCALE 1:1</text>
+      <!-- Mid layer: monorail + buildings -->
+      <g fill={`hsl(var(--footer-landscape-2))`}>
+        <!-- pylons -->
+        <path d="M198,300 L216,300 L210,226 L206,226 Z"></path>
+        <path d="M618,300 L636,300 L630,226 L626,226 Z"></path>
+        <path d="M1018,300 L1036,300 L1030,226 L1026,226 Z"></path>
+        <!-- beam -->
+        <rect x="-40" y="224" width="1280" height="11" rx="5"></rect>
+        <!-- streamlined monorail car -->
+        <rect x="430" y="206" width="146" height="20" rx="10"></rect>
+      </g>
 
-        <g transform="translate(100, 100)">
-          <circle r="2" fill="currentColor"></circle>
-          <text x="10" y="4" class="opacity-50">P-A</text>
-        </g>
+      <!-- Front layer: Googie city (darkest, nearest) -->
+      <g fill={`hsl(var(--footer-landscape-3))`}>
+        <!-- ground -->
+        <rect x="0" y="252" width="1200" height="60"></rect>
 
-        <g transform="translate(1100, 300)">
-          <circle r="2" fill="currentColor"></circle>
-          <text x="-30" y="4" class="opacity-50">P-B</text>
-        </g>
+        <!-- Space Needle -->
+        <rect x="156" y="96" width="7" height="156"></rect>
+        <ellipse cx="159" cy="96" rx="30" ry="10"></ellipse>
+        <rect x="157" y="72" width="4" height="24"></rect>
+        <circle cx="159" cy="68" r="3.5"></circle>
+
+        <!-- Dome building -->
+        <rect x="232" y="198" width="86" height="54"></rect>
+        <path d="M232,198 a43,28 0 0 1 86,0 Z"></path>
+        <rect x="273" y="172" width="4" height="26"></rect>
+
+        <!-- Butterfly-roof coffee shop -->
+        <rect x="366" y="202" width="112" height="50"></rect>
+        <path d="M354,194 L422,214 L490,194 L490,204 L422,224 L354,204 Z"
+        ></path>
+
+        <!-- Theme Building arches (hero) -->
+        <path
+          fill-rule="evenodd"
+          d="M556,252 Q566,118 660,114 Q754,118 764,252 L744,252 Q736,148 660,144 Q584,148 576,252 Z"
+        ></path>
+        <ellipse cx="660" cy="118" rx="44" ry="13"></ellipse>
+        <rect x="657" y="96" width="6" height="22"></rect>
+        <circle cx="660" cy="92" r="3.5"></circle>
+
+        <!-- Stepped ziggurat tower -->
+        <rect x="820" y="170" width="58" height="82"></rect>
+        <rect x="830" y="150" width="38" height="20"></rect>
+        <rect x="842" y="132" width="16" height="18"></rect>
+
+        <!-- Dome cluster -->
+        <path d="M906,252 a40,40 0 0 1 80,0 Z"></path>
+        <path d="M996,252 a26,26 0 0 1 52,0 Z"></path>
+        <rect x="1060" y="204" width="32" height="48"></rect>
+
+        <!-- Antenna tower -->
+        <rect x="1126" y="120" width="9" height="132"></rect>
+        <circle cx="1130" cy="110" r="4"></circle>
+        <rect x="1128" y="110" width="4" height="12"></rect>
       </g>
     </svg>
   </div>
 
   <div class="container relative z-10">
-    <div class="mb-20">
+    <div class="mb-20 flex items-end gap-6">
       <a
         href="mailto:briankimball1982@gmail.com"
-        class="text-6xl md:text-9xl font-serif font-black text-foreground hover:text-primary transition-colors duration-300 tracking-tighter leading-none"
+        class="text-6xl md:text-8xl font-display text-foreground hover:text-primary transition-colors duration-300 tracking-tight leading-none"
       >
         Connect
       </a>
+      <Starburst class="mb-2 h-10 w-10 shrink-0 text-accent" />
     </div>
 
     <div
@@ -150,11 +144,6 @@ const today = new Date()
             href="https://www.linkedin.com/in/brian-kimball-0499678a/"
             target="_blank"
             class="hover:text-primary transition-colors">LinkedIn</a
-          >
-          <a
-            href="https://bsky.app/profile/briankimball.bsky.social"
-            target="_blank"
-            class="hover:text-primary transition-colors">Bluesky</a
           >
           <a
             href="https://twitter.com/_BrianKimball"

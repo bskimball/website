@@ -1,9 +1,9 @@
 ---
-title: 'AI-Powered Tools for IBM i'
+title: 'Bringing AI to IBM i: An MCP Server with 31 System Tools'
 pubDate: '2026-05-22'
 tags: ['typescript', 'development', 'ibmi', 'ai', 'mcp']
 draft: false
-description: 'An MCP server and suite of apps that bring AI-powered tools to IBM i, built for training new users and accelerating expert workflows.'
+description: 'A BYOK MCP server that exposes 31 facade tools for IBM i observability, job management, and security. Built to train new users and accelerate expert workflows.'
 heroImage: /static/images/ibmi-ai-hub-screenshot.png
 heroImageOptimized: '../../assets/ibmi-ai-hub-screenshot.png'
 ---
@@ -35,11 +35,11 @@ The server is built on **Hono** and talks to IBM i through [**knex-ibmi**](https
 
 Everything lives in a single **monorepo** with a shared design system, which keeps the desktop and web experiences consistent.
 
-## From 184 Tools to 31
+## Shrinking 184 Tools Down to 31
 
 An early version of the server exposed **184 individual tools**. The sheer volume created two concrete problems.
 
-**First**, VSCode (and several other MCP clients) enforces a hard limit of **128 tools**. We were well beyond that.
+**First**, VS Code (and several other MCP clients) enforces a hard limit of **128 tools**. We were well beyond that.
 
 **Second**, 184 options made LLM decision-making measurably harder. Too much surface area led to hesitation and incorrect selections.
 
@@ -115,4 +115,4 @@ For **experienced operators**, it is an accelerator. You can ask for quick stora
 
 The project is in **beta** and is being validated internally on production IBM i environments. The goal is to harden the toolset, refine the selectors, and ensure the responses are reliable before a wider release.
 
-If you work with IBM i and are curious about augmenting it with AI, this is the direction I am heading. More soon.
+If you work with IBM i and are curious about augmenting it with AI, the MCP server is available on [npm](https://www.npmjs.com/package/@bdkinc/ibmi-mcp). Install it, bring your own model, and see what the system can tell you.

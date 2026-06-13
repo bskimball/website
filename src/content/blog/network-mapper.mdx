@@ -1,9 +1,9 @@
 ---
-title: Network Mapper
+title: 'A Network Discovery App for MSP Client Onboarding'
 pubDate: '2022-08-12'
 tags: ['development', 'solidjs', 'fastify']
 draft: false
-description: 'An app to install and gather network information as well as domain information.'
+description: 'A Node.js tool to automate nmap scans, whois lookups, and DNS queries during MSP onboarding. Built for the Raspberry Pi with Fastify and Solid.js.'
 heroImage: /static/images/network-mapper-dashboard.png
 heroImageOptimized: '../../assets/network-mapper-dashboard.png'
 ---
@@ -14,16 +14,18 @@ import Gallery from '@/components/Gallery.tsx'
 
 ## Preface
 
-For Managed Service Providers (MSPs), gathering detailed network information during client onboarding is critical. This process is often time-consuming and non-billable. To solve this, I built a Node.js application to automate routine discovery tasks.
+For Managed Service Providers (MSPs), gathering detailed network information during client onboarding is critical. This process is usually time-consuming and non-billable. To solve this, I built a Node.js application to automate routine discovery tasks.
 
-The concept: install the app on a Raspberry Pi, connect it to the prospective client's network, and initiate a scan. The app runs `nmap` to discover local devices and performs `whois` lookups on configured domains. It also queries DNS records (like MX records) to identify email providers. Finally, technicians can submit the gathered data to a central repository via a form.
+The concept is simple: install the app on a Raspberry Pi, connect it to the prospective client's network, and initiate a scan. The app runs `nmap` to discover local devices and performs `whois` lookups on configured domains. It also queries DNS records (like MX records) to identify email providers. Technicians can then submit the gathered data to a central repository via a form.
 
-### Technical Decisions
+## Technical Decisions
 
 **Architecture**
+
 I built this as a monolithic JavaScript application using ESM imports, with no server-side compilation step. It connects to a PostgreSQL database running in Docker.
 
 **Stack**
+
 I prioritized performance and speed.
 
 - **Server:** [Fastify](https://fastify.io/), for its low overhead.

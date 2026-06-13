@@ -1,98 +1,41 @@
 ---
-import { getRandomNumber } from '@/lib/utils'
-
-type Shooter = {
-  size: number
-  color: number
-  top: number
-  left: number
-  duration: number
-  delay: number
-}
-
-type Dot = {
-  size: number
-  color: number
-  top: number
-  left: number
-  opacity: number
-  duration: number
-}
-
-const dots: Dot[] = []
-const shooters: Shooter[] = []
-
-for (let i = 0; i < 420; i++) {
-  dots.push({
-    size: getRandomNumber(1, 4),
-    color: getRandomNumber(1, 4),
-    top: getRandomNumber(0, 100),
-    left: getRandomNumber(0, 100),
-    opacity: getRandomNumber(50, 100) / 100,
-    duration: getRandomNumber(1000, 3000),
-  })
-}
-
-for (let i = 0; i < 169; i++) {
-  shooters.push({
-    size: getRandomNumber(1, 4),
-    color: getRandomNumber(1, 4),
-    top: getRandomNumber(0, 80),
-    left: getRandomNumber(0, 80),
-    duration: getRandomNumber(4000, 8000),
-    delay: getRandomNumber(1000, 20000),
-  })
-}
+// Global atomic backdrop — a subtle mid-century swirl behind all content,
+// echoing the teal boomerang + gold orbital arc in the me_website_2026 art.
+// Fixed and very low opacity so it reads as ambient texture, never noise.
+// Sits at -z-10: above the page background color, beneath all content.
 ---
 
-<div class="-z-1 absolute top-0 left-0 bottom-0 right-0 overflow-hidden">
-  <div class="absolute top-0 left-0 bottom-0 right-0"></div>
-  {
-    dots.map((dot, index) => (
-      <div
-        class:list={[
-          'absolute rounded-none',
-          {
-            'bg-primary shadow-primary': dot.color === 1,
-            'bg-secondary shadow-secondary': dot.color === 2,
-            'bg-accent shadow-accent': dot.color === 3,
-            'bg-chart-1 shadow-chart-1': dot.color === 4,
-          },
-          index % 2 == 0 ? 'animate-pulse' : '',
-        ]}
-        style={{
-          height: `${dot.size}px`,
-          width: `${dot.size}px`,
-          top: `${dot.top}%`,
-          left: `${dot.left}%`,
-          animationDuration: `${dot.duration}ms`,
-          opacity: dot.opacity,
-          animationDelay: `${dot.duration}ms`,
-        }}
-      />
-    ))
-  }
-  {
-    shooters.map((shooter) => (
-      <div
-        class:list={[
-          'absolute animate-shooter rounded-none',
-          {
-            'bg-primary shadow-primary': shooter.color === 1,
-            'bg-secondary shadow-secondary': shooter.color === 2,
-            'bg-accent shadow-accent': shooter.color === 3,
-            'bg-chart-1 shadow-chart-1': shooter.color === 4,
-          },
-        ]}
-        style={{
-          height: `${shooter.size}px`,
-          width: `${shooter.size}px`,
-          top: `${shooter.top}%`,
-          left: `${shooter.left}%`,
-          animationDuration: `${shooter.duration}ms`,
-          animationDelay: `${shooter.delay}ms`,
-        }}
-      />
-    ))
-  }
+<div
+  class="pointer-events-none fixed inset-0 -z-10 overflow-hidden select-none"
+  aria-hidden="true"
+>
+  <svg
+    class="absolute inset-0 h-full w-full"
+    viewBox="0 0 1440 1024"
+    preserveAspectRatio="xMidYMid slice"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <!-- Teal boomerang sweep -->
+    <path
+      d="M 40 230 C 360 40 800 340 1180 160"
+      fill="none"
+      stroke={`hsl(var(--primary) / 0.07)`}
+      stroke-width="132"
+      stroke-linecap="round"></path>
+
+    <!-- Long gold orbital arcs -->
+    <path
+      d="M -140 740 C 380 820 1040 210 1620 400"
+      fill="none"
+      stroke={`hsl(var(--gold) / 0.16)`}
+      stroke-width="3"></path>
+    <path
+      d="M -140 800 C 440 900 1080 280 1660 470"
+      fill="none"
+      stroke={`hsl(var(--gold) / 0.07)`}
+      stroke-width="2"></path>
+
+    <!-- Orbit body riding the arc -->
+    <circle cx="1512" cy="372" r="7" fill={`hsl(var(--gold) / 0.2)`}></circle>
+  </svg>
 </div>

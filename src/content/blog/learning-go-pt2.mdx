@@ -1,20 +1,20 @@
 ---
-title: Learning Go part 2
+title: 'Go Is the Right Choice for Network Tools. Here Is the Proof'
 pubDate: 2024-1-20
 tags: ['development', 'golang']
 draft: false
-description: After some time with Go I really like it
+description: 'Six months into Go, I rewrote a network scanner and built a custom event bus. The language is simpler than expected, with one big limitation on IBM i.'
 heroImage: /static/images/learning-go-ide-screenshot.png
 heroImageOptimized: '../../assets/learning-go-ide-screenshot.png'
 ---
 
-## Update
+## Six Months In: Lessons Learned
 
 I really like Go. It's easy to pick up, the standard library is comprehensive, and the syntax is intentionally simple. I've been rewriting my network-mapper app, and Go is the right choice for the server.
 
 Unfortunately, Go (and Rust) does not run natively on IBM i. Despite the AIX-based PASE environment, issues with `mmap` and the IFS prevent execution (see this [GitHub issue](https://github.com/golang/go/issues/45017)). For now, I'll use Go in Linux environments and stick to Node or Python on IBM i.
 
-### The App: "Gatherer"
+### The App: Gatherer
 
 I renamed the app to **Gatherer**. It's designed for quick network and MSP client evaluations.
 
@@ -27,6 +27,7 @@ I renamed the app to **Gatherer**. It's designed for quick network and MSP clien
 - **Pub/Sub:** Custom implementation using Go channels.
 
 **Frontend**
+
 I initially tried Solid.js but reverted to React due to ecosystem maturity and IDE support.
 
 - **Stack:** React, React Query, React Router, React Hook Form.
@@ -140,4 +141,4 @@ func (r *Room) init() {
 }
 ```
 
-Any questions just hit me up!
+The event bus works well enough for my use case, though I would reach for a proper message queue like NATS if the traffic grew significantly. If you spot a bug or have a cleaner pattern for Go channel-based pub/sub, I am interested.

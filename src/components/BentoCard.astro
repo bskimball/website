@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content'
 import { Image } from 'astro:assets'
 import FormattedDate from './FormattedDate.astro'
+import Starburst from './Starburst.astro'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -15,13 +16,45 @@ const { post, class: className, featured } = Astro.props
 <a
   href={`/blog/${post.id}`}
   class:list={[
-    'group relative overflow-hidden border-2 border-foreground/10 bg-secondary p-6 flex flex-col justify-between h-full transition-all duration-300 hover:border-primary hover:bg-primary hover:text-background no-underline',
+    'group relative overflow-hidden rounded-2xl border-2 border-border bg-card p-6 flex flex-col justify-between h-full transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 no-underline',
     className,
   ]}
 >
+  <svg
+    class="pointer-events-none absolute inset-0 z-[5] size-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    fill="none"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id={`bt-${post.id}`} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="hsl(var(--gold))" />
+        <stop offset="55%" stop-color="hsl(var(--accent))" />
+        <stop offset="100%" stop-color="hsl(var(--gold))" />
+      </linearGradient>
+    </defs>
+    <rect
+      class="atomic-border-trace"
+      x="0"
+      y="0"
+      width="100%"
+      height="100%"
+      rx="16"
+      ry="16"
+      pathLength="100"
+      stroke={`url(#bt-${post.id})`}
+      stroke-width="4"
+      stroke-linecap="round"
+      vector-effect="non-scaling-stroke"
+    />
+  </svg>
+  {
+    featured && (
+      <Starburst class="pointer-events-none absolute -bottom-10 -right-10 z-0 h-44 w-44 text-gold/15 transition-colors duration-300 group-hover:text-primary-foreground/20" />
+    )
+  }
   {
     post.data.heroImageOptimized ? (
-      <div class="absolute inset-0 z-0 opacity-20 grayscale transition-all duration-500 group-hover:opacity-40 group-hover:grayscale-0">
+      <div class="absolute inset-0 z-0 opacity-25 transition-all duration-500 group-hover:opacity-45">
         <Image
           src={post.data.heroImageOptimized}
           alt=""
@@ -32,7 +65,7 @@ const { post, class: className, featured } = Astro.props
       </div>
     ) : (
       post.data.heroImage && (
-        <div class="absolute inset-0 z-0 opacity-20 grayscale transition-all duration-500 group-hover:opacity-40 group-hover:grayscale-0">
+        <div class="absolute inset-0 z-0 opacity-25 transition-all duration-500 group-hover:opacity-45">
           <Image
             src={post.data.heroImage}
             alt=""
@@ -47,7 +80,7 @@ const { post, class: className, featured } = Astro.props
 
   <div class="relative z-10 flex justify-end">
     <div
-      class="font-mono text-xs border border-foreground/20 px-2 py-1 rounded-none transition-colors duration-300 group-hover:border-background group-hover:text-background"
+      class="font-mono text-xs border border-border px-3 py-1 rounded-full transition-colors duration-300 group-hover:border-primary-foreground/50 group-hover:text-primary-foreground"
     >
       <FormattedDate date={post.data.pubDate} />
     </div>
@@ -64,7 +97,7 @@ const { post, class: className, featured } = Astro.props
     </h3>
     <p
       class:list={[
-        'mt-4 line-clamp-2 text-sm opacity-70 group-hover:text-background/80',
+        'mt-4 line-clamp-2 text-sm opacity-70 group-hover:text-primary-foreground/80',
         featured && 'md:text-base md:line-clamp-3',
       ]}
     >

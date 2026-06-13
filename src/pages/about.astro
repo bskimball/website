@@ -4,27 +4,74 @@ import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
 import { Image } from 'astro:assets'
 import meImg from '../assets/me_website_2026.png'
+import Backdrop from '@/components/Backdrop.astro'
+import { SITE_URL, AUTHOR_NAME } from '@/consts'
+
+const aboutDescription =
+  'Brian Kimball is a Systems Engineer and Developer based in Delaware. He writes about IBM i modernization, full-stack development, network infrastructure, and building resilient systems from the metal up.'
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: AUTHOR_NAME,
+  url: `${SITE_URL}/about`,
+  image: `${SITE_URL}/static/images/avatar.png`,
+  jobTitle: 'Systems Engineer / Developer',
+  description: aboutDescription,
+  sameAs: [
+    'https://github.com/bskimball',
+  ],
+  worksFor: {
+    '@type': 'Organization',
+    name: 'BDK Inc.',
+  },
+}
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: SITE_URL,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'About',
+      item: `${SITE_URL}/about`,
+    },
+  ],
+}
 ---
 
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <BaseHead title="About" description="About Brian Kimball" />
+    <BaseHead title="About" description={aboutDescription} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(personSchema)}
+    />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(breadcrumbSchema)}
+    />
   </head>
   <body
     class="bg-background text-foreground antialiased selection:bg-primary selection:text-background"
   >
     <div class="noise-overlay"></div>
+    <Backdrop />
     <Header />
     <main class="container py-20">
-      <div class="flex flex-col gap-12 relative">
-        <div
-          class="absolute -top-8 left-0 font-mono text-xs tracking-widest text-foreground/40 select-none"
-        >
-          FIG 3.0 // PROFILE
-        </div>
+      <div class="flex flex-col gap-12">
         <h1
-          class="leading-tight text-8xl font-serif animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-1000"
+          class="leading-tight text-7xl md:text-8xl font-display animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-1000"
         >
           About / Me
         </h1>
@@ -66,12 +113,12 @@ import meImg from '../assets/me_website_2026.png'
             class="col-span-2 flex flex-col items-center lg:items-end gap-8"
           >
             <div
-              class="transition-all duration-500 border-2 border-foreground/10 p-2 bg-secondary rounded-full"
+              class="transition-all duration-500 border-2 border-border p-2 bg-card rounded-full"
             >
               <Image
                 src={meImg}
-                alt="Brian Kimball"
-                class="w-64 h-auto aspect-square object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500"
+                alt="Brian Kimball portrait"
+                class="w-64 h-auto aspect-square object-cover rounded-full"
                 quality="max"
                 format="png"
                 widths={[256, 512, 1024]}

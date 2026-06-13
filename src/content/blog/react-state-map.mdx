@@ -1,12 +1,12 @@
 ---
-title: Map in React state
+title: 'Stop Using Arrays for Real-Time State in React'
 pubDate: 2023-11-6
 tags: ['development', 'reactjs', 'javascript']
 draft: false
-description: I am experimenting with using a Map instead of an array in React applications
+description: 'Using a native Map instead of an array eliminates O(n) scans for updates and simplifies real-time event handlers in React.'
 ---
 
-## Client Side Data State
+## The Problem with Arrays
 
 For years, I stored fetched data in arrays—whether using React state, React Query, or SWR. While fetching libraries like TanStack Query are my go-to, let's look at a simple `useState` example. In applications using WebSockets or Server-Sent Events (SSE), we often need to update this state in real-time based on incoming events.
 
@@ -50,9 +50,11 @@ function ListComponent() {
 
 This works, but mapping over the entire array for every patch or filter for every removal feels inefficient and verbose.
 
-**Using a Map:**
+## Using a Map Instead
 
 ES6 introduced the `Map` object (see [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)), which holds key-value pairs. Using the `id` as the key simplifies updates significantly.
+
+**Using a Map:**
 
 ```javascript
 // react component

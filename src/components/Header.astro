@@ -1,17 +1,25 @@
 ---
 import HeaderLink from './HeaderLink.astro'
 import DarkModeToggle from './DarkModeToggle.tsx'
+import Starburst from './Starburst.astro'
 ---
 
 <header
-  class="sticky top-0 z-50 w-full backdrop-blur-md border-b-2 border-foreground/10 bg-background/80"
+  class="sticky top-0 z-50 w-full backdrop-blur-md border-b-2 border-primary/20 bg-background/80"
 >
   <div class="container flex justify-between items-center h-20">
     <a
       href="/"
-      class="font-serif font-black text-3xl tracking-tighter text-primary no-underline"
+      class="group flex items-center gap-3 no-underline"
+      aria-label="Brian Kimball — home"
     >
-      ::
+      <Starburst
+        class="h-8 w-8 text-gold transition-transform duration-500 group-hover:rotate-180"
+      />
+      <span
+        class="font-display text-lg tracking-tight text-foreground transition-colors group-hover:text-primary"
+        >BK</span
+      >
     </a>
     <nav class="flex items-center gap-8">
       <HeaderLink

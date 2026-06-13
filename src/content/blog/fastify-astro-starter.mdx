@@ -1,9 +1,9 @@
 ---
-title: Fastify + Astro starter
+title: 'Building a Type-Safe Full-Stack Starter with Fastify and Astro'
 pubDate: 2024-7-25
 tags: ['development', 'fastify', 'astro', 'typescript']
 draft: false
-description: This is an example of a starter app for TS projects.
+description: 'A complete starter template combining Astro, Fastify, tRPC, Lucia, React, NextUI, and Drizzle into a single type-safe monolith.'
 ---
 
 [Github Repo](https://github.com/bskimball/astro-fastify-starter)
@@ -12,27 +12,25 @@ description: This is an example of a starter app for TS projects.
 
 Following the deprecation of [Lucia](https://github.com/lucia-auth/lucia/discussions/1707), I migrated session management to the recommended approach at [lucia-next.pages.dev](https://lucia-next.pages.dev/). This update also includes general fixes and improvements, such as resolving dark mode screen flashes.
 
-### Why?
+## Why This Stack?
 
-As a solo developer, I often build JavaScript applications with separated server and client builds. While this is a valid approach—optimizing the client for the browser and the server for the backend—managing state across both can be complex.
+As a solo developer, I often build JavaScript applications with separated server and client builds. While this is a valid approach, managing state across both can be complex.
 
-I missed the simplicity of server-generated content enriching the client. While meta-frameworks like Next.js, Remix, Nuxt, and Astro handle this with SSR, I wanted a solution that combined Astro's frontend capabilities with a robust backend like Fastify.
+I missed the simplicity of server-generated content enriching the client. Meta-frameworks like Next.js, Remix, Nuxt, and Astro handle this with SSR, but I wanted a solution that combined Astro's frontend capabilities with a robust backend like Fastify.
 
-### Decisions
-
-I appreciate Astro's approach, particularly ViewTransitions and its SPA mode. It offers excellent examples and supports various frontend frameworks. For the backend, Fastify is my preferred choice.
+## The Two Integration Attempts
 
 I explored two integration approaches:
 
-1.  **Astro Adapter for Fastify:** I found a [repository](https://github.com/matthewp/astro-fastify) with contributions from both Astro and Fastify maintainers. However, it didn't work out of the box. Although I [forked it](https://github.com/matthewp/astro-fastify) and fixed dev mode, production mode remained problematic.
+1. **Astro Adapter for Fastify:** I found a [repository](https://github.com/matthewp/astro-fastify) with contributions from both Astro and Fastify maintainers. However, it didn't work out of the box. Although I [forked it](https://github.com/matthewp/astro-fastify) and fixed dev mode, production mode remained problematic.
 
-2.  **Node Middleware:** Astro's documentation provides [middleware instructions](https://docs.astro.build/en/guides/integrations-guide/node/#middleware) for Node adapters. While this offers a clean separation, the example server wasn't in TypeScript. Since I planned to use TRPC and Drizzle, a non-TypeScript backend was a dealbreaker.
+2. **Node Middleware:** Astro's documentation provides [middleware instructions](https://docs.astro.build/en/guides/integrations-guide/node/#middleware) for Node adapters. While this offers a clean separation, the example server wasn't in TypeScript. Since I planned to use tRPC and Drizzle, a non-TypeScript backend was a dealbreaker.
 
 Ultimately, I realized I could update my npm scripts to use `tsx` for watching and `rollup` for building. This flexible configuration aligns with Vite's tooling and the recommended Astro setup.
 
-### Summary
+## What's Included
 
-This starter combines Astro, Fastify, TRPC, Lucia, React, NextUI, and Drizzle. It features:
+This starter combines Astro, Fastify, tRPC, Lucia, React, NextUI, and Drizzle. It features:
 
 - Full TypeScript support for end-to-end type safety.
 - Session-based authentication via Lucia.

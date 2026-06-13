@@ -1,9 +1,9 @@
 ---
-title: Inventory Tracker
+title: 'Tracking Warehouse Inventory with Laravel, Vue.js, and Barcode Scanning'
 pubDate: '2022-01-08'
 tags: ['development', 'vuejs', 'laravel']
 draft: false
-description: A full stack application that tracks inventory; built using Laravel with a separate Vue SPA
+description: 'A vinyl fencing company needed a warehouse inventory system. I built a Vue.js SPA with barcode scanning and shareable filters, backed by a Laravel API.'
 heroImage: /static/images/inventory-tracker-scanning.png
 heroImageOptimized: '../../assets/inventory-tracker-scanning.png'
 ---
@@ -14,22 +14,20 @@ import Gallery from '@/components/Gallery.tsx'
 
 ## Preface
 
-A vinyl fencing company needed a simple system to track warehouse inventory. Requirements included:
+A vinyl fencing company needed a simple system to track warehouse inventory. Requirements included scanning vendor barcodes to receive items, looking up inventory, filtering with shareable URL-synced links, and a pre-programmed interface for different item types.
 
-- Scanning vendor barcodes to receive items.
-- Looking up inventory items.
-- Filtering items with shareable, URL-synced links.
-- Pre-programmed interface for different item types.
-
-### Technical Decisions
+## Technical Decisions
 
 **Architecture**
+
 I chose a decoupled architecture: a Vue.js SPA frontend communicating with a Laravel API backend.
 
 **Backend**
+
 [Laravel](https://laravel.com/) provides a complete, robust framework. Inspired by Rails but built on PHP, it enables a single developer to build full-stack applications efficiently.
 
 **Frontend**
+
 The frontend uses Vue.js and Vite.
 
 - **Vite:** Faster and easier to configure than Laravel Mix or Webpack.
@@ -37,6 +35,7 @@ The frontend uses Vue.js and Vite.
 - **UI:** Bootstrap 5, which integrates well with Vite + Vue and offers utility and component classes.
 
 **Deployment**
+
 I use Docker to deploy both frontend and backend containers to an Ubuntu server. A Traefik proxy manages access, with NGINX behind it to serve both applications from the same domain. While Traefik can handle this, the NGINX container improves portability.
 
 <Gallery

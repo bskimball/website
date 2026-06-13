@@ -1,9 +1,9 @@
 ---
-title: LDAP on the IBMi
+title: 'Authenticating pfSense OpenVPN Against IBM i LDAP'
 pubDate: '2022-10-02'
 tags: ['ibmi', 'pfsense']
 draft: false
-description: The IBMi LDAP server can be used for authentication for other services
+description: 'Use the IBM i Tivoli LDAP server as a single source of truth for VPN and service authentication. Here is the full setup, including a Node.js script to sync user profiles.'
 heroImage: /static/images/ibmi-ldap-properties.png
 heroImageOptimized: '../../assets/ibmi-ldap-properties.png'
 ---
@@ -103,3 +103,5 @@ IBM integrates the Tivoli LDAP server, which is configurable via the Web Navigat
 I most commonly use this to authenticate pfSense OpenVPN users. Configuring pfSense to authenticate against the IBM i LDAP server is straightforward. Once set up, you can assign this authentication method to your OpenVPN configuration. This approach works for many other services that support LDAP.
 
 ![PFSense LDAP](/static/images/pfsense-ldap.png)
+
+The full Node.js script for syncing profiles is available in the snippets above. If you are consolidating auth across IBM i and external services, LDAP is often the simplest bridge without adding a separate identity provider.

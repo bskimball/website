@@ -1,9 +1,9 @@
 ---
-title: Modern IBMi Prototype
+title: 'A Modern Feathers.js Stack on IBM i: Real-Time APIs on DB2'
 pubDate: '2023-08-27'
 tags: ['development', 'reactjs', 'feathersjs', 'typescript', 'ibmi']
 draft: false
-description: 'A modern full-stack application. A feathers backend with a vite spa frontend.'
+description: 'Real-time WebSockets, REST APIs, and a Vite React frontend running directly on IBM i using Feathers.js and a custom Knex adapter for DB2.'
 heroImage: /static/images/feathers-ibm-home.png
 heroImageOptimized: '../../assets/feathers-ibm-home.png'
 ---
@@ -14,19 +14,22 @@ import Gallery from '@/components/Gallery.tsx'
 
 ## Preface
 
-This project demonstrates a modern full-stack application on IBM i, featuring a Feathers.js backend and a Vite-powered SPA frontend. I also used this project to test my custom Knex adapter for DB2 on i, [knex-ibmi](https://www.npmjs.com/package/@bdkinc/knex-ibmi). The frontend and backend communicate via WebSockets for real-time updates.
+This project demonstrates a modern full-stack application on IBM i, featuring a Feathers.js backend and a Vite-powered SPA frontend. I also used it to test my custom Knex adapter for DB2 on i, [knex-ibmi](https://www.npmjs.com/package/@bdkinc/knex-ibmi). The frontend and backend communicate via WebSockets for real-time updates.
 
-### Technical Decisions
+## Technical Decisions
 
 **Backend**
-The backend uses TypeScript and [Feathers.js](https://feathersjs.com/)—a toolkit for creating applications with authentication, WebSockets (Socket.io), and REST APIs (Koa). It interacts with the DB2 database using [Knex](https://knexjs.org/), a powerful SQL query builder that works well with TypeScript.
 
-To connect Knex with DB2 for i, I developed the [knex-ibmi](https://www.npmjs.com/package/@bdkinc/knex-ibmi) package. This configuration allows us to scaffold services and hooks via the CLI, enabling modern real-time applications directly on IBM i.
+The backend uses TypeScript and [Feathers.js](https://feathersjs.com/), a toolkit for creating applications with authentication, WebSockets (Socket.io), and REST APIs (Koa). It interacts with the DB2 database using [Knex](https://knexjs.org/), a powerful SQL query builder that works well with TypeScript.
+
+To connect Knex with DB2 for i, I developed the [knex-ibmi](https://www.npmjs.com/package/@bdkinc/knex-ibmi) package. This configuration lets us scaffold services and hooks via the CLI, enabling modern real-time applications directly on IBM i.
 
 **Frontend**
+
 The frontend is a Single Page Application (SPA) built with TypeScript, Vite, and [React](https://react.dev/). Since Server-Side Rendering (SSR) wasn't required, I chose [Vite](https://vitejs.dev/) for bundling. The UI uses [shadcn/ui](https://ui.shadcn.com/), combining [Tailwind CSS](https://tailwindcss.com/) for styling and [Radix UI](https://www.radix-ui.com/primitives/docs/overview/introduction) for accessible components.
 
 **Development**
+
 The frontend and backend reside in separate directories for easier management. During development, I run their respective dev servers in separate terminal windows.
 
 <Gallery

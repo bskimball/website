@@ -1,9 +1,9 @@
 ---
-title: BDKcloud Website
+title: 'Building a Hosting Brand Site with Next.js and Real DC Photography'
 pubDate: '2022-01-14'
 tags: ['design', 'nextjs']
 draft: false
-description: 'The website for BDKcloud'
+description: 'We needed a dedicated, marketable site for our hosting services. I used actual data center photography and Next.js to build it.'
 heroImage: /static/images/bdkcloud-preview.png
 heroImageOptimized: '../../assets/bdkcloud-preview.png'
 ---
@@ -18,13 +18,13 @@ import Gallery from '@/components/Gallery.tsx'
 
 We needed to sharpen our focus on hosting operations. The goal was a dedicated, marketable website for our hosting services. I designed the landing page using actual images from the data center that houses our equipment.
 
-### Technical Decisions
+## Technical Decisions
 
-I previously used Nuxt.js for websites—a great meta-framework for Vue with out-of-the-box SSR. While I love Vue's performance, I prefer the flexibility of returning JSX from functions over templates. Switching to Tailwind CSS also removed the need for Vue's style sections.
+I previously used Nuxt.js for websites. While I love Vue's performance, I prefer the flexibility of returning JSX from functions over templates. Switching to Tailwind CSS also removed the need for Vue's style sections.
 
 Since React is more prevalent in the industry, and I lead training resources, switching to React minimized our training footprint.
 
-For a website, SEO and performance are mandatory. I chose Next.js for its SSR capabilities and React UI. Next.js remains the easiest and most performant way to build React websites. The site runs in a Docker environment behind a Traefik proxy.
+For a website, SEO and performance are mandatory. I chose Next.js for its SSR capabilities and React UI. The site runs in a Docker container behind a Traefik proxy.
 
 <Gallery
   client:load
