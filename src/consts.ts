@@ -6,4 +6,3 @@ export const SITE_DESCRIPTION =
 
 export const SITE_URL = 'https://brian-kimball.com'
 export const AUTHOR_NAME = 'Brian Kimball'
-export const AUTHOR_TWITTER = '' // Add handle if you have one

@@ -6,7 +6,7 @@ import {
   FaChevronRight,
 } from 'react-icons/fa6'
 
-export interface SlideImage {
+interface SlideImage {
   src: string
   alt?: string
   width?: number
