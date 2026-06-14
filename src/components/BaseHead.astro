@@ -106,8 +106,8 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`
 <script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-7QESKGKYB4"></script>
 <script is:inline>
   window.dataLayer = window.dataLayer || []
-  function gtag() {
-    dataLayer.push(arguments)
+  function gtag(...args) {
+    dataLayer.push(...args)
   }
   gtag('js', new Date())
   gtag('config', 'G-7QESKGKYB4')

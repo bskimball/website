@@ -2,44 +2,254 @@
 import HeaderLink from './HeaderLink.astro'
 import DarkModeToggle from './DarkModeToggle.tsx'
 import Starburst from './Starburst.astro'
+
+// Mobile "Sputnik Fan" — nav links fan out as rays from the brand mark.
+// Fan into the open down-right quadrant from the top-left logo:
+// angle in degrees (screen coords, y-down): x = r·cosθ, y = r·sinθ.
+const C = 20 // center of the 40×40 starburst trigger
+const rays = [
+  { label: 'Blog', href: '/blog', angle: 14, r: 158 },
+  { label: 'Tags', href: '/tags', angle: 45, r: 156 },
+  { label: 'About', href: '/about', angle: 76, r: 150 },
+]
+const items = rays.map((it, i) => {
+  const a = (it.angle * Math.PI) / 180
+  return {
+    ...it,
+    x: +(it.r * Math.cos(a)).toFixed(1),
+    y: +(it.r * Math.sin(a)).toFixed(1),
+    len: Math.ceil(it.r) + 6,
+    delay: 40 + i * 55,
+  }
+})
 ---
 
-<header
-  class="sticky top-0 z-50 w-full backdrop-blur-md border-b-2 border-primary/20 bg-background/80"
->
-  <div class="container flex justify-between items-center h-20">
-    <a
-      href="/"
-      class="group flex items-center gap-3 no-underline"
-      aria-label="Brian Kimball — home"
-    >
-      <Starburst
-        class="h-8 w-8 text-gold transition-transform duration-500 group-hover:rotate-180"
-      />
-      <span
-        class="font-display text-lg tracking-tight text-foreground transition-colors group-hover:text-primary"
-        >BK</span
+<div data-fan>
+  <header
+    class="sticky top-0 z-50 w-full backdrop-blur-md border-b-2 border-primary/20 bg-background/80"
+  >
+    <div class="container flex justify-between items-center h-20">
+      <!-- ── Mobile: starburst is the menu trigger, BK is the home link ── -->
+      <div class="flex items-center md:hidden">
+        <div class="relative" style="width: 40px; height: 40px">
+          <button
+            type="button"
+            data-fan-trigger
+            aria-expanded="false"
+            aria-label="Open navigation"
+            class="relative z-20 grid place-items-center h-10 w-10 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+          >
+            <Starburst
+              data-fan-star
+              class="h-9 w-9 text-gold transition-transform duration-500 ease-[cubic-bezier(.2,.9,.3,1.3)]"
+            />
+          </button>
+
+          <!-- connector rays, drawn from the core outward on open -->
+          <svg
+            class="absolute top-0 left-0 overflow-visible pointer-events-none z-0"
+            width="40"
+            height="40"
+            aria-hidden="true"
+          >
+            {
+              items.map((it) => (
+                <line
+                  class="fan-ray"
+                  x1={C}
+                  y1={C}
+                  x2={C + it.x}
+                  y2={C + it.y}
+                  style={`--len:${it.len}; --d:${it.delay}ms`}
+                />
+              ))
+            }
+          </svg>
+
+          <nav
+            data-fan-nav
+            aria-label="Primary"
+            class="absolute top-0 left-0 z-10 pointer-events-none"
+          >
+            {
+              items.map((it) => (
+                <a
+                  href={it.href}
+                  class="fan-item"
+                  style={`--x:${it.x}px; --y:${it.y}px; --d:${it.delay}ms`}
+                >
+                  <span class="fan-dot" />
+                  <span>{it.label}</span>
+                </a>
+              ))
+            }
+          </nav>
+        </div>
+
+        <a
+          href="/"
+          class="ml-3 font-display text-lg tracking-tight text-foreground"
+          aria-label="Brian Kimball — home">BK</a
+        >
+      </div>
+
+      <!-- ── Desktop: starburst + BK together are the home link ── -->
+      <a
+        href="/"
+        class="group hidden md:flex items-center gap-3 no-underline"
+        aria-label="Brian Kimball — home"
       >
-    </a>
-    <nav class="flex items-center gap-8">
-      <HeaderLink
-        href="/blog"
-        class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
-        >Blog</HeaderLink
-      >
-      <HeaderLink
-        href="/tags"
-        class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
-        >Tags</HeaderLink
-      >
-      <HeaderLink
-        href="/about"
-        class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
-        >About</HeaderLink
-      >
-      <div class="pl-4 border-l border-foreground/10">
+        <Starburst
+          class="h-8 w-8 text-gold transition-transform duration-500 group-hover:rotate-180"
+        />
+        <span
+          class="font-display text-lg tracking-tight text-foreground transition-colors group-hover:text-primary"
+          >BK</span
+        >
+      </a>
+
+      <!-- ── Desktop nav rail (unchanged) ── -->
+      <nav class="hidden md:flex items-center gap-8">
+        <HeaderLink
+          href="/blog"
+          class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
+          >Blog</HeaderLink
+        >
+        <HeaderLink
+          href="/tags"
+          class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
+          >Tags</HeaderLink
+        >
+        <HeaderLink
+          href="/about"
+          class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
+          >About</HeaderLink
+        >
+        <div class="pl-4 border-l border-foreground/10">
+          <DarkModeToggle client:load />
+        </div>
+      </nav>
+
+      <!-- ── Mobile: theme toggle pinned right ── -->
+      <div class="md:hidden">
         <DarkModeToggle client:load />
       </div>
-    </nav>
-  </div>
-</header>
+    </div>
+  </header>
+
+  <!-- scrim: dims + closes on outside tap. Kept OUTSIDE the blurred header so
+       position:fixed resolves against the viewport (backdrop-filter on the
+       header would otherwise make it the containing block → 0-height scrim). -->
+  <div data-fan-scrim class="fan-scrim md:hidden"></div>
+</div>
+
+<style>
+  .fan-item {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 42px;
+    white-space: nowrap;
+    padding: 0.6rem 1.1rem 0.6rem 0.85rem;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--primary) / 0.35);
+    background: hsl(var(--card));
+    box-shadow:
+      0 10px 26px -10px hsl(220 12% 4% / 0.7),
+      inset 0 0 0 1px hsl(var(--background) / 0.4);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: hsl(var(--foreground));
+    text-decoration: none;
+    transform: translate(-50%, -50%) translate(0, 0) scale(0.3);
+    opacity: 0;
+    transition:
+      transform 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3),
+      opacity 0.3s ease;
+  }
+  .fan-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: hsl(var(--gold));
+    box-shadow: 0 0 9px hsl(var(--gold) / 0.9);
+    flex: none;
+  }
+  .fan-ray {
+    stroke: hsl(var(--gold) / 0.55);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-dasharray: var(--len);
+    stroke-dashoffset: var(--len);
+    transition: stroke-dashoffset 0.45s ease;
+  }
+
+  [data-fan][data-open='true'] .fan-item {
+    transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1);
+    opacity: 1;
+    transition-delay: var(--d);
+  }
+  [data-fan][data-open='true'] [data-fan-nav] {
+    pointer-events: auto;
+  }
+  [data-fan][data-open='true'] .fan-ray {
+    stroke-dashoffset: 0;
+    transition-delay: var(--d);
+  }
+  [data-fan][data-open='true'] [data-fan-star] {
+    transform: rotate(180deg);
+  }
+
+  .fan-scrim {
+    position: fixed;
+    inset: 0;
+    top: 5rem;
+    background: hsl(var(--background) / 0.82);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 40; /* above page content, below the sticky header (z-50) */
+  }
+  [data-fan][data-open='true'] .fan-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fan-item,
+    .fan-ray,
+    [data-fan-star] {
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>
+
+<script>
+  function initFan() {
+    document.querySelectorAll<HTMLElement>('[data-fan]').forEach((root) => {
+      if (root.dataset.fanReady) return
+      root.dataset.fanReady = 'true'
+      const trigger = root.querySelector<HTMLButtonElement>('[data-fan-trigger]')
+      const scrim = root.querySelector<HTMLElement>('[data-fan-scrim]')
+      const set = (open: boolean) => {
+        root.dataset.open = String(open)
+        trigger?.setAttribute('aria-expanded', String(open))
+      }
+      trigger?.addEventListener('click', () =>
+        set(root.dataset.open !== 'true')
+      )
+      scrim?.addEventListener('click', () => set(false))
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') set(false)
+      })
+    })
+  }
+  initFan()
+  document.addEventListener('astro:after-swap', initFan)
+</script>

@@ -11,7 +11,7 @@ export interface SlideImage {
   alt?: string
   width?: number
   height?: number
-  [key: string]: any
+  [key: string]: unknown
 }
 
 interface Props {
