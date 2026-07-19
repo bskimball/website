@@ -1,4 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@300..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/* Self-hosted fonts via Fontsource (no Google Fonts network dependency) */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/outfit';
+@import '@fontsource/audiowide';
+@import '@fontsource/space-mono/400.css';
+@import '@fontsource/space-mono/700.css';
+@import '@fontsource/space-mono/400-italic.css';
+@import '@fontsource/space-mono/700-italic.css';
+
 @import 'tailwindcss';
 @import 'tailwindcss-animated';
 @plugin '@tailwindcss/typography';
@@ -33,11 +41,11 @@
    * font-mono:    Space Mono — FIG labels, tags, dates, technical specs. */
   --font-display: 'Audiowide', ui-sans-serif, system-ui, sans-serif;
   --font-sans:
-    'Inter', ui-sans-serif, system-ui, sans-serif, Apple Color Emoji,
-    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   --font-serif:
-    'Outfit', ui-sans-serif, system-ui, sans-serif, Apple Color Emoji,
-    Segoe UI Emoji;
+    'Outfit Variable', 'Outfit', ui-sans-serif, system-ui, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji;
   --font-mono:
     'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     Liberation Mono, Courier New, monospace;
@@ -79,7 +87,9 @@
   --color-chart-3: hsl(var(--chart-3));
   --color-chart-4: hsl(var(--chart-4));
   --color-chart-5: hsl(var(--chart-5));
-  --color-gold: hsl(var(--gold)); /* Chrome gold accent — starbursts, rules, focus */
+  --color-gold: hsl(
+    var(--gold)
+  ); /* Chrome gold accent — starbursts, rules, focus */
   --color-radius: 0.75rem;
 
   /* Footer SVG Colors — Atomic horizon (overridden per-mode in :root / .dark) */
@@ -260,11 +270,7 @@
 
   /* Chrome text — gold-to-coral gradient fill for display headlines. */
   .text-chrome {
-    background: linear-gradient(
-      135deg,
-      var(--color-gold),
-      var(--color-accent)
-    );
+    background: linear-gradient(135deg, var(--color-gold), var(--color-accent));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

@@ -14,11 +14,7 @@ Many of my recent backend projects involve pulling data from an API and insertin
 
 The default Job Scheduler on IBM i (accessed via `WRKJOBSCDE`) allows administrators to execute commands daily, weekly, or monthly.
 
-<img
-  alt="addjobscde screen"
-  src="/static/images/addjobscde.png"
-  style={{ float: 'right' }}
-/>
+![addjobscde screen](../../assets/addjobscde.png)
 This standard scheduler offers limited options. In the past, I've seen
 workarounds like creating multiple scheduled entries or writing complex CL
 programs. With my Linux background, I prefer CRON jobs, which easily handle
@@ -28,11 +24,7 @@ specific intervals for recurring tasks.
 
 The Advanced Job Scheduler (licensed program 5770-JS1) has been available since IBM i v7r2. It requires a separate license and installation. You can access it via `WRKJOBJS` or add a job with `ADDJOBJS`.
 
-<img
-  alt="addjobscde screen"
-  src="/static/images/addjobjs.png"
-  style={{ float: 'right' }}
-/>
+![addjobjs screen](../../assets/addjobjs.png)
 The `ADDJOBJS` screen shares many fields with the standard scheduler, but with a critical difference: it supports minute-based intervals. I can now schedule my Node.js applications to run hourly without any workarounds.
 
 If you are running recurring integrations on IBM i and have not looked at the Advanced Job Scheduler, it is worth the license cost just to eliminate the scheduling hacks.

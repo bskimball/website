@@ -4,17 +4,72 @@ import BlogPost from '../../layouts/BlogPost.astro'
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog')
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: post,
-  }))
-}
-type Props = CollectionEntry<'blog'>
+  const published = posts
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 
-const post = Astro.props as Props
+  return posts.map((post) => {
+    const currentTagIds = new Set(
+      (post.data.tags ?? []).map((t) => (typeof t === 'object' ? t.id : t)),
+    )
+
+    const scored = published
+      .filter((candidate) => candidate.id !== post.id)
+      .map((candidate) => {
+        const shared = (candidate.data.tags ?? []).reduce((count, tag) => {
+          const tagId = typeof tag === 'object' ? tag.id : tag
+          return currentTagIds.has(tagId) ? count + 1 : count
+        }, 0)
+        return { post: candidate, shared }
+      })
+      .filter((entry) => entry.shared > 0)
+      .sort((a, b) => {
+        if (b.shared !== a.shared) return b.shared - a.shared
+        return b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf()
+      })
+
+    const related = scored.slice(0, 3).map((entry) => entry.post)
+    if (related.length < 3) {
+      const relatedIds = new Set(related.map((r) => r.id))
+      for (const candidate of published) {
+        if (candidate.id === post.id || relatedIds.has(candidate.id)) continue
+        related.push(candidate)
+        if (related.length >= 3) break
+      }
+    }
+
+    return {
+      params: { slug: post.id },
+      props: {
+        post,
+        relatedPosts: related.slice(0, 3).map((r) => ({
+          id: r.id,
+          data: {
+            title: r.data.title,
+            description: r.data.description,
+            pubDate: r.data.pubDate,
+          },
+        })),
+      },
+    }
+  })
+}
+
+type Props = {
+  post: CollectionEntry<'blog'>
+  relatedPosts: {
+    id: string
+    data: Pick<
+      CollectionEntry<'blog'>['data'],
+      'title' | 'description' | 'pubDate'
+    >
+  }[]
+}
+
+const { post, relatedPosts } = Astro.props as Props
 const { Content } = await render(post)
 ---
 
-<BlogPost {...post.data}>
+<BlogPost {...post.data} relatedPosts={relatedPosts}>
   <Content />
 </BlogPost>

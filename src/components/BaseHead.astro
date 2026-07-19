@@ -7,6 +7,8 @@ interface Props {
   title: string
   description: string
   image?: string
+  imageWidth?: number
+  imageHeight?: number
   type?: 'website' | 'article'
   pubDate?: Date
   updatedDate?: Date
@@ -19,6 +21,8 @@ const {
   title,
   description,
   image = '/default-display.png',
+  imageWidth = 1200,
+  imageHeight = 630,
   type = 'website',
   pubDate,
   updatedDate,
@@ -37,31 +41,50 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
-<meta name="theme-color" content="#1FB8B0" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#0E1A20" media="(prefers-color-scheme: dark)" />
+<meta
+  name="theme-color"
+  content="#1FB8B0"
+  media="(prefers-color-scheme: light)"
+/>
+<meta
+  name="theme-color"
+  content="#0E1A20"
+  media="(prefers-color-scheme: dark)"
+/>
 
 <!-- Favicons -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="apple-touch-icon" sizes="180x180" href="/static/favicons/apple-touch-icon.png" />
-<link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#1FB8B0" />
+<link
+  rel="apple-touch-icon"
+  sizes="180x180"
+  href="/static/favicons/apple-touch-icon.png"
+/>
+<link
+  rel="mask-icon"
+  href="/static/favicons/safari-pinned-tab.svg"
+  color="#1FB8B0"
+/>
 <link rel="manifest" href="/static/favicons/site.webmanifest" />
 
 <!-- RSS Feed Discovery -->
-<link rel="alternate" type="application/rss+xml" title={`RSS Feed for ${SITE_TITLE}`} href={`${SITE_URL}/rss.xml`} />
-
-<!-- Font preloads -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`RSS Feed for ${SITE_TITLE}`}
+  href={`${SITE_URL}/rss.xml`}
+/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 
 <!-- Robots -->
-{noindex ? (
-  <meta name="robots" content="noindex, nofollow" />
-) : (
-  <meta name="robots" content="index, follow, max-image-preview:large" />
-)}
+{
+  noindex ? (
+    <meta name="robots" content="noindex, nofollow" />
+  ) : (
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+  )
+}
 
 <!-- Primary Meta Tags -->
 <title>{pageTitle}</title>
@@ -78,6 +101,8 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`
 <meta property="og:description" content={description} />
 <meta property="og:image" content={imageURL} />
 <meta property="og:image:secure_url" content={imageURL} />
+<meta property="og:image:width" content={String(imageWidth)} />
+<meta property="og:image:height" content={String(imageHeight)} />
 <meta property="og:image:alt" content={`${pageTitle} — featured image`} />
 
 <!-- Twitter -->
@@ -89,21 +114,29 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`
 <meta name="twitter:image:alt" content={`${pageTitle} — featured image`} />
 
 <!-- Article-specific meta -->
-{type === 'article' && pubDate && (
-  <>
-    <meta property="article:published_time" content={pubDate.toISOString()} />
-    <meta property="article:author" content={author} />
-    {tags.map((tag) => (
-      <meta property="article:tag" content={tag} />
-    ))}
-  </>
-)}
-{type === 'article' && updatedDate && (
-  <meta property="article:modified_time" content={updatedDate.toISOString()} />
-)}
+{
+  type === 'article' && pubDate && (
+    <>
+      <meta property="article:published_time" content={pubDate.toISOString()} />
+      <meta property="article:author" content={author} />
+      {tags.map((tag) => (
+        <meta property="article:tag" content={tag} />
+      ))}
+    </>
+  )
+}
+{
+  type === 'article' && updatedDate && (
+    <meta
+      property="article:modified_time"
+      content={updatedDate.toISOString()}
+    />
+  )
+}
 
 <!-- Analytics -->
-<script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-7QESKGKYB4"></script>
+<script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-7QESKGKYB4"
+></script>
 <script is:inline>
   window.dataLayer = window.dataLayer || []
   function gtag(...args) {

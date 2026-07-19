@@ -1,6 +1,6 @@
 ---
 import { type CollectionEntry } from 'astro:content'
-import { Image } from 'astro:assets'
+import { Image, getImage } from 'astro:assets'
 import BaseHead from '@/components/BaseHead.astro'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
@@ -10,7 +10,17 @@ import BlockAuthor from '../components/BlockAuthor.astro'
 import Backdrop from '@/components/Backdrop.astro'
 import { SITE_URL, AUTHOR_NAME } from '@/consts'
 
-type Props = CollectionEntry<'blog'>['data']
+type RelatedPost = {
+  id: string
+  data: Pick<
+    CollectionEntry<'blog'>['data'],
+    'title' | 'description' | 'pubDate'
+  >
+}
+
+type Props = CollectionEntry<'blog'>['data'] & {
+  relatedPosts?: RelatedPost[]
+}
 
 const {
   title,
@@ -21,11 +31,30 @@ const {
   heroImageOptimized,
   fullImage,
   tags,
+  relatedPosts = [],
 } = Astro.props
 
 const tagStrings = tags?.map((t) => (typeof t === 'object' ? t.id : t)) ?? []
 const canonicalPostUrl = new URL(Astro.url.pathname, SITE_URL).toString()
-const imageUrl = heroImage ? new URL(heroImage, SITE_URL).toString() : undefined
+
+let ogImagePath = heroImage
+let ogImageWidth = 1200
+let ogImageHeight = 630
+
+if (heroImageOptimized) {
+  const optimizedOg = await getImage({
+    src: heroImageOptimized,
+    width: 1200,
+    format: 'jpg',
+  })
+  ogImagePath = optimizedOg.src
+  ogImageWidth = optimizedOg.attributes.width ?? 1200
+  ogImageHeight = optimizedOg.attributes.height ?? 630
+}
+
+const imageUrl = ogImagePath
+  ? new URL(ogImagePath, SITE_URL).toString()
+  : undefined
 
 // JSON-LD structured data
 const articleSchema = {
@@ -86,7 +115,9 @@ const breadcrumbSchema = {
     <BaseHead
       title={title}
       description={description}
-      image={heroImage}
+      image={ogImagePath}
+      imageWidth={ogImageWidth}
+      imageHeight={ogImageHeight}
       type="article"
       pubDate={pubDate ? new Date(pubDate) : undefined}
       updatedDate={updatedDate ? new Date(updatedDate) : undefined}
@@ -216,9 +247,7 @@ const breadcrumbSchema = {
             <aside
               class="lg:col-span-4 flex flex-col gap-12 h-fit lg:sticky lg:top-32"
             >
-              <div
-                class="flex flex-col gap-8"
-              >
+              <div class="flex flex-col gap-8">
                 <div>
                   <span
                     class="font-mono text-xs tracking-widest text-primary block mb-4"
@@ -252,6 +281,34 @@ const breadcrumbSchema = {
               </div>
             </aside>
           </div>
+
+          {
+            relatedPosts.length > 0 && (
+              <section class="border-t border-border pt-12">
+                <span class="font-mono text-xs tracking-widest text-primary block mb-6">
+                  Related Posts
+                </span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {relatedPosts.map((post) => (
+                    <a
+                      href={`/blog/${post.id}`}
+                      class="group flex flex-col gap-3 rounded-2xl border-2 border-border bg-card p-5 no-underline transition-colors hover:border-primary"
+                    >
+                      <div class="font-mono text-[10px] tracking-widest text-foreground/50">
+                        <FormattedDate date={post.data.pubDate} />
+                      </div>
+                      <h3 class="font-serif text-xl leading-tight text-foreground group-hover:text-primary transition-colors">
+                        {post.data.title}
+                      </h3>
+                      <p class="line-clamp-2 text-sm text-foreground/70">
+                        {post.data.description}
+                      </p>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            )
+          }
         </div>
       </article>
     </main>

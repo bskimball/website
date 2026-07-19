@@ -21,11 +21,11 @@ Configuration varies by switch manufacturer (e.g., Cisco Nexus uses Virtual Port
 
 1.  **Identify Interfaces:** Determine which physical interfaces to aggregate. Typically, a 4-port network adapter uses labels like `CMN03`–`CMN06`. Verify this with the command `WRKHDWRSC *CMN`.
 
-![ibmi-lagg-interfaces](/static/images/lagg-ports.png)
+![ibmi-lagg-interfaces](../../assets/lagg-ports.png)
 
 2.  **Create Line Descriptor:** Use the `WRKLIND` screen and press F6 (or use the `CRTLIND` command) to create a new line descriptor.
 
-![ibmi-lagg-wrklind](/static/images/lagg-wrklind.png)
+![ibmi-lagg-wrklind](../../assets/lagg-wrklind.png)
 
 3.  **Configure Resource Name:** Instead of a specific port (e.g., `CMN04`), specify `*AGG` as the resource name.
 
@@ -37,6 +37,6 @@ Configuration varies by switch manufacturer (e.g., Cisco Nexus uses Virtual Port
 
 6.  **Define Aggregated Resources:** List the physical interfaces to be included in the LAGG group.
 
-![ibmi-lagg-configure](/static/images/lagg-configure-line.png)
+![ibmi-lagg-configure](../../assets/lagg-configure-line.png)
 
 Once configured, the new line descriptor functions like any other. You can assign static IP addresses and routing as usual, but with the added benefits of performance and redundancy.

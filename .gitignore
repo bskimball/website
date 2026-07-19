@@ -1,4 +1,5 @@
 node_modules
+.tmp/
 .astro
 dist
 docs

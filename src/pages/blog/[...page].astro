@@ -1,0 +1,163 @@
+---
+import type { GetStaticPaths, Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import BaseHead from '../../components/BaseHead.astro'
+import Header from '../../components/Header.astro'
+import Footer from '../../components/Footer.astro'
+import { getCollection } from 'astro:content'
+import { SITE_URL } from '../../consts'
+import Search from 'astro-pagefind/components/Search.astro'
+
+import BentoCard from '../../components/BentoCard.astro'
+import Backdrop from '../../components/Backdrop.astro'
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = (await getCollection('blog'))
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+
+  return paginate(posts, { pageSize: 10 })
+}) satisfies GetStaticPaths
+
+type Props = {
+  page: Page<CollectionEntry<'blog'>>
+}
+
+const { page } = Astro.props
+const posts = page.data
+
+const blogDescription =
+  'Articles on IBM i modernization, full-stack development, network infrastructure, and systems engineering by Brian Kimball.'
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: SITE_URL,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Blog',
+      item: `${SITE_URL}/blog`,
+    },
+  ],
+}
+
+const pageLabel =
+  page.currentPage > 1 ? `Blog — Page ${page.currentPage}` : 'Blog'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={pageLabel} description={blogDescription} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(breadcrumbSchema)}
+    />
+  </head>
+  <body
+    class="bg-background text-foreground antialiased selection:bg-primary selection:text-background"
+  >
+    <div class="noise-overlay"></div>
+    <Backdrop />
+    <Header />
+    <main class="container py-20">
+      <section class="flex flex-col gap-12">
+        <div class="flex flex-col gap-8">
+          <h1
+            class="leading-tight text-7xl md:text-8xl font-display animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-1000"
+          >
+            Blog
+          </h1>
+
+          <div class="blog-search max-w-xl">
+            <Search
+              className="w-full"
+              searchboxOptions={{ placeholder: 'Search posts…' }}
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {posts.map((post) => <BentoCard post={post} />)}
+        </div>
+
+        {
+          page.lastPage > 1 && (
+            <nav
+              class="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8"
+              aria-label="Blog pagination"
+            >
+              <div>
+                {page.url.prev ? (
+                  <a
+                    href={page.url.prev}
+                    class="font-mono text-xs tracking-widest border-2 border-border px-4 py-2 rounded-full no-underline text-foreground hover:border-primary hover:text-primary transition-colors"
+                  >
+                    ← Previous
+                  </a>
+                ) : (
+                  <span class="font-mono text-xs tracking-widest border-2 border-border/40 px-4 py-2 rounded-full text-foreground/30">
+                    ← Previous
+                  </span>
+                )}
+              </div>
+
+              <span class="font-mono text-xs tracking-widest text-foreground/60">
+                Page {page.currentPage} of {page.lastPage}
+              </span>
+
+              <div>
+                {page.url.next ? (
+                  <a
+                    href={page.url.next}
+                    class="font-mono text-xs tracking-widest border-2 border-border px-4 py-2 rounded-full no-underline text-foreground hover:border-primary hover:text-primary transition-colors"
+                  >
+                    Next →
+                  </a>
+                ) : (
+                  <span class="font-mono text-xs tracking-widest border-2 border-border/40 px-4 py-2 rounded-full text-foreground/30">
+                    Next →
+                  </span>
+                )}
+              </div>
+            </nav>
+          )
+        }
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  .blog-search {
+    --pf-text: hsl(var(--foreground));
+    --pf-text-secondary: hsl(var(--foreground) / 0.7);
+    --pf-text-muted: hsl(var(--foreground) / 0.55);
+    --pf-background: hsl(var(--background));
+    --pf-border: hsl(var(--border));
+    --pf-border-focus: hsl(var(--primary));
+    --pf-skeleton: hsl(var(--muted));
+    --pf-skeleton-shine: hsl(var(--muted));
+    --pf-hover: hsl(var(--muted));
+    --pf-mark: hsl(var(--primary));
+    --pf-scroll-shadow: hsl(var(--foreground) / 0.08);
+    --pf-outline-focus: hsl(var(--primary));
+    --pf-font: var(--font-sans);
+    --pf-border-radius: 9999px;
+    --pf-searchbox-max-width: 100%;
+  }
+
+  .blog-search pagefind-searchbox {
+    display: block;
+    width: 100%;
+  }
+</style>

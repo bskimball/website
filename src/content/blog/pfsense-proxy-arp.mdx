@@ -25,13 +25,13 @@ Proxy ARP allows a firewall to answer requests for IP addresses that don't belon
 
 First, establish and verify the tunnel between the two networks. Ensuring identical configurations on both sides is key. For details, refer to the [pfSense IPSec documentation](https://docs.netgate.com/pfsense/en/latest/recipes/ipsec-s2s-psk.html).
 
-![IPSEC tunnel](/static/images/proxy-arp_ipsec.png)
+![IPSEC tunnel](../../assets/proxy-arp_ipsec.png)
 
 ## Local Network
 
 In this scenario, the LAN is `192.168.1.0/24`. We will add a new **Proxy ARP** Virtual IP on the pfSense.
 
-![Virtual IP](/static/images/proxy-arp_virtual-ip.png)
+![Virtual IP](../../assets/proxy-arp_virtual-ip.png)
 
 Since we are defining a single IP, use a `/32` bitmask. This adds an entry to the firewall's ARP table. While the firewall won't reply to ICMP pings for this address, it will accept and route traffic destined for it.
 
@@ -41,6 +41,6 @@ The goal is to forward traffic from a LAN address (`192.168.1.30`) to a server o
 
 We achieve this with a **Port Forwarding** rule.
 
-![Port Forwarding](/static/images/proxy-arp_port-forward.png)
+![Port Forwarding](../../assets/proxy-arp_port-forward.png)
 
 Configure the rule to forward traffic (TCP, UDP, ICMP, or specific ports) from the local Proxy ARP address to the remote server's IP. Once active, LAN users can access the remote server using the local address.

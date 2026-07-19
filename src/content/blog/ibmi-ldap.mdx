@@ -96,12 +96,12 @@ odbc.connect(`DSN=${config.name}`, (error, db) => {
 
 IBM integrates the Tivoli LDAP server, which is configurable via the Web Navigator. For detailed instructions, refer to the [IBM i LDAP documentation](https://www.ibm.com/docs/en/i/7.5?topic=server-configuring-directory). Like standard LDAP servers, it uses Common Names (CN) and Organization Names (ON) for authentication integration.
 
-![IBMi LDAP Properties](/static/images/ibmi-ldap-properties.png)
+![IBMi LDAP Properties](../../assets/ibmi-ldap-properties.png)
 
 ## Implementation
 
 I most commonly use this to authenticate pfSense OpenVPN users. Configuring pfSense to authenticate against the IBM i LDAP server is straightforward. Once set up, you can assign this authentication method to your OpenVPN configuration. This approach works for many other services that support LDAP.
 
-![PFSense LDAP](/static/images/pfsense-ldap.png)
+![PFSense LDAP](../../assets/pfsense-ldap.png)
 
 The full Node.js script for syncing profiles is available in the snippets above. If you are consolidating auth across IBM i and external services, LDAP is often the simplest bridge without adding a separate identity provider.
