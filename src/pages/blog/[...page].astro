@@ -43,7 +43,7 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 2,
       name: 'Blog',
-      item: `${SITE_URL}/blog`,
+      item: `${SITE_URL}/blog/`,
     },
   ],
 }
@@ -142,7 +142,7 @@ const pageLabel =
     --pf-text: hsl(var(--foreground));
     --pf-text-secondary: hsl(var(--foreground) / 0.7);
     --pf-text-muted: hsl(var(--foreground) / 0.55);
-    --pf-background: hsl(var(--background));
+    --pf-background: hsl(var(--card));
     --pf-border: hsl(var(--border));
     --pf-border-focus: hsl(var(--primary));
     --pf-skeleton: hsl(var(--muted));
@@ -152,12 +152,46 @@ const pageLabel =
     --pf-scroll-shadow: hsl(var(--foreground) / 0.08);
     --pf-outline-focus: hsl(var(--primary));
     --pf-font: var(--font-sans);
-    --pf-border-radius: 9999px;
+    /* Keep dropdown/result chrome squared; pill only the input below. */
+    --pf-border-radius: 0.75rem;
     --pf-searchbox-max-width: 100%;
+    --pf-shadow-md: 0 12px 40px hsl(var(--foreground) / 0.12);
+    position: relative;
+    z-index: 30;
   }
 
   .blog-search pagefind-searchbox {
     display: block;
     width: 100%;
+  }
+
+  .blog-search .pf-searchbox-input {
+    border-radius: 9999px;
+    border-width: 2px;
+    min-height: 2.75rem;
+    padding-inline: 1rem 1rem;
+    padding-inline-start: 2.5rem;
+  }
+
+  .blog-search .pf-searchbox.open .pf-searchbox-input {
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+  }
+
+  .blog-search .pf-searchbox-dropdown {
+    border-width: 2px;
+    border-top-width: 0;
+    border-radius: 0 0 0.75rem 0.75rem;
+    background: hsl(var(--card));
+    overflow: hidden;
+  }
+
+  .blog-search .pf-searchbox-result {
+    border-radius: 0.5rem;
+  }
+
+  .blog-search .pf-searchbox-result[data-pf-selected],
+  .blog-search .pf-searchbox-result:hover {
+    background: hsl(var(--muted));
   }
 </style>

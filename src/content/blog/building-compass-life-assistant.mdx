@@ -1,0 +1,146 @@
+---
+title: 'Building Compass: A Life Assistant That Still Works When the AI Does Not'
+pubDate: '2026-07-19'
+tags: ['development', 'reactjs', 'typescript', 'life']
+draft: false
+description: 'I wanted a more customizable workout tracker, a budget my wife and I could share, and AI help on both. So I built Compass on TanStack Start and Cloudflare, and made sure it still works when the AI does not.'
+---
+
+I wanted three things. A workout and nutrition tracker with more customization than the apps I already liked, plus a way to see what workouts AI would generate for me. A way for my wife and me to actually share a budget instead of me maintaining a spreadsheet nobody else opens. And some AI help figuring out where our money was leaking, because staring at a category breakdown once a month was not doing much.
+
+Plenty of workout apps are fine. I still wanted deeper control over the plans, and I was curious whether generated sessions would be any good. They are. Grok even generates exercise reference images for the movements, which is more useful mid-session than I expected.
+
+None of the apps I tried did the fitness piece and the household budget piece together the way I wanted, and the ones that did one thing well still left me juggling tools. So I built Compass.
+
+{/* TODO: short personal anecdote about the specific week the spreadsheet/app juggling finally broke. Keep it light, keep it private. */}
+
+## Why the shape of the app looks the way it does
+
+Those three goals immediately created a problem. My workout history is mine. My wife does not need to see my protein numbers, and I do not need to see hers. But money is not like that. If I hide a purchase from the household budget, the budget is lying.
+
+So from day one Compass had to draw a hard line between personal data and shared data. Health and fitness live in a personal scope tied to whoever is logged in. Finance and some tasks live in a household scope both of us can see and edit. That split is not a nice-to-have I added later. It is the reason the whole storage layer is built the way it is.
+
+The other thing I knew early: I did not want to type. Half the time I want to log a workout or add water intake, I am mid-set or mid-cooking with wet hands. Voice had to be the default way in, not a bonus feature bolted on after the UI shipped.
+
+{/* TODO: screenshot of the daily dashboard, mic button and all. Blur names and numbers. */}
+
+## The stack
+
+Nothing exotic here on purpose:
+
+- **TanStack Start + React + TanStack Router** for the app and its server functions
+- **Cloudflare Workers** for deploy and scheduled jobs
+- **R2** for domain data, **D1** for Better Auth tables only
+- **Better Auth** with a Google allowlist plus passkeys
+- **Grok** through a server-side adapter, never from the browser
+- **Tailwind + shadcn/ui** for the UI
+
+I picked Cloudflare because I wanted edge deploy with low ops and one obvious place to put secrets. TanStack Start fit because I wanted server functions with real types, not a separate API layer I'd have to keep in sync with the client.
+
+## How requests and storage actually work
+
+Routes stay thin. Route-facing server functions live under `src/server`. The actual domain logic lives in plain `*-impl.ts` modules. Persistence goes through a store interface instead of R2 key strings scattered across the codebase, because I have made that mistake before and cleaning it up later is miserable.
+
+The path a request takes:
+
+1. A route calls a `createServerFn` wrapper.
+2. Auth middleware resolves the session and binds the member scope for that request.
+3. The wrapper validates input and gates any write.
+4. The implementation calls `getDomainStore()` for personal data or `getDomainStore({ shared: true })` for household data.
+5. Adapters own the Cloudflare bindings, the SimpleFIN HTTP calls, and the Grok transport.
+
+Domain data lives as objects in R2 with a few conventions: daily aggregates, weekly rollups, reference collections, append-only logs. Most of what Compass does is day-shaped, so that fits better than it should. History is either a weekly rollup or a log, not a sprawling relational schema I'd have to migrate every time the product changed.
+
+Writes to anything contended use compare-and-swap so two people writing at once do not clobber each other. For a household of two that is plenty. I was not going to build a relational migration story before I even knew if the product's shape was right.
+
+I looked at using D1 or Postgres for everything. What I actually needed was cheap object storage for daily JSON, one Cloudflare account for privacy, zero-ops deploys, and a clean wall between auth state and life data. D1 stays auth-only. Nutrition, workouts, finance, chat history, and voice logs never touch it.
+
+The tradeoff is real: R2 is not a query engine. Anything that looks like a complex view gets built in server code from known keys, not SQL. For an app this size that has been fine, and honestly it keeps me from over-designing a schema for data I do not have yet.
+
+{/* TODO: architecture diagram, once there's a good way to embed one on this blog. */}
+
+## Personal vs household, enforced not assumed
+
+The first version of this app had a single storage prefix, which works fine right up until a second person logs in and can suddenly see your workout log. That was an easy bug to imagine and an easy one to avoid, so I did the scoping properly.
+
+- **Personal:** profile, workouts, nutrition, daily plan, coach chat, voice and AI logs, personal tasks
+- **Household:** transactions, budget, subscriptions, category rules, finance snapshots, shared tasks
+
+The middleware resolves the session once per request and binds the scope. Personal stores read that bound scope. Shared stores use the household prefix. If auth is configured and nothing got bound, the store throws instead of quietly defaulting to something. I would rather see an error than accidentally leak data.
+
+Tasks are the one hybrid case, since a task can be personal or shared. The productivity loaders merge both collections for display and split them again on write. Finance is always household, full stop, even on a screen that's showing my personal dashboard.
+
+Passkeys sit on top of the Google allowlist. First sign-in is Google, and after that a passkey works on whatever device I enrolled it on. That matters a lot for a PWA I'm opening half asleep before coffee.
+
+## AI as an upgrade, not a dependency
+
+Every AI call goes through a server adapter. The browser never sees a provider key. Grok handles coaching, chat, voice intent, meal estimation, finance suggestions, workout plan generation, and the exercise reference images.
+
+The rule I actually enforced: every AI path has a deterministic fallback.
+
+- No key configured, the app still generates structural coaching from today's numbers.
+- Provider errors or bad JSON come back, it falls back instead of showing a blank screen.
+- Chat with no key still streams a useful snapshot of your data and tells you to add a key later.
+- Voice with no key falls back to simple text parsing for creating, completing, and deleting tasks, and logging water.
+
+Workouts are where that paid off first for me. Grok builds the weekly plan from preferences, training days, and the rest of the health context, and the sessions have been good enough that I actually follow them. Reference images for each exercise are generated on demand through Grok Imagine, cached in R2, and served from a simple API route so the workout UI can show a silhouette without shipping a giant media library.
+
+Budget optimization follows the same rule. AI advice on where to cut spending is useful when it works. It cannot be the only thing standing between me and a working budget page. Coaching and workout suggestions get generated and saved, so a reload just reads R2 instead of hitting Grok again. Regeneration is something you ask for.
+
+I also didn't hardcode special-case nutrition data just to hide a weak prompt. If food estimation is off, the estimation logic needs to get better. A real curated food database would be its own decision, made on purpose, not a patch to cover for a bad AI response.
+
+## Voice and chat write through the same path
+
+Voice is the main way I interact with this thing day to day. Capture happens in the browser with the Web Speech API, and the transcript gets saved. Intent extraction goes through Grok first for structured JSON and falls back to local parsing if that fails. Additive actions run right away. Anything destructive asks for confirmation first.
+
+Chat handles the longer, open-ended stuff, streaming over a server function instead of a public API route so the same scope middleware protects it. When chat wants to do something voice-shaped, like logging a meal or nudging a task, it produces a proposal card I can apply. Applying it runs through the exact same intent executor the mic uses.
+
+That shared path was one of the better calls I made. Voice and chat could easily have grown two different, slightly inconsistent ways of writing data, and I did not want to maintain both. Other tools in chat are narrower on purpose: memory tools manage coaching context, finance tools can read the ledger, and finance mutations go through their own guarded implementation.
+
+{/* TODO: stills or short recording: workout carousel with generated exercise image, voice meal log confirmation, chat proposal card being applied. */}
+
+## Integrations I'm actually willing to trust
+
+**SimpleFIN Bridge** is the real finance sync. I still support manual CSV import, but balances and transactions from linked accounts now come in through a sealed Access URL stored in household R2. The app never touches a bank password. A Workers cron runs the sync on its own, manual refresh is rate-limited, and everything lands in the same ledger and categorizer as CSV imports, with a cutover date so nothing double-counts.
+
+That's a real privacy tradeoff, since a third party now sees which institutions we're connected to. In exchange, the net worth chart stops depending on whether I remembered to download a statement that month.
+
+**Weather** comes from Open-Meteo through a server function. The client sends coordinates, the server fetches the forecast after auth. No key in the browser.
+
+**Daily quotes** are AI-backed and gated the same way as coaching: nice when Grok is up, not something the app depends on when it isn't.
+
+That's the whole integration list. I'm not going to pad it out.
+
+## Deploying to Cloudflare
+
+Production runs as a Worker. The entry point re-exports TanStack Start's fetch handler and adds a `scheduled` handler for the SimpleFIN cron. Secrets live in Wrangler secrets, non-secret config is a Worker variable. I locked down preview and crawler exposure hard: noindex headers, robots disallow, workers.dev turned off in the deploy config.
+
+Local dev uses the Cloudflare Vite plugin with emulated bindings, and auth degrades gracefully without OAuth set up locally. Production is the opposite. If auth config is missing, it fails closed. I want convenience on my laptop and a locked door on the deployed app, not the reverse.
+
+CI runs format, lint, typecheck, and tests before every build, and deploy goes through the same gate. This thing writes into our actual budget. I did not want it running on the honor system.
+
+## What I traded off, and what's still not done
+
+Compass works. It is not finished, and I'm fine with that.
+
+Things I chose on purpose:
+
+- Object storage over relational convenience, betting the app stays day-shaped
+- Browser speech-to-text over the cost and latency of server-side audio, for now
+- One coach call that reasons over everything instead of a pile of small model calls
+- Shared visibility into household finances over strict isolation, because a half-shared budget defeats the point
+- My own SSE chat transport instead of waiting on a clean TanStack AI package for the versions I'm pinned to
+
+What still needs work:
+
+- Household coordination is thin outside of shared tasks and shared money
+- The nightly reflection screen is basically a stub sitting on top of data that's already there
+- Coach memory is decent but I have no real way to measure if it's actually good yet
+- The list of things voice and chat are allowed to do safely is still short
+- I might eventually put a real abstraction layer in front of Grok, but only once I'm sure I want to swap providers, not before
+
+The stuff I really can't answer yet is whether any of this changes our actual habits. Does the coaching nudge get ignored after week two? Which voice commands fall apart in a loud kitchen? How often does SimpleFIN need me to go rescue a broken bank connection by hand? I don't have that mileage yet.
+
+{/* TODO: after a few weeks of real use, add notes on which fallbacks actually fire, which voice commands need work, and whether the coaching suggestions get acted on. No made-up numbers. */}
+
+If I stripped this app for parts, the pieces I'd keep are the scope binding at the middleware level instead of scattered checks, the deterministic fallback on every AI path, and the one shared write path for voice and chat. The specific model, the R2 key layout, the dashboard cards, all of that can and probably will change. What I built this time, for once, doesn't fall over the moment the clever part goes offline.

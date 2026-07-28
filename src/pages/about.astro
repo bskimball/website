@@ -14,13 +14,11 @@ const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: AUTHOR_NAME,
-  url: `${SITE_URL}/about`,
+  url: `${SITE_URL}/about/`,
   image: `${SITE_URL}/static/images/avatar.png`,
   jobTitle: 'Systems Engineer / Developer',
   description: aboutDescription,
-  sameAs: [
-    'https://github.com/bskimball',
-  ],
+  sameAs: ['https://github.com/bskimball'],
   worksFor: {
     '@type': 'Organization',
     name: 'BDK Inc.',
@@ -41,7 +39,7 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 2,
       name: 'About',
-      item: `${SITE_URL}/about`,
+      item: `${SITE_URL}/about/`,
     },
   ],
 }

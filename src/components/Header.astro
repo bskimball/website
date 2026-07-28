@@ -8,9 +8,9 @@ import Starburst from './Starburst.astro'
 // angle in degrees (screen coords, y-down): x = r·cosθ, y = r·sinθ.
 const C = 20 // center of the 40×40 starburst trigger
 const rays = [
-  { label: 'Blog', href: '/blog', angle: 14, r: 158 },
-  { label: 'Tags', href: '/tags', angle: 45, r: 156 },
-  { label: 'About', href: '/about', angle: 76, r: 150 },
+  { label: 'Blog', href: '/blog/', angle: 14, r: 158 },
+  { label: 'Tags', href: '/tags/', angle: 45, r: 156 },
+  { label: 'About', href: '/about/', angle: 76, r: 150 },
 ]
 const items = rays.map((it, i) => {
   const a = (it.angle * Math.PI) / 180
@@ -111,17 +111,17 @@ const items = rays.map((it, i) => {
       <!-- ── Desktop nav rail (unchanged) ── -->
       <nav class="hidden md:flex items-center gap-8">
         <HeaderLink
-          href="/blog"
+          href="/blog/"
           class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
           >Blog</HeaderLink
         >
         <HeaderLink
-          href="/tags"
+          href="/tags/"
           class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
           >Tags</HeaderLink
         >
         <HeaderLink
-          href="/about"
+          href="/about/"
           class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
           >About</HeaderLink
         >
@@ -235,14 +235,15 @@ const items = rays.map((it, i) => {
     document.querySelectorAll<HTMLElement>('[data-fan]').forEach((root) => {
       if (root.dataset.fanReady) return
       root.dataset.fanReady = 'true'
-      const trigger = root.querySelector<HTMLButtonElement>('[data-fan-trigger]')
+      const trigger =
+        root.querySelector<HTMLButtonElement>('[data-fan-trigger]')
       const scrim = root.querySelector<HTMLElement>('[data-fan-scrim]')
       const set = (open: boolean) => {
         root.dataset.open = String(open)
         trigger?.setAttribute('aria-expanded', String(open))
       }
       trigger?.addEventListener('click', () =>
-        set(root.dataset.open !== 'true')
+        set(root.dataset.open !== 'true'),
       )
       scrim?.addEventListener('click', () => set(false))
       document.addEventListener('keydown', (e) => {

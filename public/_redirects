@@ -1,0 +1,7 @@
+# Retired Astro starter sample posts — collapse soft 404s for Google.
+/blog/first-post /blog/ 301
+/blog/first-post/ /blog/ 301
+/blog/second-post /blog/ 301
+/blog/second-post/ /blog/ 301
+/blog/third-post /blog/ 301
+/blog/third-post/ /blog/ 301

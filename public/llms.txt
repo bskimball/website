@@ -12,25 +12,25 @@ This is the personal website and technical blog of Brian Kimball, a Systems Engi
 ## Content Index
 
 ### Featured & Recent Articles
-- [High Availability Strategies](/blog/high-availability) - Concepts and implementation of HA systems.
-- [IBM i & LDAP](/blog/ibmi-ldap) - Integrating IBM i authentication with LDAP.
-- [Knex.js with IBM i](/blog/knex-ibmi) - Using modern ORMs with DB2 on i.
-- [React State Map](/blog/react-state-map) - Visualizing state management in React.
-- [Tanstack Query & Hono](/blog/tanstack-hono) - Building type-safe APIs.
+- [High Availability Strategies](/blog/high-availability/) - Concepts and implementation of HA systems.
+- [IBM i & LDAP](/blog/ibmi-ldap/) - Integrating IBM i authentication with LDAP.
+- [Knex.js with IBM i](/blog/knex-ibmi/) - Using modern ORMs with DB2 on i.
+- [React State Map](/blog/react-state-map/) - Visualizing state management in React.
+- [Tanstack Query & Hono](/blog/tanstack-hono/) - Building type-safe APIs.
 
 ### Complete Archive
-- [Advanced Job Scheduler](/blog/advanced-job-scheduler)
-- [Building bdkcloud.com](/blog/bdkcloud-website)
-- [Building bdkinc.com](/blog/bdkinc-website)
-- [Datacenter Installations](/blog/datacenter-installations)
-- [Fastify Astro Starter](/blog/fastify-astro-starter)
-- [Feathers.js & IBM i](/blog/feathers-ibm)
-- [IBM i LAGG](/blog/ibmi-lagg)
-- [Inventory Tracker App](/blog/inventory-tracker)
-- [Learning Go](/blog/learning-go)
-- [Learning Go (Part 2)](/blog/learning-go-pt2)
-- [Network Mapper](/blog/network-mapper)
-- [Node.js Automation](/blog/node-automation)
-- [pfSense Proxy ARP](/blog/pfsense-proxy-arp)
-- [Renaissance Technical Design System](/blog/renaissance-technical)
-- [Time Tracker App](/blog/time-tracker)
+- [Advanced Job Scheduler](/blog/advanced-job-scheduler/)
+- [Building bdkcloud.com](/blog/bdkcloud-website/)
+- [Building bdkinc.com](/blog/bdkinc-website/)
+- [Datacenter Installations](/blog/datacenter-installations/)
+- [Fastify Astro Starter](/blog/fastify-astro-starter/)
+- [Feathers.js & IBM i](/blog/feathers-ibm/)
+- [IBM i LAGG](/blog/ibmi-lagg/)
+- [Inventory Tracker App](/blog/inventory-tracker/)
+- [Learning Go](/blog/learning-go/)
+- [Learning Go (Part 2)](/blog/learning-go-pt2/)
+- [Network Mapper](/blog/network-mapper/)
+- [Node.js Automation](/blog/node-automation/)
+- [pfSense Proxy ARP](/blog/pfsense-proxy-arp/)
+- [Renaissance Technical Design System](/blog/renaissance-technical/)
+- [Time Tracker App](/blog/time-tracker/)

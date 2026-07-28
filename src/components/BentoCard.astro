@@ -14,7 +14,7 @@ const { post, class: className, featured } = Astro.props
 ---
 
 <a
-  href={`/blog/${post.id}`}
+  href={`/blog/${post.id}/`}
   class:list={[
     'group relative overflow-hidden rounded-2xl border-2 border-border bg-card p-6 flex flex-col justify-between h-full transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 no-underline',
     className,
@@ -27,9 +27,9 @@ const { post, class: className, featured } = Astro.props
   >
     <defs>
       <linearGradient id={`bt-${post.id}`} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="hsl(var(--gold))" />
-        <stop offset="55%" stop-color="hsl(var(--accent))" />
-        <stop offset="100%" stop-color="hsl(var(--gold))" />
+        <stop offset="0%" stop-color="hsl(var(--gold))"></stop>
+        <stop offset="55%" stop-color="hsl(var(--accent))"></stop>
+        <stop offset="100%" stop-color="hsl(var(--gold))"></stop>
       </linearGradient>
     </defs>
     <rect
@@ -44,8 +44,7 @@ const { post, class: className, featured } = Astro.props
       stroke={`url(#bt-${post.id})`}
       stroke-width="4"
       stroke-linecap="round"
-      vector-effect="non-scaling-stroke"
-    />
+      vector-effect="non-scaling-stroke"></rect>
   </svg>
   {
     featured && (

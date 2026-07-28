@@ -15,9 +15,10 @@ export async function GET(context) {
     items: sortedPosts.map((post) => ({
       title: post.data.title,
       description: post.data.description,
-      link: `/blog/${post.slug}`,
+      link: `/blog/${post.id}/`,
       pubDate: post.data.pubDate,
-      categories: post.data.tags?.map((t) => (typeof t === 'object' ? t.id : t)) ?? [],
+      categories:
+        post.data.tags?.map((t) => (typeof t === 'object' ? t.id : t)) ?? [],
     })),
     customData: `<language>en-us</language>`,
   })

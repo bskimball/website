@@ -1,0 +1,94 @@
+---
+import BaseHead from '@/components/BaseHead.astro'
+import Header from '@/components/Header.astro'
+import Footer from '@/components/Footer.astro'
+import Backdrop from '@/components/Backdrop.astro'
+import Starburst from '@/components/Starburst.astro'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="404 — Signal Lost"
+      description="This page drifted off the schematic. Head back home or browse the blog."
+      noindex={true}
+    />
+  </head>
+  <body
+    class="bg-background text-foreground antialiased selection:bg-primary selection:text-background"
+  >
+    <div class="noise-overlay"></div>
+    <Backdrop />
+    <Header />
+    <main class="container py-20">
+      <section
+        class="relative min-h-[60vh] flex flex-col justify-center overflow-hidden"
+      >
+        <Starburst
+          class="pointer-events-none select-none absolute -top-20 -right-16 h-72 w-72 text-gold/15 animate-spin-slow md:h-[28rem] md:w-[28rem]"
+        />
+        <Starburst
+          class="pointer-events-none select-none absolute bottom-0 -left-16 h-40 w-40 text-accent/10 md:h-56 md:w-56"
+        />
+
+        <div class="relative z-10 flex flex-col gap-8 max-w-3xl">
+          <p
+            class="font-mono text-xs md:text-sm tracking-[0.25em] text-primary uppercase"
+          >
+            Error / 404
+          </p>
+
+          <h1
+            class="font-display leading-[0.95] tracking-tight text-6xl md:text-8xl animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-1000"
+          >
+            Signal
+            <span class="block text-primary">Lost</span>
+          </h1>
+
+          <div class="flex items-center gap-4 max-w-md">
+            <span class="h-px flex-1 max-w-16 bg-gold/60"></span>
+            <Starburst class="h-4 w-4 text-accent shrink-0" dots />
+            <span class="h-px flex-1 bg-gold/60"></span>
+          </div>
+
+          <p
+            class="font-sans text-lg md:text-xl text-foreground/75 max-w-xl leading-relaxed animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-1000 delay-150"
+          >
+            This route isn’t on the schematic. It may have been renamed,
+            retired, or never existed — either way, the terminal can’t lock onto
+            it.
+          </p>
+
+          <div
+            class="flex flex-wrap items-center gap-3 pt-2 animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-1000 delay-300"
+          >
+            <a
+              href="/"
+              class="inline-flex items-center justify-center rounded-full border-2 border-border bg-primary px-6 py-2.5 font-mono text-xs tracking-widest text-primary-foreground no-underline transition-colors hover:border-primary"
+            >
+              Home
+            </a>
+            <a
+              href="/blog/"
+              class="inline-flex items-center justify-center rounded-full border-2 border-border bg-card px-6 py-2.5 font-mono text-xs tracking-widest text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+            >
+              Blog
+            </a>
+            <a
+              href="/tags/"
+              class="inline-flex items-center justify-center rounded-full border-2 border-border bg-card px-6 py-2.5 font-mono text-xs tracking-widest text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+            >
+              Tags
+            </a>
+          </div>
+
+          <p class="font-mono text-xs tracking-widest text-foreground/45 pt-4">
+            STATUS · NOT FOUND · RETURN TO KNOWN COORDINATES
+          </p>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </body>
+</html>

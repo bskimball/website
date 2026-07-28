@@ -52,13 +52,13 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 2,
       name: 'Tags',
-      item: `${SITE_URL}/tags`,
+      item: `${SITE_URL}/tags/`,
     },
     {
       '@type': 'ListItem',
       position: 3,
       name: tag.data.name,
-      item: `${SITE_URL}/tags/${tag.id}`,
+      item: `${SITE_URL}/tags/${tag.id}/`,
     },
   ],
 }

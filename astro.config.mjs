@@ -9,7 +9,7 @@ import tailwindcss from '@tailwindcss/vite'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://brian-kimball.com',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   integrations: [mdx(), sitemap(), react(), pagefind()],
   prefetch: {
     prefetchAll: true,

@@ -25,7 +25,7 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 2,
       name: 'Tags',
-      item: `${SITE_URL}/tags`,
+      item: `${SITE_URL}/tags/`,
     },
   ],
 }
@@ -58,7 +58,7 @@ const breadcrumbSchema = {
           {
             tags.map((tag, index) => (
               <a
-                href={`/${tag.collection}/${tag.id}`}
+                href={`/${tag.collection}/${tag.id}/`}
                 class="animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-500 border border-foreground/20 px-4 py-2 hover:bg-primary hover:text-background hover:border-background transition-colors font-mono text-lg rounded-full"
                 style={{ animationDelay: `${index * 50}ms` }}
               >

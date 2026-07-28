@@ -66,4 +66,4 @@ The page is intentionally clean — there is **no** "FIG" technical-label system
 - **Tailwind v4:** all theme config lives in the `@theme` block in `src/styles/global.css`.
 - **Containers:** `.container` utility (`px-8`, `py-20`).
 - **Icons:** `react-icons` (Fa6).
-- **Links:** never use trailing slashes.
+- **Links:** use trailing slashes for internal page routes (e.g. `/blog/`, `/about/`, `/blog/my-post/`). Root remains `/`. Do not add trailing slashes to external URLs, `mailto:`, asset paths, or feed URLs like `/rss.xml`.
