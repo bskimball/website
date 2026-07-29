@@ -100,7 +100,7 @@ That constraint improves the main session too. If I cannot explain a delegated u
 
 ## Synchronous tasks are disposable, queued missions
 
-The original orchestration path is still useful. The `task` tool launches a fresh Pi process in JSON mode with no restored session. It discovers the selected agent, validates the working directory, injects the specialist prompt, streams events into the terminal UI, and returns the final report to the lead.
+The original orchestration path is still useful. This synchronous path launches a fresh `pi --mode json --no-session` process. It discovers the selected agent, validates the working directory, injects the specialist prompt, streams JSON events into the terminal UI, and returns the final report to the lead. JSON mode applies only to the synchronous `task` runner.
 
 Synchronous tasks have a hard concurrency cap of three. Additional calls queue until a slot opens.
 
@@ -117,7 +117,7 @@ The synchronous runner can walk the agent's configured model fallback chain when
 
 ## Persistent RPC workers make delegation interactive
 
-Some jobs need a longer relationship than one prompt and one report. The newer orchestration path starts Pi in RPC mode with an isolated session directory and exposes a lifecycle instead of a single call:
+Some jobs need a longer relationship than one prompt and one report. Async tasks do not use JSON mode. `task_start` launches `pi --mode rpc` with an isolated, session-backed directory, then communicates with the child over Pi's RPC protocol. That exposes a persistent lifecycle instead of a single call:
 
 - `task_start` launches a specialist and immediately returns a worker handle
 - `task_status` shows bounded lifecycle, activity, errors, and pending interactions
