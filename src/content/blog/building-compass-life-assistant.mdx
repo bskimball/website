@@ -10,6 +10,7 @@ import { Image } from 'astro:assets'
 import compassDashboard from '../../assets/compass-screenshot-1.png'
 import compassNutrition from '../../assets/compass-screenshot-2.png'
 import compassCoach from '../../assets/compass-screenshot-3.png'
+import ArchitectureDiagram from '../../components/blog/compass/ArchitectureDiagram.astro'
 
 I wanted three things. A workout and nutrition tracker with more customization than the apps I already liked, plus a way to see what workouts AI would generate for me. A way for my wife and me to actually share a budget instead of me maintaining a spreadsheet nobody else opens. And some AI help figuring out where our money was leaking, because staring at a category breakdown once a month was not doing much.
 
@@ -71,7 +72,7 @@ I looked at using D1 or Postgres for everything. What I actually needed was chea
 
 The tradeoff is real: R2 is not a query engine. Anything that looks like a complex view gets built in server code from known keys, not SQL. For an app this size that has been fine, and honestly it keeps me from over-designing a schema for data I do not have yet.
 
-{/* TODO: architecture diagram, once there's a good way to embed one on this blog. */}
+<ArchitectureDiagram />
 
 ## Personal vs household, enforced not assumed
 
@@ -175,4 +176,12 @@ What still needs work:
 
 The stuff I really can't answer yet is whether any of this changes our actual habits. Does the coaching nudge get ignored after week two? Which voice commands fall apart in a loud kitchen? How often does SimpleFIN need me to go rescue a broken bank connection by hand? I don't have that mileage yet.
 
-{/* TODO: after a few weeks of real use, add notes on which fallbacks actually fire, which voice commands need work, and whether the coaching suggestions get acted on. No made-up numbers. */}
+## After a few weeks of real use
+
+It has been good, though not evenly good.
+
+The finance side is the clear win. Putting every subscription in one place surfaced a few I did not need and promptly cancelled, which is the kind of thing I had been meaning to audit for years and never did. I also have a much better sense of where the budget actually sits, instead of the vague once-a-month guess I had before. Nutrition is close behind: knowing my real calorie intake, rather than what I assumed it was, changed how I eat more than any coaching prompt did.
+
+The fitness side is the honest miss. The app generates good workouts. I am not doing them as often as I would like. That is not a bug I can fix in the storage layer, and it is worth saying plainly, because the easy version of this post ends with the tool solving everything. Building a thing that tracks a habit turns out to be much easier than building the habit.
+
+So: measurement got better across the board, and one of the three behaviors actually moved. I will take that.

@@ -1,0 +1,745 @@
+---
+// Compass request path: one server-function entry, one scope decision, two
+// storage scopes. D1 hangs off auth only, adapters hang off the impl layer.
+// Two hand-tuned layouts (wide + stacked) so the mono labels stay legible
+// instead of shrinking into unreadability on narrow screens.
+const description =
+  'Compass request flow. The browser PWA calls a single TanStack Start server function. Auth middleware binds the member scope for the request and is the only thing that touches D1, which holds Better Auth tables only. Domain implementation modules reach persistence through a store interface, which splits into two scopes: a personal scope for workouts, nutrition, coach chat and voice logs, and a household scope for finance, budget, subscriptions and shared tasks. Both scopes persist domain data to R2 as daily JSON. Adapters for Grok, SimpleFIN and the Cloudflare bindings hang off the implementation layer and stay server side.'
+---
+
+<figure class="not-prose my-10">
+  <div
+    class="overflow-hidden rounded-2xl border-2 border-border bg-card/60 p-4 sm:p-6"
+  >
+    <!-- Wide layout -->
+    <svg
+      class="hidden h-auto w-full md:block"
+      viewBox="0 0 720 576"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-labelledby="compass-arch-title compass-arch-desc"
+    >
+      <title id="compass-arch-title">Compass application architecture</title>
+      <desc id="compass-arch-desc">{description}</desc>
+
+      <defs>
+        <pattern
+          id="compass-arch-grid"
+          width="24"
+          height="24"
+          patternUnits="userSpaceOnUse"
+        >
+          <path
+            d="M24 0H0V24"
+            fill="none"
+            class="stroke-border"
+            stroke-width="1"
+            opacity="0.4"></path>
+        </pattern>
+      </defs>
+      <rect width="720" height="576" fill="url(#compass-arch-grid)"></rect>
+
+      <!-- restrained atomic ornament -->
+      <g class="fill-gold" opacity="0.6" transform="translate(676 536)">
+        <path d="M0,-18 L4,-4 L18,0 L4,4 L0,18 L-4,4 L-18,0 L-4,-4 Z"></path>
+        <circle cx="0" cy="0" r="2.5"></circle>
+      </g>
+
+      <!-- request spine -->
+      <g class="fill-primary stroke-primary" stroke-width="2">
+        <path d="M220 52 H251" fill="none"></path>
+        <polygon points="260,52 250,47 250,57" stroke="none"></polygon>
+        <path d="M460 52 H491" fill="none"></path>
+        <polygon points="500,52 490,47 490,57" stroke="none"></polygon>
+        <path
+          d="M520 84 V104 H360 V116"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <polygon points="360,124 355,114 365,114" stroke="none"></polygon>
+        <path d="M360 200 V219" fill="none"></path>
+        <polygon points="360,228 355,218 365,218" stroke="none"></polygon>
+        <path
+          d="M360 292 V308 M200 308 H520"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <path d="M360 444 V451" fill="none"></path>
+        <polygon points="360,460 355,450 365,450" stroke="none"></polygon>
+      </g>
+
+      <!-- auth side concerns: D1 and the adapters -->
+      <g class="fill-border stroke-border" stroke-width="2">
+        <path d="M600 84 V115" fill="none"></path>
+        <polygon points="600,124 595,114 605,114" stroke="none"></polygon>
+        <path d="M260 162 H229" fill="none"></path>
+        <polygon points="220,162 230,157 230,167" stroke="none"></polygon>
+      </g>
+
+      <!-- personal branch -->
+      <g class="fill-accent stroke-accent" stroke-width="2">
+        <path d="M200 308 V323" fill="none"></path>
+        <polygon points="200,332 195,322 205,322" stroke="none"></polygon>
+        <path
+          d="M200 420 V444 H360"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </g>
+
+      <!-- household branch -->
+      <g class="fill-gold stroke-gold" stroke-width="2">
+        <path d="M520 308 V323" fill="none"></path>
+        <polygon points="520,332 515,322 525,322" stroke="none"></polygon>
+        <path
+          d="M520 420 V444 H360"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </g>
+
+      <!-- entry -->
+      <rect
+        x="20"
+        y="20"
+        width="200"
+        height="64"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="120"
+        y="48"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">Browser / PWA</text
+      >
+      <text
+        x="120"
+        y="68"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">voice + chat UI</text
+      >
+
+      <rect
+        x="260"
+        y="20"
+        width="200"
+        height="64"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="360"
+        y="48"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">TanStack Start</text
+      >
+      <text
+        x="360"
+        y="68"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">createServerFn</text
+      >
+
+      <rect
+        x="500"
+        y="20"
+        width="200"
+        height="64"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="600"
+        y="48"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">auth middleware</text
+      >
+      <text
+        x="600"
+        y="68"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">binds member scope</text
+      >
+
+      <!-- walled-off auth store -->
+      <rect
+        x="500"
+        y="124"
+        width="200"
+        height="80"
+        rx="14"
+        stroke-width="2"
+        class="fill-muted/50 stroke-border"></rect>
+      <text
+        x="600"
+        y="152"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">D1</text
+      >
+      <text
+        x="600"
+        y="172"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">Better Auth</text
+      >
+      <text
+        x="600"
+        y="190"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">tables only</text
+      >
+
+      <!-- adapters -->
+      <rect
+        x="20"
+        y="118"
+        width="200"
+        height="92"
+        rx="14"
+        stroke-width="2"
+        class="fill-muted/50 stroke-border"></rect>
+      <text
+        x="120"
+        y="146"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">adapters</text
+      >
+      <text
+        x="120"
+        y="166"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">Grok (server only)</text
+      >
+      <text
+        x="120"
+        y="184"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">SimpleFIN</text
+      >
+      <text
+        x="120"
+        y="202"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">Cloudflare bindings</text
+      >
+
+      <!-- domain layer -->
+      <rect
+        x="260"
+        y="124"
+        width="200"
+        height="76"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="360"
+        y="150"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">domain impl</text
+      >
+      <text
+        x="360"
+        y="170"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">*-impl.ts</text
+      >
+      <text
+        x="360"
+        y="188"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">plain logic</text
+      >
+
+      <rect
+        x="260"
+        y="228"
+        width="200"
+        height="64"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="360"
+        y="256"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">store interface</text
+      >
+      <text
+        x="360"
+        y="276"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">not raw R2 keys</text
+      >
+
+      <!-- the scope split -->
+      <rect
+        x="60"
+        y="332"
+        width="280"
+        height="88"
+        rx="14"
+        stroke-width="2"
+        class="fill-accent/10 stroke-accent"></rect>
+      <text
+        x="200"
+        y="360"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">personal scope</text
+      >
+      <text
+        x="200"
+        y="380"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">workouts, nutrition</text
+      >
+      <text
+        x="200"
+        y="398"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">coach chat, voice logs</text
+      >
+
+      <rect
+        x="380"
+        y="332"
+        width="280"
+        height="88"
+        rx="14"
+        stroke-width="2"
+        class="fill-gold/10 stroke-gold"></rect>
+      <text
+        x="520"
+        y="360"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">household scope</text
+      >
+      <text
+        x="520"
+        y="380"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">finance, budget</text
+      >
+      <text
+        x="520"
+        y="398"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">subscriptions, shared tasks</text
+      >
+
+      <!-- domain persistence -->
+      <rect
+        x="230"
+        y="460"
+        width="260"
+        height="76"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="360"
+        y="488"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">R2</text
+      >
+      <text
+        x="360"
+        y="508"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">domain data as</text
+      >
+      <text
+        x="360"
+        y="526"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">daily JSON</text
+      >
+    </svg>
+
+    <!-- Stacked layout -->
+    <svg
+      class="mx-auto block h-auto w-full max-w-[340px] md:hidden"
+      viewBox="0 0 320 908"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-labelledby="compass-arch-title-sm compass-arch-desc-sm"
+    >
+      <title id="compass-arch-title-sm">Compass application architecture</title>
+      <desc id="compass-arch-desc-sm">{description}</desc>
+
+      <defs>
+        <pattern
+          id="compass-arch-grid-sm"
+          width="24"
+          height="24"
+          patternUnits="userSpaceOnUse"
+        >
+          <path
+            d="M24 0H0V24"
+            fill="none"
+            class="stroke-border"
+            stroke-width="1"
+            opacity="0.4"></path>
+        </pattern>
+      </defs>
+      <rect width="320" height="908" fill="url(#compass-arch-grid-sm)"></rect>
+
+      <g class="fill-gold" opacity="0.6" transform="translate(296 890)">
+        <path d="M0,-13 L3,-3 L13,0 L3,3 L0,13 L-3,3 L-13,0 L-3,-3 Z"></path>
+      </g>
+
+      <!-- request rail -->
+      <g class="fill-primary stroke-primary" stroke-width="2">
+        <path
+          d="M160 64 V80 H24 V540"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <path d="M24 124 H43" fill="none"></path>
+        <polygon points="52,124 42,119 42,129" stroke="none"></polygon>
+        <path d="M24 196 H43" fill="none"></path>
+        <polygon points="52,196 42,191 42,201" stroke="none"></polygon>
+        <path d="M24 356 H43" fill="none"></path>
+        <polygon points="52,356 42,351 42,361" stroke="none"></polygon>
+        <path d="M24 540 H43" fill="none"></path>
+        <polygon points="52,540 42,535 42,545" stroke="none"></polygon>
+        <path
+          d="M170 568 V584 H24 V730"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </g>
+
+      <!-- auth side concerns -->
+      <g class="fill-border stroke-border" stroke-width="2">
+        <path d="M200 224 V239" fill="none"></path>
+        <polygon points="200,248 195,238 205,238" stroke="none"></polygon>
+        <path d="M200 384 V399" fill="none"></path>
+        <polygon points="200,408 195,398 205,398" stroke="none"></polygon>
+      </g>
+
+      <!-- personal branch -->
+      <g class="fill-accent stroke-accent" stroke-width="2">
+        <path d="M24 630 H43" fill="none"></path>
+        <polygon points="52,630 42,625 42,635" stroke="none"></polygon>
+        <path
+          d="M288 630 H302 V796 H196 V803"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <polygon points="196,812 191,802 201,802" stroke="none"></polygon>
+      </g>
+
+      <!-- household branch -->
+      <g class="fill-gold stroke-gold" stroke-width="2">
+        <path d="M24 730 H43" fill="none"></path>
+        <polygon points="52,730 42,725 42,735" stroke="none"></polygon>
+        <path d="M144 768 V803" fill="none"></path>
+        <polygon points="144,812 139,802 149,802" stroke="none"></polygon>
+      </g>
+
+      <rect
+        x="16"
+        y="8"
+        width="288"
+        height="56"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="160"
+        y="32"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">Browser / PWA</text
+      >
+      <text
+        x="160"
+        y="50"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">voice + chat UI</text
+      >
+
+      <rect
+        x="52"
+        y="96"
+        width="236"
+        height="56"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="170"
+        y="120"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">TanStack Start</text
+      >
+      <text
+        x="170"
+        y="138"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">createServerFn</text
+      >
+
+      <rect
+        x="52"
+        y="168"
+        width="236"
+        height="56"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="170"
+        y="192"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">auth middleware</text
+      >
+      <text
+        x="170"
+        y="210"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">binds member scope</text
+      >
+
+      <rect
+        x="52"
+        y="248"
+        width="236"
+        height="64"
+        rx="14"
+        stroke-width="2"
+        class="fill-muted/50 stroke-border"></rect>
+      <text
+        x="170"
+        y="274"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">D1</text
+      >
+      <text
+        x="170"
+        y="294"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">Better Auth tables only</text
+      >
+
+      <rect
+        x="52"
+        y="328"
+        width="236"
+        height="56"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="170"
+        y="352"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">domain impl</text
+      >
+      <text
+        x="170"
+        y="370"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">*-impl.ts, plain logic</text
+      >
+
+      <rect
+        x="52"
+        y="408"
+        width="236"
+        height="80"
+        rx="14"
+        stroke-width="2"
+        class="fill-muted/50 stroke-border"></rect>
+      <text
+        x="170"
+        y="434"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">adapters</text
+      >
+      <text
+        x="170"
+        y="454"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">Grok (server only), SimpleFIN</text
+      >
+      <text
+        x="170"
+        y="472"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">Cloudflare bindings</text
+      >
+
+      <rect
+        x="52"
+        y="512"
+        width="236"
+        height="56"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="170"
+        y="536"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">store interface</text
+      >
+      <text
+        x="170"
+        y="554"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">not raw R2 keys</text
+      >
+
+      <rect
+        x="52"
+        y="592"
+        width="236"
+        height="76"
+        rx="14"
+        stroke-width="2"
+        class="fill-accent/10 stroke-accent"></rect>
+      <text
+        x="170"
+        y="618"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">personal scope</text
+      >
+      <text
+        x="170"
+        y="638"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">workouts, nutrition</text
+      >
+      <text
+        x="170"
+        y="656"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">coach chat, voice logs</text
+      >
+
+      <rect
+        x="52"
+        y="692"
+        width="236"
+        height="76"
+        rx="14"
+        stroke-width="2"
+        class="fill-gold/10 stroke-gold"></rect>
+      <text
+        x="170"
+        y="718"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">household scope</text
+      >
+      <text
+        x="170"
+        y="738"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">finance, budget</text
+      >
+      <text
+        x="170"
+        y="756"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">subscriptions, shared tasks</text
+      >
+
+      <rect
+        x="52"
+        y="812"
+        width="236"
+        height="64"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="170"
+        y="838"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">R2</text
+      >
+      <text
+        x="170"
+        y="858"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">domain data as daily JSON</text
+      >
+    </svg>
+  </div>
+  <figcaption class="mt-3 font-mono text-xs text-muted-foreground">
+    One server-function entry, one scope decision, two storage scopes. D1 never
+    sees domain data.
+  </figcaption>
+</figure>
