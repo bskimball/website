@@ -6,6 +6,11 @@ draft: false
 description: 'I wanted a more customizable workout tracker, a budget my wife and I could share, and AI help on both. So I built Compass on TanStack Start and Cloudflare, and made sure it still works when the AI does not.'
 ---
 
+import { Image } from 'astro:assets'
+import compassDashboard from '../../assets/compass-screenshot-1.png'
+import compassNutrition from '../../assets/compass-screenshot-2.png'
+import compassCoach from '../../assets/compass-screenshot-3.png'
+
 I wanted three things. A workout and nutrition tracker with more customization than the apps I already liked, plus a way to see what workouts AI would generate for me. A way for my wife and me to actually share a budget instead of me maintaining a spreadsheet nobody else opens. And some AI help figuring out where our money was leaking, because staring at a category breakdown once a month was not doing much.
 
 Plenty of workout apps are fine. I still wanted deeper control over the plans, and I was curious whether generated sessions would be any good. They are. Grok even generates exercise reference images for the movements, which is more useful mid-session than I expected.
@@ -22,7 +27,16 @@ So from day one Compass had to draw a hard line between personal data and shared
 
 The other thing I knew early: I did not want to type. Half the time I want to log a workout or add water intake, I am mid-set or mid-cooking with wet hands. Voice had to be the default way in, not a bonus feature bolted on after the UI shipped.
 
-{/* TODO: screenshot of the daily dashboard, mic button and all. Blur names and numbers. */}
+<figure>
+  <Image
+    src={compassDashboard}
+    alt="Compass morning dashboard showing an AI-generated yoga workout, daily coaching prompt, weather, and voice input"
+  />
+  <figcaption>
+    The morning dashboard puts the generated workout, daily coaching, weather,
+    and voice input on one screen.
+  </figcaption>
+</figure>
 
 ## The stack
 
@@ -97,7 +111,27 @@ Chat handles the longer, open-ended stuff, streaming over a server function inst
 
 That shared path was one of the better calls I made. Voice and chat could easily have grown two different, slightly inconsistent ways of writing data, and I did not want to maintain both. Other tools in chat are narrower on purpose: memory tools manage coaching context, finance tools can read the ledger, and finance mutations go through their own guarded implementation.
 
-{/* TODO: stills or short recording: workout carousel with generated exercise image, voice meal log confirmation, chat proposal card being applied. */}
+<figure>
+  <Image
+    src={compassNutrition}
+    alt="Compass nutrition panel showing calorie, protein, and water tracking above the daily workout carousel"
+  />
+  <figcaption>
+    The midday nutrition panel accepts a meal description, tracks the day's
+    targets, and keeps the microphone within reach.
+  </figcaption>
+</figure>
+
+<figure>
+  <Image
+    src={compassCoach}
+    alt="Compass Coach chat screen with suggested prompts for health, savings, protein logging, and task creation"
+  />
+  <figcaption>
+    Coach can answer questions across personal and household data, then propose
+    actions that use the same guarded write path as voice commands.
+  </figcaption>
+</figure>
 
 ## Integrations I'm actually willing to trust
 
@@ -142,5 +176,3 @@ What still needs work:
 The stuff I really can't answer yet is whether any of this changes our actual habits. Does the coaching nudge get ignored after week two? Which voice commands fall apart in a loud kitchen? How often does SimpleFIN need me to go rescue a broken bank connection by hand? I don't have that mileage yet.
 
 {/* TODO: after a few weeks of real use, add notes on which fallbacks actually fire, which voice commands need work, and whether the coaching suggestions get acted on. No made-up numbers. */}
-
-If I stripped this app for parts, the pieces I'd keep are the scope binding at the middleware level instead of scattered checks, the deterministic fallback on every AI path, and the one shared write path for voice and chat. The specific model, the R2 key layout, the dashboard cards, all of that can and probably will change. What I built this time, for once, doesn't fall over the moment the clever part goes offline.
