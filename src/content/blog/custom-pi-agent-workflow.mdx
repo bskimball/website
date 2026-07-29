@@ -1,10 +1,13 @@
 ---
-title: 'How I Turned Pi into a Team of Persistent Coding Agents'
+title: 'My Custom Pi Configuration for a Multi-Agent Coding Workflow'
 pubDate: '2026-07-20'
 tags: ['development', 'typescript']
 draft: false
-description: 'Inside a custom Pi configuration with specialized agents, synchronous missions, persistent RPC workers, explicit review gates, and a terminal UI built for orchestration.'
+description: 'The Pi configuration I use for daily development: specialized coding agents, persistent RPC workers, iterative review loops, and a custom orchestration UI.'
 ---
+
+import AgentTopologyDiagram from '../../components/blog/pi-workflow/AgentTopologyDiagram.astro'
+import ReviewLoopDiagram from '../../components/blog/pi-workflow/ReviewLoopDiagram.astro'
 
 A single coding agent works until its context becomes a record of every abandoned idea, file search, implementation attempt, and test failure from the entire job. Better models delay that failure. They do not remove it.
 
@@ -13,6 +16,10 @@ I use [Pi](https://github.com/earendil-works/pi-mono) as the host for a differen
 The full configuration is public at [github.com/bskimball/pi](https://github.com/bskimball/pi). The repository contains the agent definitions, lead prompt, extensions, skills, and restore instructions described here. Secret-bearing and machine-local files remain excluded.
 
 The useful part is not the role-playing names. It is the process boundary.
+
+![Pi's custom Mono terminal UI showing compact tool receipts and an active oracle review](../../assets/pi-tui-screenshot.png)
+
+_This is the interface I use every day. Successful and failed tools, elapsed time, the active oracle mission, token traffic, model state, MCP connections, and task count remain visible without dumping child transcripts into the lead context._
 
 ## The lead agent protects its context for judgment
 
@@ -59,24 +66,7 @@ The names make the terminal easier to scan, but the tool boundaries do the real 
 
 The system has one coordinator. Workers do not grow their own worker farms.
 
-```text
-                         ╭──────────────╮
-                         │  Pi session  │
-                         │  lead agent  │
-                         ╰──────┬───────╯
-                                │
-              ╭─────────────────┼─────────────────╮
-              │                 │                 │
-       ╭──────▼──────╮   ╭──────▼──────╮   ╭──────▼──────╮
-       │ sync task   │   │ async RPC   │   │ local tools │
-       │ fresh child │   │ worker      │   │ web / MCP   │
-       ╰──────┬──────╯   ╰──────┬──────╯   │ bg / UI     │
-              │                 │          ╰─────────────╯
-       ╭──────▼──────╮   ╭──────▼──────╮
-       │ specialist │   │ persistent  │
-       │ final report│   │ specialist │
-       ╰─────────────╯   ╰─────────────╯
-```
+<AgentTopologyDiagram />
 
 Child processes receive their role prompt and a self-contained work order, not the parent's conversation. Task tools are excluded from child runtimes, so escalation returns to the lead instead of creating an unbounded process tree.
 
@@ -168,25 +158,27 @@ Oracle is the exception. A review is only useful if the reviewer is at least as 
 
 The lead still evaluates the review. Fresh context prevents one class of bias, but it does not make the reviewer automatically correct.
 
-## The terminal UI shows receipts, not transcripts
+## The custom Mono UI is an orchestration console
 
-Streaming every child token into the main session would defeat the point of context isolation. The custom Mono UI instead renders compact operational receipts:
+The stock terminal was designed around one agent calling tools. Once I had several specialists running, the presentation layer became part of the orchestration system. Streaming every child token into the main session would defeat context isolation, but collapsing a worker to a spinner would hide too much. The Mono UI sits between those extremes.
 
-- queued, running, settled, failed, and closed worker states
-- current model and fallback status
-- recent tool activity and liveness
-- bounded final reports
-- file edits as readable diffs
-- MCP calls using the same visual language
-- pending RPC checkpoints
+Its basic unit is a **tool receipt**. A collapsed receipt fits the operational facts on one row: status glyph, tool name, primary argument, optional stats, and duration. A short rail beneath it previews useful output. Expanding the receipt reveals a bounded body without changing how the tool itself executes.
 
-The distinction between a receipt and a transcript is important. I need to know that a worker inspected four files, changed two, and passed a targeted test. I usually do not need every intermediate sentence it generated while doing that.
+The same receipt engine presents built-in tools such as `read`, `bash`, `edit`, and `write`, plus web-search and MCP calls. That consistency matters when one turn mixes a local file read, an Exa result, a platform API call, and a failed shell command. I can scan one visual grammar instead of decoding a different renderer for every extension.
 
-The UI also makes failure visible without turning the terminal into a wall of JSON. Long-running tools keep a liveness signal. Failed renderers write diagnostics rather than crashing the main interface.
+Edits get special treatment. The expanded result shows a numbered contextual diff with line statistics and intra-line highlights. Writes capture the previous file contents when possible, so replacing a file still produces a real before-and-after diff instead of a generic success message.
 
-![Pi's Mono terminal UI showing compact tool receipts and an active oracle review](../../assets/pi-tui-screenshot.png)
+Task presentation depends on the execution mode:
 
-_The lead can see successful reads, a failed shell command, elapsed time, worker activity, model routing, and overall session state without importing the child's full transcript._
+- synchronous `task` calls get a rich mission card with the specialist, model, thinking level, turns, activity tree, fallback state, and final report
+- async RPC tools return bounded status and result views with lighter worker chrome, because persistent lifecycle control matters more than replaying a full mission card
+- pending child dialogs remain visible as checkpoints until the lead answers them with `task_reply`
+
+The footer is a second information layer. It anchors working directory and branch on the left, model and thinking level on the right, and fits token traffic, cache rate, active task count, MCP state, and VS Code state where terminal width allows. Fields degrade by priority as the window narrows instead of wrapping into an unreadable dashboard. The input keeps Pi's editor geometry intact, while the custom border, prompt glyph, and rotating working indicator make the current state easier to locate.
+
+All large output is bounded by lines and characters. Renderers use width-aware fallbacks because a beautiful receipt that crashes on a narrow Windows terminal is not an improvement. Renderer failures go to `pi-render.log` and degrade to short text. `PI_MONO_UI=0` disables the layer entirely if I need to separate an interface bug from an agent or tool failure.
+
+The distinction between a receipt and a transcript is the main design decision. I need to know that a worker inspected four files, changed two, hit one failed command, and passed its targeted validation. I usually do not need every intermediate sentence it generated while getting there.
 
 ## Repeated workflows became commands and local tools
 
@@ -215,15 +207,7 @@ A tiny inline change can get a focused review from the lead. Delegated code, mul
 5. The lead repeats the loop until the findings are resolved, rejected as incorrect, or surfaced as an explicit blocker.
 6. The relevant validation runs after the final fixes.
 
-```text
-╭──────────────╮     ╭──────────────╮     ╭──────────────╮
-│ machinist or │────▶│    oracle    │────▶│ lead judges  │
-│   artisan    │     │ fresh review │     │ the findings │
-╰──────▲───────╯     ╰──────┬───────╯     ╰──────┬───────╯
-       │                    │ issues              │ accepted
-       ╰────────────────────╯                     ▼
-                                             validation
-```
+<ReviewLoopDiagram />
 
 The implementer and reviewer keep different jobs. Machinist or artisan owns the fix. Oracle owns the independent judgment. The lead decides whether a finding is real, speculative, already covered, or outside the requested scope.
 
@@ -263,19 +247,14 @@ This setup is more capable than the original one-tool version. It also has more 
 
 **The extension surface needs testing.** Process control, JSON event parsing, RPC sessions, UI rendering, model routing, and platform-specific termination are real software. Daily use and crash logs catch problems, but they are not a substitute for deeper automated coverage.
 
-## What I would keep if I rebuilt it again
+## Why this configuration works for me
 
-The current implementation will keep changing. The durable rules are smaller:
+I built this configuration around the way I already prefer to work. I want one place to discuss the goal, make decisions, and see the final result. I do not want that same context window filled with every repository scan, documentation search, implementation detour, and review pass required to get there.
 
-1. One coordinator owns integration and the final answer.
-2. Specialists get fresh context, bounded tools, and explicit work orders.
-3. Use disposable missions for bounded work and persistent workers when steering matters.
-4. Keep the worker graph star-shaped.
-5. Give each worktree one writer at a time.
-6. Loop implementation and fresh-context review until valid findings are resolved.
-7. Treat worker cleanup and verification as part of completion.
-8. Keep prompts portable and secrets local.
+The specialist roles give recurring jobs a clear owner. Scout gathers local evidence. Librarian handles external research. Machinist or artisan implements. Oracle challenges the result. Stevedore handles the operational finish. I can change the model, tools, and turn budget for each role without rewriting the entire workflow every time.
 
-Pi is the runtime. The configuration defines the team shape and the operating discipline. You can inspect or reuse the current version in the [public configuration repository](https://github.com/bskimball/pi).
+The two task modes cover the delegation patterns I actually need. A synchronous task is enough for a bounded lookup or review. A persistent RPC worker is better when implementation needs steering, follow-up, or another pass after Oracle finds an issue. The custom UI lets me supervise both without flooding the lead session with worker transcripts.
 
-I still handle plenty of work inline. That is not a failure of the architecture. The point is to preserve judgment when a task becomes expensive, not to turn every keystroke into a distributed system.
+This is not meant to be a universal agent framework or a claim that every coding task needs a team. I still make small changes inline. The configuration is useful when a job becomes large enough that discovery, implementation, review, and release work start competing for the same context.
+
+The complete setup is available in the [public configuration repository](https://github.com/bskimball/pi). It includes the lead prompt, specialist definitions, extensions, skills, themes, and restore instructions. You can copy the whole setup, but the more useful approach is probably to take the boundaries that match how you work and discard the rest.

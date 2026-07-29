@@ -1,0 +1,346 @@
+---
+// The implementation/review loop: implementer -> oracle -> lead, with issues
+// looping back to the implementer and accepted work moving on to validation.
+const description =
+  'Review loop. Machinist or artisan implements, then hands the diff to oracle for a fresh-context review. Oracle reports to the lead, which judges the findings. Issues loop back to the implementer for another pass; accepted changes proceed to validation.'
+---
+
+<figure class="not-prose my-10">
+  <div
+    class="overflow-hidden rounded-2xl border-2 border-border bg-card/60 p-4 sm:p-6"
+  >
+    <!-- Wide layout -->
+    <svg
+      class="hidden h-auto w-full md:block"
+      viewBox="0 0 720 300"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-labelledby="pi-loop-title pi-loop-desc"
+    >
+      <title id="pi-loop-title">Implementation and review loop</title>
+      <desc id="pi-loop-desc">{description}</desc>
+
+      <defs>
+        <pattern
+          id="pi-loop-grid"
+          width="24"
+          height="24"
+          patternUnits="userSpaceOnUse"
+        >
+          <path
+            d="M24 0H0V24"
+            fill="none"
+            class="stroke-border"
+            stroke-width="1"
+            opacity="0.4"></path>
+        </pattern>
+      </defs>
+      <rect width="720" height="300" fill="url(#pi-loop-grid)"></rect>
+
+      <!-- restrained atomic ornament -->
+      <g class="fill-gold" opacity="0.6" transform="translate(44 258)">
+        <path d="M0,-18 L4,-4 L18,0 L4,4 L0,18 L-4,4 L-18,0 L-4,-4 Z"></path>
+        <circle cx="0" cy="0" r="2.5"></circle>
+      </g>
+
+      <!-- forward edges -->
+      <g class="stroke-primary fill-primary" stroke-width="2">
+        <path d="M220 76 H251" fill="none"></path>
+        <polygon points="260,76 250,71 250,81" stroke="none"></polygon>
+        <path d="M460 76 H491" fill="none"></path>
+        <polygon points="500,76 490,71 490,81" stroke="none"></polygon>
+      </g>
+
+      <!-- accepted -> validation -->
+      <g class="stroke-gold fill-gold" stroke-width="2">
+        <path d="M600 112 V163" fill="none"></path>
+        <polygon points="600,172 595,162 605,162" stroke="none"></polygon>
+      </g>
+
+      <!-- issues loop back -->
+      <g class="stroke-accent fill-accent" stroke-width="2">
+        <path
+          d="M540 112 V256 H120 V121"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <polygon points="120,112 115,122 125,122" stroke="none"></polygon>
+      </g>
+
+      <!-- nodes -->
+      <rect
+        x="20"
+        y="40"
+        width="200"
+        height="72"
+        rx="14"
+        stroke-width="2"
+        class="fill-accent/10 stroke-accent"></rect>
+      <text
+        x="120"
+        y="72"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">machinist or</text
+      >
+      <text
+        x="120"
+        y="92"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">artisan</text
+      >
+
+      <rect
+        x="260"
+        y="40"
+        width="200"
+        height="72"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="360"
+        y="72"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">oracle</text
+      >
+      <text
+        x="360"
+        y="92"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">fresh review</text
+      >
+
+      <rect
+        x="500"
+        y="40"
+        width="200"
+        height="72"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="600"
+        y="72"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">lead judges</text
+      >
+      <text
+        x="600"
+        y="92"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="13">the findings</text
+      >
+
+      <rect
+        x="500"
+        y="172"
+        width="200"
+        height="60"
+        rx="14"
+        stroke-width="2"
+        class="fill-gold/10 stroke-gold"></rect>
+      <text
+        x="600"
+        y="209"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="15"
+        font-weight="700">validation</text
+      >
+
+      <!-- edge labels -->
+      <text
+        x="300"
+        y="248"
+        class="fill-accent font-mono"
+        font-size="12.5"
+        font-weight="700">issues</text
+      >
+      <text
+        x="614"
+        y="147"
+        class="fill-gold font-mono"
+        font-size="12.5"
+        font-weight="700">accepted</text
+      >
+    </svg>
+
+    <!-- Stacked layout -->
+    <svg
+      class="mx-auto block h-auto w-full max-w-[340px] md:hidden"
+      viewBox="0 0 320 424"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-labelledby="pi-loop-title-sm pi-loop-desc-sm"
+    >
+      <title id="pi-loop-title-sm">Implementation and review loop</title>
+      <desc id="pi-loop-desc-sm">{description}</desc>
+
+      <defs>
+        <pattern
+          id="pi-loop-grid-sm"
+          width="24"
+          height="24"
+          patternUnits="userSpaceOnUse"
+        >
+          <path
+            d="M24 0H0V24"
+            fill="none"
+            class="stroke-border"
+            stroke-width="1"
+            opacity="0.4"></path>
+        </pattern>
+      </defs>
+      <rect width="320" height="424" fill="url(#pi-loop-grid-sm)"></rect>
+
+      <g class="fill-gold" opacity="0.6" transform="translate(292 408)">
+        <path d="M0,-13 L3,-3 L13,0 L3,3 L0,13 L-3,3 L-13,0 L-3,-3 Z"></path>
+      </g>
+
+      <!-- forward edges -->
+      <g class="stroke-primary fill-primary" stroke-width="2">
+        <path d="M142 76 V103" fill="none"></path>
+        <polygon points="142,112 137,102 147,102" stroke="none"></polygon>
+        <path d="M142 180 V207" fill="none"></path>
+        <polygon points="142,216 137,206 147,206" stroke="none"></polygon>
+      </g>
+
+      <!-- accepted -->
+      <g class="stroke-gold fill-gold" stroke-width="2">
+        <path d="M142 284 V331" fill="none"></path>
+        <polygon points="142,340 137,330 147,330" stroke="none"></polygon>
+      </g>
+
+      <!-- issues loop back -->
+      <g class="stroke-accent fill-accent" stroke-width="2">
+        <path
+          d="M212 284 V300 H300 V46 H285"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+        <polygon points="276,46 286,41 286,51" stroke="none"></polygon>
+      </g>
+
+      <rect
+        x="16"
+        y="16"
+        width="260"
+        height="60"
+        rx="14"
+        stroke-width="2"
+        class="fill-accent/10 stroke-accent"></rect>
+      <text
+        x="146"
+        y="42"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">machinist or</text
+      >
+      <text
+        x="146"
+        y="62"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">artisan</text
+      >
+
+      <rect
+        x="16"
+        y="120"
+        width="260"
+        height="60"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="146"
+        y="146"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">oracle</text
+      >
+      <text
+        x="146"
+        y="166"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">fresh review</text
+      >
+
+      <rect
+        x="16"
+        y="224"
+        width="260"
+        height="60"
+        rx="14"
+        stroke-width="2"
+        class="fill-primary/10 stroke-primary"></rect>
+      <text
+        x="146"
+        y="250"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">lead judges</text
+      >
+      <text
+        x="146"
+        y="270"
+        text-anchor="middle"
+        class="fill-muted-foreground font-mono"
+        font-size="12.5">the findings</text
+      >
+
+      <rect
+        x="16"
+        y="340"
+        width="260"
+        height="56"
+        rx="14"
+        stroke-width="2"
+        class="fill-gold/10 stroke-gold"></rect>
+      <text
+        x="146"
+        y="374"
+        text-anchor="middle"
+        class="fill-foreground font-mono"
+        font-size="14"
+        font-weight="700">validation</text
+      >
+
+      <text
+        x="52"
+        y="316"
+        class="fill-gold font-mono"
+        font-size="12"
+        font-weight="700">accepted</text
+      >
+      <text
+        x="310"
+        y="173"
+        text-anchor="middle"
+        transform="rotate(-90 310 173)"
+        class="fill-accent font-mono"
+        font-size="12"
+        font-weight="700">issues</text
+      >
+    </svg>
+  </div>
+  <figcaption class="mt-3 font-mono text-xs text-muted-foreground">
+    Review is part of implementation. Issues loop back; accepted work moves
+    forward.
+  </figcaption>
+</figure>
