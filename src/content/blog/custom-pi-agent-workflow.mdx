@@ -1,232 +1,281 @@
 ---
-title: 'How I Turned Pi into a Small Team of Specialized Coding Agents'
+title: 'How I Turned Pi into a Team of Persistent Coding Agents'
 pubDate: '2026-07-20'
 tags: ['development', 'typescript']
 draft: false
-description: 'A custom Pi configuration that coordinates specialized subagents through a task extension, giving each child process its own prompt, model, tools, and fresh context window.'
+description: 'Inside a custom Pi configuration with specialized agents, synchronous missions, persistent RPC workers, explicit review gates, and a terminal UI built for orchestration.'
 ---
 
-A single coding agent with one growing context window is fine until the work stops being fine. The moment a task spans discovery, design judgment, multi-file implementation, visual polish, external docs, and a deploy checklist, one generalist starts thrashing. It rereads the same files, mixes planning with patching, and slowly loses the plot.
+A single coding agent works until its context becomes a record of every abandoned idea, file search, implementation attempt, and test failure from the entire job. Better models delay that failure. They do not remove it.
 
-I use [Pi](https://github.com/earendil-works/pi-mono) as the host runtime. The interesting part is not the stock CLI. It is the personal configuration that turns Pi into a coordination layer over a small team of specialists.
+I use [Pi](https://github.com/earendil-works/pi-mono) as the host for a different shape of workflow: one lead agent coordinates nine specialists, dispatches isolated work, reviews the evidence, and keeps responsibility for the final result. The configuration started with one synchronous `task` tool. It now supports both disposable missions and persistent, steerable RPC workers.
 
-This post is a draft of that system: what the roles are, how the task extension launches them, and which tradeoffs still hurt.
+The full configuration is public at [github.com/bskimball/pi](https://github.com/bskimball/pi). The repository contains the agent definitions, lead prompt, extensions, skills, and restore instructions described here. Secret-bearing and machine-local files remain excluded.
 
-{/* TODO: Add a short story about a concrete multi-file change where a single-agent session collapsed under context load, and the multi-agent split recovered it. Keep repo names and private paths minimal. */}
+The useful part is not the role-playing names. It is the process boundary.
 
-## The bottleneck is context, not just model quality
+## The lead agent protects its context for judgment
 
-When one agent owns everything, the context window becomes a junk drawer:
+When one agent owns every phase of a substantial change, its context window becomes a junk drawer:
 
 - reconnaissance notes crowd out the current edit
-- a failed debugging branch pollutes the next implementation attempt
-- a review reads the implementer's summary instead of the files
-- a deploy checklist gets interleaved with design debate
+- failed debugging branches influence later decisions
+- implementation details displace the original requirements
+- review becomes a reread of the implementer's own reasoning
+- release commands get mixed into design and architecture debate
 
-I did not want eight chat tabs. I wanted one lead agent that stays coordination-first, plus cheap fresh processes for work that benefits from isolation.
+My main system prompt treats the lead as an orchestrator first. It still handles small work directly, but it delegates anything that would consume the context needed for integration and judgment.
 
-The lead agent still owns the user outcome. Specialists do not become a way to dodge responsibility. They become a way to protect judgment.
+The triage is explicit:
 
-## Coordination-first main agent
+- **Inline** for one known file, one small edit, or one direct answer
+- **Delegate** for multi-file work, broad investigation, substantial UI work, or difficult debugging
+- **Parallelize** only when units are independent
+- **Serialize** when units touch the same files or depend on the same decision
 
-The main system prompt is explicit about the job:
+Delegation does not transfer ownership of the user's outcome. The lead writes the work order, checks the returned evidence, reconciles disagreements, runs combined validation, and gives the final answer.
 
-- understand the goal
-- split the work
-- write complete work orders
-- inspect evidence
-- integrate results
-- verify the combined outcome
-- answer the user
+That distinction matters. Without it, subagents become an elaborate way to say, "someone else said it passed."
 
-It also encodes triage:
+## Nine specialists replace one overloaded mega-prompt
 
-- **Inline** for one small edit or one direct answer
-- **Delegate** for multi-file work, broad investigation, UI direction, or review that needs fresh eyes
-- **Parallelize** only when ownership does not collide
-- **Serialize** when files or decisions depend on each other
+Each specialist is defined in a Markdown file with YAML frontmatter. The frontmatter controls its model route, fallback models, thinking level, tools, skill inheritance, and turn budget. The Markdown body is the role's system prompt.
 
-That last part matters. Parallel agents with overlapping write rights are not speed. They are merge conflict generation with extra steps.
+The roster is intentionally narrow:
 
-The lead agent is also told not to reimplement units the worktree already satisfies. Before dispatching another coder, check whether the job is already done. That sounds obvious. It saves real money once subagents become easy to spawn.
+1. **advisor** evaluates consequential approaches and tradeoffs before implementation.
+2. **artisan** owns substantial UI, layout, visual hierarchy, and interaction polish.
+3. **librarian** researches external libraries, framework internals, documentation, and reference implementations.
+4. **machinist** handles concrete non-visual implementation such as backend logic, refactors, migrations, and bug fixes.
+5. **oracle** provides an independent review or a second opinion on difficult debugging.
+6. **picasso** generates image assets from a visual brief.
+7. **scout** performs fast, read-only reconnaissance across the local codebase.
+8. **scribe** writes and revises long-form technical content.
+9. **stevedore** handles bounded operational work such as builds, git mechanics, and platform CLIs.
 
-## Nine roles, not one mega-prompt
+The names make the terminal easier to scan, but the tool boundaries do the real work. Scout does not need edit access. Librarian should not improvise local patches. Artisan is not interchangeable with a backend coder just because both can write TypeScript. Oracle is valuable because it inspects the actual diff from a fresh process, not because it produces a ceremonial approval paragraph.
 
-Agent definitions live as Markdown files with YAML frontmatter. Each file is a specialist charter: description, model, fallback models, thinking level, tool allowlist, skill inheritance, and max turns. The body is the system prompt for that role.
+## The topology stays star-shaped
 
-The current roster:
+The system has one coordinator. Workers do not grow their own worker farms.
 
-1. **advisor**: strategic planning only. Approach choices, course corrections, and high-leverage tradeoffs. Does not implement the product work.
-2. **artisan**: substantial UI and visual design. Tokens, hierarchy, interaction states, presentation polish. Not the default for a one-line CSS fix.
-3. **librarian**: remote source research. Library internals, release history, reference implementations, official docs. Read-only on the local project.
-4. **machinist**: the workhorse coder. Features, backend logic, refactors, migrations, bug fixes, tests. Smallest correct change, explicit file ownership.
-5. **oracle**: independent review and hard debugging. Second opinion on risky diffs, conflicting evidence, and high-stakes decisions.
-6. **picasso**: image generation specialist. Turns a visual brief into an inspected artifact, not a prose description of an image.
-7. **scout**: fast local reconnaissance. Broad scans, architecture maps, pattern hunting. Cheap model, low thinking, no file writes, skills off by default.
-8. **scribe**: editorial writing and revision. Blog posts, technical narratives, documentation, and long-form prose grounded in inspected sources.
-9. **stevedore**: ops and release mechanics. Lint, build, git ceremony, platform CLIs, deploy checklists. Not a place to redesign the system.
+```text
+                         ╭──────────────╮
+                         │  Pi session  │
+                         │  lead agent  │
+                         ╰──────┬───────╯
+                                │
+              ╭─────────────────┼─────────────────╮
+              │                 │                 │
+       ╭──────▼──────╮   ╭──────▼──────╮   ╭──────▼──────╮
+       │ sync task   │   │ async RPC   │   │ local tools │
+       │ fresh child │   │ worker      │   │ web / MCP   │
+       ╰──────┬──────╯   ╰──────┬──────╯   │ bg / UI     │
+              │                 │          ╰─────────────╯
+       ╭──────▼──────╮   ╭──────▼──────╮
+       │ specialist │   │ persistent  │
+       │ final report│   │ specialist │
+       ╰─────────────╯   ╰─────────────╯
+```
 
-The names are a little theatrical. The separations are not. Scout exists so the lead does not burn a flagship context on `rg`. Oracle exists so the implementer is not also the final reviewer. Scribe exists so editorial work gets its own factual and stylistic pass. Stevedore exists so deploy muscle memory does not contaminate design judgment.
+Child processes receive their role prompt and a self-contained work order, not the parent's conversation. Task tools are excluded from child runtimes, so escalation returns to the lead instead of creating an unbounded process tree.
 
-{/* TODO: Screenshot of the custom TUI task cards showing queued/running specialists with model labels. Redact any account-identifying path noise if needed. */}
+This also keeps shared-state decisions in one place. A worker can report that a push, deploy, deletion, or migration is ready. The lead remains responsible for deciding whether that action should happen.
 
-## The task extension is the real product
+## Self-contained work orders are the shared memory
 
-The custom piece is a Pi extension that registers one tool: `task`.
+A fresh context window is only helpful if the prompt contains enough context to act correctly. My work orders follow a deliberately boring structure:
 
-On load it discovers agent definitions from the personal agents directory and, if present, a project-local `.pi/agents` directory. Each Markdown file is parsed into a structured agent definition. Unknown agent names fail immediately with the available roster.
+- **Goal:** the user-visible outcome
+- **Scope:** files, directories, behavior, and non-goals
+- **Context:** constraints and decisions already made
+- **Task:** the exact implementation, investigation, or review request
+- **Evidence:** the files, commands, or documentation to inspect first
+- **Validation:** the narrowest useful check
+- **Return format:** changed files, findings, test results, blockers, and residual risks
 
-When the lead calls `task`, the extension:
+The lead is the shared blackboard. There is no hidden memory service that lets a child recover a requirement omitted from its prompt.
 
-1. resolves the agent definition
-2. validates the working directory
-3. acquires a concurrency slot
-4. spawns a fresh `pi --mode json` child process
-5. streams JSON events back into a compact custom TUI card
-6. returns only the child's final report to the lead
+That constraint improves the main session too. If I cannot explain a delegated unit clearly, I probably have not decomposed the problem clearly.
 
-The child does not inherit the parent conversation. That is the point. If the work order is vague, the specialist cannot "just know" what you meant five turns ago. The prompt has to carry goal, scope, context, evidence, validation, and return format.
+## Synchronous tasks are disposable, queued missions
 
-I treat that constraint as a feature. Incomplete delegation fails loudly instead of half-working on hidden assumptions.
+The original orchestration path is still useful. The `task` tool launches a fresh Pi process in JSON mode with no restored session. It discovers the selected agent, validates the working directory, injects the specialist prompt, streams events into the terminal UI, and returns the final report to the lead.
 
-## Self-contained work orders beat clever shared memory
+Synchronous tasks have a hard concurrency cap of three. Additional calls queue until a slot opens.
 
-A strong work order is boring and complete:
+This mode works well for bounded jobs with a known result shape:
 
-- the user-visible outcome
-- owned files and non-goals
-- decisions already made
-- exact implementation or investigation ask
-- first files or docs to inspect
-- the narrowest useful validation command
-- the report shape the lead expects back
+- map a subsystem and return relevant file paths
+- review a diff without editing it
+- implement one isolated change and run a targeted test
+- research a library behavior and cite the source
 
-Writers get explicit ownership boundaries. Reviewers get explicit "do not edit" instructions when the job is pure review. If a specialist needs broader research it cannot do efficiently, it says so and asks the lead to dispatch the librarian with concrete questions.
+The tradeoff is control. Once dispatched, a synchronous task cannot be steered mid-flight. If the brief is wrong, the lead waits for the task to finish or time out, reads the result, and starts a better-scoped mission.
 
-There is no magical shared blackboard. The lead is the blackboard.
+The synchronous runner can walk the agent's configured model fallback chain when the primary route fails. The UI records the active model and whether a fallback was needed, while the lead receives the bounded report rather than the child's full transcript.
 
-## Prompt, model, thinking, tools, and turn limits are metadata
+## Persistent RPC workers make delegation interactive
 
-Because each agent is a file, role policy is data:
+Some jobs need a longer relationship than one prompt and one report. The newer orchestration path starts Pi in RPC mode with an isolated session directory and exposes a lifecycle instead of a single call:
 
-- **model** sets the primary route
-- **fallbackModels** define the retry chain
-- **thinking** sets the effort profile
-- **tools** restrict the surface area
-- **maxTurns** caps wander
-- **inheritSkills** decides whether the child gets the skill catalog
-- the Markdown body becomes `--system-prompt`
+- `task_start` launches a specialist and immediately returns a worker handle
+- `task_status` shows bounded lifecycle, activity, errors, and pending interactions
+- `task_list` shows active and recently settled workers
+- `task_send` queues steering, a post-settlement follow-up, or a new prompt
+- `task_wait` blocks until the current generation settles
+- `task_abort` asks the worker to stop, then escalates if it does not cooperate
+- `task_close` reaps the process and releases its concurrency slot
+- `task_reply` answers a child UI checkpoint
 
-The task tool also accepts per-call overrides for model, timeout, max turns, and working directory. That lets the lead keep the role defaults while still saying "use a different family for this review" or "run this scout in that package root."
+The async runner has its own cap of three live workers. Unlike the synchronous queue, `task_start` rejects when all three slots are occupied. A settled worker still holds its slot until the lead calls `task_close`.
 
-Scout stays cheap and read-only. Machinist gets the edit tools and a higher turn budget. Advisor can write plan documents but is instructed not to implement the feature. Picasso is pinned to an image workflow instead of drifting into frontend code. Those differences are enforced by metadata and prompt text, not by hoping the same general agent remembers its costume.
+That explicit cleanup is not cosmetic. Persistent workers preserve useful state, but state has a lifecycle and a cost. Forgetting to close a worker is the orchestration equivalent of leaking a file descriptor.
 
-## Fresh subprocesses, model overrides, and fallback routing
+Steering is also more precise than the name suggests. It does not interrupt a model halfway through inference or cancel a tool already running. A steer message waits for the next model-call boundary. Follow-up messages wait until the worker has fully settled. `task_abort` is the control for work that should actually stop.
 
-Every task is a new process. The extension launches the same Pi CLI the human uses, but in JSON mode, with no session restore, and with a system prompt taken from the specialist file.
+The async path is now my default for implementation, uncertain investigation, and anything likely to need correction after the first result. The synchronous path remains better for short, deterministic lookups where persistence would be overhead.
 
-Model handling is deliberate:
+## UI checkpoints cross the process boundary
 
-- a fully qualified `provider/model` override sets both provider and model
-- a bare model id inherits the agent's provider when possible
-- declared fallback models remain available even when the primary is overridden
-- if the primary fails, the extension walks the remaining attempts and reports which model finally worked
+RPC workers introduced a problem the synchronous runner did not have to solve: a child extension can ask the user a question.
 
-That fallback path is not theoretical. Provider blips and model-specific refusals happen. I would rather the task card say "succeeded on fallback after one failed attempt" than force the lead to rediscover the failure manually.
+Pi extensions can request a select, confirm, input, or editor dialog. An isolated child cannot display that interaction directly in the parent session, so the async runner records the request as a pending checkpoint. The lead sees it through `task_status` and answers it with `task_reply`, which sends the matching RPC response back to the child.
 
-Environment markers tag the child as a subagent, including agent name and model label. Crash diagnostics use those markers later.
+This is a small feature with a large architectural effect. It means persistent workers can use interactive extensions without pretending every decision was known at launch. The checkpoint is still mediated by the lead, so the star-shaped ownership model remains intact.
 
-## Concurrency cap, queueing, and no recursive worker graphs
+## Parallel work needs ownership, not optimism
 
-The runner executes at most three child processes at once. Additional tasks queue. That cap is intentional. Larger fan-outs mostly add latency, cost, and contention. The lead prompt also recommends two or three parallel subagents as the practical default, with writers kept single-threaded unless file ownership is clearly disjoint.
+The most important parallelism rule is not the concurrency limit. It is one writer per worktree.
 
-Recursive delegation is blocked at the process boundary. Child invocations exclude the task and related wait tools, so a machinist cannot quietly become a second orchestrator. Most specialist prompts reinforce the same rule. Escalation happens by returning a blocker to the lead, not by growing a process tree.
+Read-only agents can investigate in parallel. A librarian can research an API while a scout maps local call sites. Reviewers can inspect the same files because they are not modifying them.
 
-This keeps the topology star-shaped: one coordinator, many workers, no worker-owned worker farm.
+Writers are different. Two agents editing the same worktree at the same time can invalidate each other's reads, overwrite nearby changes, and produce a result neither one actually tested. Parallel writers require isolated worktrees with disjoint ownership and an explicit integration step.
 
-## Streamed JSON events and a custom TUI
+Most of the time, serialization is cheaper than clever conflict management. I use parallel fan-out for independent evidence gathering, not as a default display of agent abundance.
 
-Because children run in JSON mode, the extension can render progress without dumping transcripts into the lead context.
+![Oracle and stevedore inspecting review and release concerns in parallel](../../assets/pi-tui-screenshot-3.png)
 
-The task card tracks:
+_Parallelism is most useful when ownership is clear. Here, oracle inspects the diff while stevedore checks build, branch, and release state._
 
-- agent identity and mission summary
-- queued vs running vs completed vs failed
-- current model and whether a fallback was used
-- recent tool activity
-- turn count
-- final report excerpt
+## Model policy belongs to the role definition
 
-The custom mono UI extension keeps the surrounding chrome compact so the terminal remains readable when several missions are in flight. I care more about knowing which specialist is stuck in a long test than about watching every token land.
+The lead generally does not override models when dispatching work. Each specialist already has a primary model, ordered fallbacks, a thinking level, and a tool budget chosen for that role.
 
-Only the final report returns to the lead agent. That is the main context-preservation trick. The lead sees outcomes, evidence summaries, and blockers. It does not inherit every dead-end file read the scout needed to get there.
+Scout can use a cheaper route because it returns paths and findings. Artisan gets a model suited to visual judgment. Machinist gets enough turns to implement and validate a concrete unit. Those defaults are part of the configuration, not choices the lead should reopen on every call.
 
-## Crash diagnostics without turning the terminal into a black box
+Oracle is the exception. A review is only useful if the reviewer is at least as capable as the orchestrator on the question being judged. That might mean raising the thinking level within the same model family. It might mean switching families to challenge a correlated blind spot. Novelty is not the goal. Independent capability is.
 
-A separate crash-logger extension appends process diagnostics to a local log file. It records uncaught errors, rejected promises, stream failures, session shutdowns, and even clean exits because a graceful terminal disappearance can still be the clue. Each entry identifies whether the process was the main Pi session or a subagent, plus agent name, model label, pid, cwd, and stack text when available.
+The lead still evaluates the review. Fresh context prevents one class of bias, but it does not make the reviewer automatically correct.
 
-That sounds unglamorous. It is the difference between "the terminal just vanished" and "the stevedore child died during a deploy command with a concrete stack." The logger is intentionally best-effort and must never create a second fatal error while handling the first.
+## The terminal UI shows receipts, not transcripts
 
-{/* TODO: Once I have a non-sensitive crash-log excerpt, include a redacted example of a subagent failure and how the lead recovered. */}
+Streaming every child token into the main session would defeat the point of context isolation. The custom Mono UI instead renders compact operational receipts:
 
-## Prompt templates for the jobs I keep repeating
+- queued, running, settled, failed, and closed worker states
+- current model and fallback status
+- recent tool activity and liveness
+- bounded final reports
+- file edits as readable diffs
+- MCP calls using the same visual language
+- pending RPC checkpoints
 
-Not everything needs a subagent. Some workflows are repeated operator moves, so they live as prompt templates:
+The distinction between a receipt and a transcript is important. I need to know that a worker inspected four files, changed two, and passed a targeted test. I usually do not need every intermediate sentence it generated while doing that.
 
-- **browser** attaches to a dedicated authenticated debug Chrome instead of fighting daily-profile permission prompts
-- **brainstorm** forces divergent option generation and forbids implementation until I converge
-- **deploy** gathers worktree facts, then forces the lead to hand release mechanics to stevedore instead of freelancing a deploy mid-conversation
+The UI also makes failure visible without turning the terminal into a wall of JSON. Long-running tools keep a liveness signal. Failed renderers write diagnostics rather than crashing the main interface.
 
-Templates are for mode shifts. Agents are for role shifts. The distinction keeps the system smaller than it looks.
+![Pi's Mono terminal UI showing compact tool receipts and an active oracle review](../../assets/pi-tui-screenshot.png)
 
-## Review loop and model diversity
+_The lead can see successful reads, a failed shell command, elapsed time, worker activity, model routing, and overall session state without importing the child's full transcript._
 
-The system treats review as part of the work, not optional polish.
+## Repeated workflows became commands and local tools
 
-- tiny inline edits can be self-reviewed by the lead
-- delegated multi-file or risky work should get a fresh reviewer or oracle pass
-- reviewers inspect files and diffs, not the implementer's summary alone
-- after fixes, validation runs again before the lead claims done
+The configuration has also moved beyond agent dispatch.
 
-Model diversity is part of that loop. Advisor and oracle are most valuable when they are not a clone of the lead's blind spots. The lead is instructed to override to a strong model from a different family when the specialist default would otherwise correlate too hard with the parent. Same-family second opinions are comfort, not review.
+`/browser` and `/deploy` are native extension commands now, not just reusable prompt files. They perform deterministic setup before handing control back to the model. The browser command connects to a dedicated debug profile and injects the relevant operating instructions. The deploy command captures worktree facts and constructs a bounded handoff for stevedore.
 
-I still reconcile those opinions myself. A reviewer can be wrong, speculative, or out of scope. Fresh eyes are an input, not an autopilot.
+`brainstorm` remains a prompt-level mode shift because its job is behavioral: generate divergent options and do not implement until the user chooses a direction.
 
-## Secrets stay out of the story and out of git
+External research is provided through local `web_search`, `fetch_content`, and `get_search_content` tools backed by Exa. Fetches are cached so the model can request bounded slices instead of stuffing whole pages into one result.
 
-The configuration repository is meant to be restorable on a new machine, but secret-bearing provider, MCP, and auth files are intentionally excluded from source control. Restore means reinstalling dependencies, recreating ignored local credential files, and signing back into OAuth-backed providers. I am not going to name those values or paste example secrets here.
+MCP support is composed locally too. The adapter and the Mono presentation layer share one extension API, which avoids initializing the protocol integration twice and keeps MCP receipts consistent with the rest of the terminal.
 
-That split is part of the workflow design. The agent roster and prompts are portable knowledge. The credentials are local state.
+Long-running shell commands use a separate background-process extension with start, status, list, and kill operations. Dev servers and watchers should not force the agent to hold a foreground tool call open while other work continues.
 
-## Tradeoffs that are still real
+## Implementation and review form a loop
 
-This setup is powerful. It is also easy to romanticize.
+The workflow treats review as part of implementation, not optional polish.
 
-**Latency.** Fresh processes and queueing add wall-clock time. For a one-line fix, the multi-agent path is pure overhead. The lead has to keep using inline work.
+A tiny inline change can get a focused review from the lead. Delegated code, multi-file changes, difficult logic, and security-sensitive work enter a fresh-context review loop:
 
-**Cost.** Specialists multiply spend, especially when advisor, machinist, and oracle all touch the same feature. The concurrency cap and cheap scout defaults help, but they do not make fan-out free.
+1. Machinist implements non-visual code, or artisan implements the user-facing interface.
+2. Oracle inspects the actual files and diff, not just the worker's summary.
+3. If oracle finds a valid issue, the original worker fixes it with the implementation context still available.
+4. Oracle reviews the revised diff again.
+5. The lead repeats the loop until the findings are resolved, rejected as incorrect, or surfaced as an explicit blocker.
+6. The relevant validation runs after the final fixes.
 
-**Prompt quality.** Bad work orders produce confident garbage in a clean context window. Isolation removes hidden conversation state. It does not invent missing requirements.
+```text
+╭──────────────╮     ╭──────────────╮     ╭──────────────╮
+│ machinist or │────▶│    oracle    │────▶│ lead judges  │
+│   artisan    │     │ fresh review │     │ the findings │
+╰──────▲───────╯     ╰──────┬───────╯     ╰──────┬───────╯
+       │                    │ issues              │ accepted
+       ╰────────────────────╯                     ▼
+                                             validation
+```
 
-**Context isolation cuts both ways.** Workers cannot see the parent thread, so the lead must spend tokens writing better briefs. That is good discipline and also more work up front.
+The implementer and reviewer keep different jobs. Machinist or artisan owns the fix. Oracle owns the independent judgment. The lead decides whether a finding is real, speculative, already covered, or outside the requested scope.
 
-**Limited automated tests.** The extensions are real TypeScript with real process control, TUI rendering, and fallback logic. Automated coverage is still thinner than I want for something this close to my daily driver. A lot of confidence still comes from use, crash logs, and typechecking rather than a rich end-to-end suite.
+![A completed machinist review reporting a type-resolution issue before the lead applies the next fix](../../assets/pi-tui-screenshot-2.png)
 
-**Operational sharpness.** Stevedore can move fast with platform CLIs. That is useful only if the lead keeps shared-state actions under explicit control. Shipping remains a human-visible decision.
+_The implementation loop in practice: machinist returns a concrete finding, and the lead immediately plans the corrective edit before another review pass._
 
-{/* TODO: Add measured notes after more usage: typical task durations by role, how often fallbacks fire, and which work-order failures are most common. No invented benchmarks. */}
+For higher-risk changes, the lead can run additional oracle passes with different strong models. This is not a vote where two reviews automatically beat one. Changing the model is useful when another model family may notice a different failure mode, or when the first review leaves conflicting evidence. Every oracle used for the final gate still needs to be at least as capable as the orchestrating model for the question under review.
 
-## What I would keep if I rewrote it tomorrow
+The final answer states what passed, what failed, and what was not run.
 
-If I threw away the names and the chrome, I would keep these rules:
+I also encode delegation and verification gates in the lead prompt. If the lead personally scans half the repository instead of using scout, or implements a substantial multi-file unit instead of assigning the right specialist, it needs a concrete reason. This protects the coordination context from the very behavior the system was built to avoid.
+
+## Crash logs and ignored secrets keep operations boring
+
+A crash-logger extension records uncaught errors, rejected promises, stream failures, shutdown events, and process metadata. Environment markers distinguish the main Pi session from a named subagent. The logger is best-effort because a diagnostic hook that causes a second fatal error is worse than no logger.
+
+The configuration repository is portable, but credentials are not part of the portable layer. Authentication, provider configuration, MCP secrets, web-search keys, generated sessions, caches, and browser profiles stay ignored.
+
+The agent roster, prompts, extensions, and install metadata belong in git. Secret-bearing and machine-local state do not.
+
+## The tradeoffs got sharper as the system improved
+
+This setup is more capable than the original one-tool version. It also has more ways to fail.
+
+**Two orchestration APIs require judgment.** A synchronous mission is simpler. A persistent worker is easier to steer but requires status handling and cleanup. Picking RPC for every lookup adds ceremony without improving the result.
+
+**Persistent workers can leak capacity.** The async cap counts live workers until `task_close`, even after their current generation settles. The lead has to treat cleanup as part of completing the unit.
+
+**The two caps are independent.** The synchronous runner and async runner each enforce three slots in their own codepath. That is not the same as one global six-worker budget, and I do not treat it as permission to saturate both.
+
+**Fallback behavior is not identical.** The synchronous runner has a mature fallback walk. The async runner currently emphasizes session persistence and steering, and its model-routing behavior is less complete. I avoid promising identical recovery semantics across both modes.
+
+**Isolation makes weak prompts fail faster.** A fresh worker does not inherit unstated decisions. Better work orders cost time up front, even though they save time later.
+
+**Parallelism multiplies review work.** Four fast patches still need integration, combined validation, and a coherent final decision. Fan-out moves work around. It does not erase it.
+
+**The extension surface needs testing.** Process control, JSON event parsing, RPC sessions, UI rendering, model routing, and platform-specific termination are real software. Daily use and crash logs catch problems, but they are not a substitute for deeper automated coverage.
+
+## What I would keep if I rebuilt it again
+
+The current implementation will keep changing. The durable rules are smaller:
 
 1. One coordinator owns integration and the final answer.
-2. Specialists get fresh context and explicit metadata, not vibes.
-3. Writers never share file ownership in parallel.
-4. Children cannot spawn children.
-5. Review is a different process from implementation.
-6. Secrets stay local, prompts stay portable.
+2. Specialists get fresh context, bounded tools, and explicit work orders.
+3. Use disposable missions for bounded work and persistent workers when steering matters.
+4. Keep the worker graph star-shaped.
+5. Give each worktree one writer at a time.
+6. Loop implementation and fresh-context review until valid findings are resolved.
+7. Treat worker cleanup and verification as part of completion.
+8. Keep prompts portable and secrets local.
 
-Pi is the host. The custom configuration is the team shape. Once those rules are in place, the rest is tuning: which model is cheap enough for scout, how hard oracle should think, when artisan is worth the handoff, and when the lead should just edit the file itself.
+Pi is the runtime. The configuration defines the team shape and the operating discipline. You can inspect or reuse the current version in the [public configuration repository](https://github.com/bskimball/pi).
 
-I still do the last one more often than the architecture diagram would suggest. That is healthy. A team of agents is a tool for expensive work, not a costume for every keystroke.
+I still handle plenty of work inline. That is not a failure of the architecture. The point is to preserve judgment when a task becomes expensive, not to turn every keystroke into a distributed system.
