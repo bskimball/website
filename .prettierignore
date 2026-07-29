@@ -1,0 +1,12 @@
+dist
+node_modules
+.astro
+
+# Blog prose: let paragraphs stay hand-wrapped instead of reflowed
+src/content
+
+# Docs and agent skills are hand-authored; don't reflow or requote them
+*.md
+.agents
+skills-lock.json
+public
