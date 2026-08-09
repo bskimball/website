@@ -11,15 +11,15 @@ import ReviewLoopDiagram from '../../components/blog/pi-workflow/ReviewLoopDiagr
 
 A single coding agent works until its context becomes a record of every abandoned idea, file search, implementation attempt, and test failure from the entire job. Better models delay that failure. They do not remove it.
 
-I use [Pi](https://github.com/earendil-works/pi-mono) as the host for a different shape of workflow: one lead agent coordinates nine specialists, dispatches isolated work, reviews the evidence, and keeps responsibility for the final result. The configuration started with one synchronous `task` tool. It now supports both disposable missions and persistent, steerable RPC workers.
+I use [Pi](https://github.com/earendil-works/pi-mono) as the host for a different shape of workflow: one lead agent coordinates ten specialists, dispatches isolated work, reviews the evidence, and keeps responsibility for the final result. The configuration started with one synchronous `task` tool. It now supports both disposable missions and persistent, steerable RPC workers.
 
 The full configuration is public at [github.com/bskimball/pi](https://github.com/bskimball/pi). The repository contains the agent definitions, lead prompt, extensions, skills, and restore instructions described here. Secret-bearing and machine-local files remain excluded.
 
 The useful part is not the role-playing names. It is the process boundary.
 
-![Pi's custom Mono terminal UI showing compact tool receipts and an active oracle review](../../assets/pi-tui-screenshot.png)
+![A historical capture of the terminal UI, still labeled Mono at the time, showing compact tool receipts and an active oracle review](../../assets/pi-tui-screenshot.png)
 
-_This is the interface I use every day. Successful and failed tools, elapsed time, the active oracle mission, token traffic, model state, MCP connections, and task count remain visible without dumping child transcripts into the lead context._
+_This is a historical capture of the interface I use every day, taken before a later rename from Mono to Apex. Successful and failed tools, elapsed time, the active oracle mission, token traffic, model state, MCP connections, and task count remain visible without dumping child transcripts into the lead context._
 
 ## The lead agent protects its context for judgment
 
@@ -44,7 +44,7 @@ Delegation does not transfer ownership of the user's outcome. The lead writes th
 
 That distinction matters. Without it, subagents become an elaborate way to say, "someone else said it passed."
 
-## Nine specialists replace one overloaded mega-prompt
+## Ten specialists replace one overloaded mega-prompt
 
 Each specialist is defined in a Markdown file with YAML frontmatter. The frontmatter controls its model route, fallback models, thinking level, tools, skill inheritance, and turn budget. The Markdown body is the role's system prompt.
 
@@ -52,15 +52,16 @@ The roster is intentionally narrow:
 
 1. **advisor** evaluates consequential approaches and tradeoffs before implementation.
 2. **artisan** owns substantial UI, layout, visual hierarchy, and interaction polish.
-3. **librarian** researches external libraries, framework internals, documentation, and reference implementations.
-4. **machinist** handles concrete non-visual implementation such as backend logic, refactors, migrations, and bug fixes.
-5. **oracle** provides an independent review or a second opinion on difficult debugging.
-6. **picasso** generates image assets from a visual brief.
-7. **scout** performs fast, read-only reconnaissance across the local codebase.
-8. **scribe** writes and revises long-form technical content.
-9. **stevedore** handles bounded operational work such as builds, git mechanics, and platform CLIs.
+3. **inspector** performs fast, read-only browser verification: screenshots, responsive checks, and focused visual regressions after implementation.
+4. **librarian** researches external libraries, framework internals, documentation, and reference implementations.
+5. **machinist** handles concrete non-visual implementation such as backend logic, refactors, migrations, and bug fixes.
+6. **oracle** provides an independent review or a second opinion on difficult debugging.
+7. **picasso** generates image assets from a visual brief.
+8. **scout** performs fast, read-only reconnaissance across the local codebase.
+9. **scribe** writes and revises long-form technical content.
+10. **stevedore** handles bounded operational work such as builds, git mechanics, and platform CLIs.
 
-The names make the terminal easier to scan, but the tool boundaries do the real work. Scout does not need edit access. Librarian should not improvise local patches. Artisan is not interchangeable with a backend coder just because both can write TypeScript. Oracle is valuable because it inspects the actual diff from a fresh process, not because it produces a ceremonial approval paragraph.
+The names make the terminal easier to scan, but the tool boundaries do the real work. Scout does not need edit access. Librarian should not improvise local patches. Artisan is not interchangeable with a backend coder just because both can write TypeScript. Inspector only verifies the rendered result in a browser; it cannot edit code, so a defect it finds still routes back to artisan or machinist. Oracle is valuable because it inspects the actual diff from a fresh process, not because it produces a ceremonial approval paragraph.
 
 ## The topology stays star-shaped
 
@@ -84,7 +85,7 @@ A fresh context window is only helpful if the prompt contains enough context to 
 - **Validation:** the narrowest useful check
 - **Return format:** changed files, findings, test results, blockers, and residual risks
 
-The lead is the shared blackboard. There is no hidden memory service that lets a child recover a requirement omitted from its prompt.
+The lead is the shared blackboard. A continual-memory extension gives me `memory_list` and `memory_write` for durable notes, split into local memory that is scoped to the current session and global memory that is shared across sessions. It injects a compact overview of that memory into the lead's system prompt each turn. That memory is explicit and manual, not automatic: I write to it deliberately. Workers do not inherit the lead's conversation or its session-local memory; any child that loads the extension gets its own independent view of the global, cross-session memory instead. Because that global memory is supplemental and manual, I still cannot assume it contains the requirements for a given task, so there is no hidden channel that lets a child recover a requirement omitted from its prompt.
 
 That constraint improves the main session too. If I cannot explain a delegated unit clearly, I probably have not decomposed the problem clearly.
 
@@ -103,7 +104,7 @@ This mode works well for bounded jobs with a known result shape:
 
 The tradeoff is control. Once dispatched, a synchronous task cannot be steered mid-flight. If the brief is wrong, the lead waits for the task to finish or time out, reads the result, and starts a better-scoped mission.
 
-The synchronous runner can walk the agent's configured model fallback chain when the primary route fails. The UI records the active model and whether a fallback was needed, while the lead receives the bounded report rather than the child's full transcript.
+The synchronous runner can walk the agent's configured model fallbacks for a failed model attempt or a process or result failure. A task abort, timeout, or turn-limit kill stops the attempt loop instead of triggering another fallback. The UI records the active model and whether a fallback was needed, while the lead receives the bounded report rather than the child's full transcript.
 
 ## Persistent RPC workers make delegation interactive
 
@@ -144,9 +145,9 @@ Writers are different. Two agents editing the same worktree at the same time can
 
 Most of the time, serialization is cheaper than clever conflict management. I use parallel fan-out for independent evidence gathering, not as a default display of agent abundance.
 
-![Oracle and stevedore inspecting review and release concerns in parallel](../../assets/pi-tui-screenshot-3.png)
+![A historical capture of oracle and stevedore inspecting review and release concerns in parallel](../../assets/pi-tui-screenshot-3.png)
 
-_Parallelism is most useful when ownership is clear. Here, oracle inspects the diff while stevedore checks build, branch, and release state._
+_A historical capture: parallelism is most useful when ownership is clear. Here, oracle inspects the diff while stevedore checks build, branch, and release state._
 
 ## Model policy belongs to the role definition
 
@@ -158,9 +159,9 @@ Oracle is the exception. A review is only useful if the reviewer is at least as 
 
 The lead still evaluates the review. Fresh context prevents one class of bias, but it does not make the reviewer automatically correct.
 
-## The custom Mono UI is an orchestration console
+## The custom Apex UI is an orchestration console
 
-The stock terminal was designed around one agent calling tools. Once I had several specialists running, the presentation layer became part of the orchestration system. Streaming every child token into the main session would defeat context isolation, but collapsing a worker to a spinner would hide too much. The Mono UI sits between those extremes.
+The stock terminal was designed around one agent calling tools. Once I had several specialists running, the presentation layer became part of the orchestration system. Streaming every child token into the main session would defeat context isolation, but collapsing a worker to a spinner would hide too much. The Apex UI sits between those extremes.
 
 Its basic unit is a **tool receipt**. A collapsed receipt fits the operational facts on one row: status glyph, tool name, primary argument, optional stats, and duration. A short rail beneath it previews useful output. Expanding the receipt reveals a bounded body without changing how the tool itself executes.
 
@@ -176,7 +177,9 @@ Task presentation depends on the execution mode:
 
 The footer is a second information layer. It anchors working directory and branch on the left, model and thinking level on the right, and fits token traffic, cache rate, active task count, MCP state, and VS Code state where terminal width allows. Fields degrade by priority as the window narrows instead of wrapping into an unreadable dashboard. The input keeps Pi's editor geometry intact, while the custom border, prompt glyph, and rotating working indicator make the current state easier to locate.
 
-All large output is bounded by lines and characters. Renderers use width-aware fallbacks because a beautiful receipt that crashes on a narrow Windows terminal is not an improvement. Renderer failures go to `pi-render.log` and degrade to short text. `PI_MONO_UI=0` disables the layer entirely if I need to separate an interface bug from an agent or tool failure.
+All large output is bounded by lines and characters. Renderers use width-aware fallbacks because a beautiful receipt that crashes on a narrow Windows terminal is not an improvement. Renderer failures go to `pi-render.log` and degrade to short text. `PI_APEX_UI=0` disables the layer entirely if I need to separate an interface bug from an agent or tool failure.
+
+Apex also owns a landing identity: an Observatory splash shown once on a fresh chat, with a shark mark drawn rather than photographed and a workspace-seeded star field whose shape comes from the workspace path and whose density reflects context usage. The shark is there because my son loves sharks, and it felt right to let that show up in something I built. It is a splash, not a status indicator, and its featured roster is currently limited to nine specialists rather than all ten. Compaction still uses Pi's own built-in spinner, and live async workers show through the normal task status cards, not through any shark animation.
 
 The distinction between a receipt and a transcript is the main design decision. I need to know that a worker inspected four files, changed two, hit one failed command, and passed its targeted validation. I usually do not need every intermediate sentence it generated while getting there.
 
@@ -186,13 +189,19 @@ The configuration has also moved beyond agent dispatch.
 
 `/browser` and `/deploy` are native extension commands now, not just reusable prompt files. They perform deterministic setup before handing control back to the model. The browser command connects to a dedicated debug profile and injects the relevant operating instructions. The deploy command captures worktree facts and constructs a bounded handoff for stevedore.
 
+`/orchestrate` is also native. It toggles a strict orchestrator mode, `on` or `off`, and persists that setting for the session. With it on, the lead loses its inline-by-default allowance: all substantive implementation and broad investigation route to a specialist, and the lead's job narrows to decomposing the request, writing work orders, integrating results, and verifying the outcome. Direct `rg` lookups, lead-run combined validation, and trivial mechanical corrections to a returned diff remain allowed. I reach for it on larger changes where I want to force delegation discipline instead of relying on my own triage in the moment.
+
 `brainstorm` remains a prompt-level mode shift because its job is behavioral: generate divergent options and do not implement until the user chooses a direction.
+
+A handful of local tools round out daily use without deserving their own section.
+
+`todo_write` and `todo_read` keep an explicit session plan. `lsp` gives the lead semantic navigation (definitions, references, symbols, diagnostics) instead of grep-only search. A dedicated PowerShell tool runs Windows-native scripts and services work directly, separate from the portable `bash` default. A read/image result guard blocks redundant re-reads of unchanged images and downscales oversized ones before they burn context.
+
+Long-running shell commands use a separate background-process extension (`bg_start`, `bg_status`, `bg_list`, `bg_kill`) so dev servers and watchers do not hold a foreground tool call open.
 
 External research is provided through local `web_search`, `fetch_content`, and `get_search_content` tools backed by Exa. Fetches are cached so the model can request bounded slices instead of stuffing whole pages into one result.
 
-MCP support is composed locally too. The adapter and the Mono presentation layer share one extension API, which avoids initializing the protocol integration twice and keeps MCP receipts consistent with the rest of the terminal.
-
-Long-running shell commands use a separate background-process extension with start, status, list, and kill operations. Dev servers and watchers should not force the agent to hold a foreground tool call open while other work continues.
+MCP support is composed locally too. The adapter and Apex's MCP receipt wrapper share the adapter extension's `ExtensionAPI`, so a server's tools get the same receipt chrome as everything else. I don't also load the MCP package independently in the extension list; doing that alongside the local composition would just start a second, inconsistent MCP integration. Two skills, `mcp-scripting` and `mcp-scripting-recipes`, cover the scripting contract and safe, server-agnostic composition patterns for it.
 
 ## Implementation and review form a loop
 
@@ -211,9 +220,9 @@ A tiny inline change can get a focused review from the lead. Delegated code, mul
 
 The implementer and reviewer keep different jobs. Machinist or artisan owns the fix. Oracle owns the independent judgment. The lead decides whether a finding is real, speculative, already covered, or outside the requested scope.
 
-![A completed machinist review reporting a type-resolution issue before the lead applies the next fix](../../assets/pi-tui-screenshot-2.png)
+![An oracle review finding reporting a type-resolution issue before the lead applies the next fix](../../assets/pi-tui-screenshot-2.png)
 
-_The implementation loop in practice: machinist returns a concrete finding, and the lead immediately plans the corrective edit before another review pass._
+_The implementation loop in practice: an oracle review surfaces a concrete finding, and the lead immediately plans the corrective edit before another review pass._
 
 For higher-risk changes, the lead can run additional oracle passes with different strong models. This is not a vote where two reviews automatically beat one. Changing the model is useful when another model family may notice a different failure mode, or when the first review leaves conflicting evidence. Every oracle used for the final gate still needs to be at least as capable as the orchestrating model for the question under review.
 
@@ -223,9 +232,9 @@ I also encode delegation and verification gates in the lead prompt. If the lead 
 
 ## Crash logs and ignored secrets keep operations boring
 
-A crash-logger extension records uncaught errors, rejected promises, stream failures, shutdown events, and process metadata. Environment markers distinguish the main Pi session from a named subagent. The logger is best-effort because a diagnostic hook that causes a second fatal error is worse than no logger.
+A crash-logger extension records uncaught exceptions, unhandled promise rejections, stream errors, and nonzero exits, along with process metadata. A normal, zero-exit shutdown is not logged; the file is a record of failures, not a session log. Environment markers distinguish the main Pi session from a named subagent. The logger is best-effort because a diagnostic hook that causes a second fatal error is worse than no logger.
 
-The configuration repository is portable, but credentials are not part of the portable layer. Authentication, provider configuration, MCP secrets, web-search keys, generated sessions, caches, and browser profiles stay ignored.
+The configuration repository is portable, but credentials and local runtime state are not part of the portable layer. Authentication, provider configuration, MCP secrets, web-search keys, sessions, run histories, logs, caches, trust state, browser profiles, and continual-memory notes stay ignored.
 
 The agent roster, prompts, extensions, and install metadata belong in git. Secret-bearing and machine-local state do not.
 
@@ -239,7 +248,7 @@ This setup is more capable than the original one-tool version. It also has more 
 
 **The two caps are independent.** The synchronous runner and async runner each enforce three slots in their own codepath. That is not the same as one global six-worker budget, and I do not treat it as permission to saturate both.
 
-**Fallback behavior is not identical.** The synchronous runner has a mature fallback walk. The async runner currently emphasizes session persistence and steering, and its model-routing behavior is less complete. I avoid promising identical recovery semantics across both modes.
+**Fallback behavior is not identical.** The synchronous runner walks its configured fallbacks for failed model attempts and process or result failures, but a task abort, timeout, or turn-limit kill stops the attempt loop rather than triggering another fallback. The async runner only retries a qualifying provider or model failure, and only when replay is still safe: no tool call has started and no visible result has been produced for that generation. Once a worker has done real work, a fallback would risk duplicating it, so the runner leaves the failure attached to the model that produced it instead of replaying the prompt.
 
 **Isolation makes weak prompts fail faster.** A fresh worker does not inherit unstated decisions. Better work orders cost time up front, even though they save time later.
 
