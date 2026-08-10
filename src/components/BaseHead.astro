@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions'
 import { SITE_TITLE, SITE_URL } from '@/consts'
+import interFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url'
 import '../styles/global.css'
 
 interface Props {
@@ -50,6 +51,13 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`
   name="theme-color"
   content="#0E1A20"
   media="(prefers-color-scheme: dark)"
+/>
+<link
+  rel="preload"
+  href={interFont}
+  as="font"
+  type="font/woff2"
+  crossorigin="anonymous"
 />
 
 <!-- Favicons -->
@@ -135,8 +143,6 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`
 }
 
 <!-- Analytics -->
-<script is:inline src="https://www.googletagmanager.com/gtag/js?id=G-7QESKGKYB4"
-></script>
 <script is:inline>
   window.dataLayer = window.dataLayer || []
   function gtag(...args) {
@@ -144,6 +150,29 @@ const pageTitle = title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`
   }
   gtag('js', new Date())
   gtag('config', 'G-7QESKGKYB4')
+
+  const loadAnalytics = () => {
+    if (document.querySelector('[data-google-analytics]')) return
+    const script = document.createElement('script')
+    script.async = true
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-7QESKGKYB4'
+    script.dataset.googleAnalytics = 'true'
+    document.head.appendChild(script)
+  }
+
+  const scheduleAnalytics = () => {
+    window.setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(loadAnalytics, { timeout: 2000 })
+      } else {
+        loadAnalytics()
+      }
+    }, 4000)
+  }
+
+  window.addEventListener('load', scheduleAnalytics, { once: true })
+  window.addEventListener('pointerdown', loadAnalytics, { once: true })
+  window.addEventListener('keydown', loadAnalytics, { once: true })
 </script>
 
 <!-- Dark mode -->

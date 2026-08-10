@@ -31,14 +31,14 @@ const posts = (await getCollection('blog'))
       >
         <!-- Ambient atomic starbursts -->
         <Starburst
-          class="pointer-events-none select-none absolute -top-24 -right-24 h-[34rem] w-[34rem] text-gold/15 animate-spin-slow"
+          class="pointer-events-none select-none absolute -top-16 -right-32 h-[26rem] w-[26rem] text-gold/15 animate-spin-slow md:-top-24 md:-right-24 md:h-[34rem] md:w-[34rem]"
         />
         <Starburst
           class="pointer-events-none select-none absolute bottom-10 -left-28 h-72 w-72 text-accent/10"
         />
 
         <div
-          class="container relative flex flex-col justify-center min-h-screen"
+          class="container relative flex min-h-screen flex-col justify-start pt-28 sm:pt-36 md:justify-center md:pt-0"
         >
           <!-- Center Headline -->
           <div class="relative z-10">
@@ -63,6 +63,26 @@ const posts = (await getCollection('blog'))
                 >BUILDING FROM THE METAL UP</span
               >
             </div>
+
+            <p
+              class="mt-7 max-w-xl text-base leading-relaxed text-foreground/70 md:text-lg"
+            >
+              Field notes on modernizing IBM i, operating infrastructure, and
+              building software that survives contact with production.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a
+                href="/blog/"
+                class="rounded-full border-2 border-primary bg-primary px-5 py-3 font-mono text-xs tracking-widest text-primary-foreground no-underline transition-colors hover:bg-transparent hover:text-primary"
+                >Read the field notes</a
+              >
+              <a
+                href="/about/"
+                class="rounded-full border-2 border-border px-5 py-3 font-mono text-xs tracking-widest text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+                >About Brian</a
+              >
+            </div>
           </div>
         </div>
       </section>
@@ -72,6 +92,14 @@ const posts = (await getCollection('blog'))
       <!-- Bento Grid -->
       <section class="pb-24">
         <div class="container">
+          <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <h2 class="font-serif text-3xl md:text-4xl">Latest field notes</h2>
+            <a
+              href="/blog/"
+              class="font-mono text-xs tracking-widest text-foreground/70 no-underline transition-colors hover:text-primary"
+              >View all posts →</a
+            >
+          </div>
           <div
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 auto-rows-[minmax(240px,auto)]"
           >
@@ -92,6 +120,12 @@ const posts = (await getCollection('blog'))
                     post={post}
                     class={`${colSpan} ${rowSpan}`}
                     featured={index === 0}
+                    headingLevel="h3"
+                    imageSizes={
+                      index === 0
+                        ? '(min-width: 1024px) calc(50vw - 2rem), (min-width: 768px) calc(100vw - 4rem), calc(100vw - 4rem)'
+                        : '(min-width: 1024px) calc(25vw - 1.5rem), (min-width: 768px) calc(50vw - 2rem), calc(100vw - 4rem)'
+                    }
                   />
                 )
               })

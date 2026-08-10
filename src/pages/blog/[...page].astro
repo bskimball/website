@@ -83,6 +83,25 @@ const pageLabel =
               searchboxOptions={{ placeholder: 'Search posts…' }}
             />
           </div>
+
+          <nav class="flex flex-wrap gap-2" aria-label="Primary topics">
+            {
+              [
+                ['IBM i', 'ibmi'],
+                ['Systems architecture', 'systems-architecture'],
+                ['AI', 'ai'],
+                ['Networking', 'networking'],
+                ['Development', 'development'],
+              ].map(([label, slug]) => (
+                <a
+                  href={`/tags/${slug}/`}
+                  class="rounded-full border border-border px-3 py-2 font-mono text-[0.7rem] tracking-widest text-foreground/70 no-underline transition-colors hover:border-primary hover:text-primary"
+                >
+                  {label}
+                </a>
+              ))
+            }
+          </nav>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
