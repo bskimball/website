@@ -2,7 +2,7 @@
 import BaseHead from '@/components/BaseHead.astro'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
-import { SITE_TITLE, SITE_DESCRIPTION } from '@/consts'
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL, AUTHOR_NAME } from '@/consts'
 import { getCollection } from 'astro:content'
 import BentoCard from '@/components/BentoCard.astro'
 import SectionDivider from '@/components/SectionDivider.astro'
@@ -13,11 +13,54 @@ const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 9) // Limit to 9 posts for the home page grid
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: AUTHOR_NAME,
+  url: SITE_URL,
+  image: `${SITE_URL}/static/images/avatar.png`,
+  jobTitle: 'Systems Engineer / Developer',
+  description: SITE_DESCRIPTION,
+  sameAs: [
+    'https://github.com/bskimball',
+    'https://www.linkedin.com/in/brian-kimball-0499678a/',
+    'https://twitter.com/_BrianKimball',
+  ],
+  email: 'hello@brian-kimball.com',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'BDK Inc.',
+  },
+}
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_TITLE,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  author: {
+    '@type': 'Person',
+    name: AUTHOR_NAME,
+    url: SITE_URL,
+  },
+}
 ---
 
 <html lang="en">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(personSchema)}
+    />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(websiteSchema)}
+    />
   </head>
   <body
     class="bg-background text-foreground antialiased selection:bg-primary selection:text-background"
@@ -68,7 +111,9 @@ const posts = (await getCollection('blog'))
               class="mt-7 max-w-xl text-base leading-relaxed text-foreground/70 md:text-lg"
             >
               Field notes on modernizing IBM i, operating infrastructure, and
-              building software that survives contact with production.
+              building software that survives contact with production. This is
+              the personal website of Brian Kimball, a systems engineer and
+              developer based in Delaware.
             </p>
 
             <div class="mt-8 flex flex-wrap gap-3">
@@ -83,6 +128,65 @@ const posts = (await getCollection('blog'))
                 >About Brian</a
               >
             </div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      <section class="pb-8">
+        <div class="container">
+          <h2 class="font-serif text-3xl md:text-4xl">What I build</h2>
+          <p
+            class="mt-4 max-w-3xl text-base leading-relaxed text-foreground/70 md:text-lg"
+          >
+            I work across the boundary between software and infrastructure:
+            racking servers, designing networks, then shipping the application
+            that has to run there. The notes on this site cover IBM i
+            modernization, high-availability architecture, full-stack products,
+            and agent tooling used in daily engineering work.
+          </p>
+          <div class="mt-10 grid gap-4 md:grid-cols-2">
+            <article class="rounded-2xl border-2 border-border bg-card p-6">
+              <h3 class="font-serif text-xl md:text-2xl">
+                IBM i modernization
+              </h3>
+              <p class="mt-3 text-sm leading-relaxed text-foreground/70">
+                System tooling, LDAP, LAGG, Knex/DB2, and MCP servers that give
+                operators a practical path forward on IBM i without pretending
+                the platform is something else.
+              </p>
+            </article>
+            <article class="rounded-2xl border-2 border-border bg-card p-6">
+              <h3 class="font-serif text-xl md:text-2xl">
+                Infrastructure architecture
+              </h3>
+              <p class="mt-3 text-sm leading-relaxed text-foreground/70">
+                Networks, compute, storage, and redundant physical and logical
+                layers — datacenter installs, pfSense, and systems designed so
+                maintenance is not an outage.
+              </p>
+            </article>
+            <article class="rounded-2xl border-2 border-border bg-card p-6">
+              <h3 class="font-serif text-xl md:text-2xl">
+                Application development
+              </h3>
+              <p class="mt-3 text-sm leading-relaxed text-foreground/70">
+                Full-stack products with low operational complexity: Astro,
+                React, Node.js, Hono, Fastify, and Cloudflare — software that
+                still works when a dependency fails.
+              </p>
+            </article>
+            <article class="rounded-2xl border-2 border-border bg-card p-6">
+              <h3 class="font-serif text-xl md:text-2xl">
+                Engineering tools and AI
+              </h3>
+              <p class="mt-3 text-sm leading-relaxed text-foreground/70">
+                Custom agent workflows, MCP tools, and internal platforms that
+                make technical teams more capable without hiding the process
+                behind a black box.
+              </p>
+            </article>
           </div>
         </div>
       </section>

@@ -57,7 +57,8 @@ import Starburst from '@/components/Starburst.astro'
           >
             This route isn’t on the schematic. It may have been renamed,
             retired, or never existed — either way, the terminal can’t lock onto
-            it.
+            it. Agents: this is an HTTP 404. Start from the sitemap or llms.txt
+            instead of treating the missing path as empty content.
           </p>
 
           <div
@@ -76,10 +77,22 @@ import Starburst from '@/components/Starburst.astro'
               Blog
             </a>
             <a
-              href="/tags/"
+              href="/developer/"
               class="inline-flex items-center justify-center rounded-full border-2 border-border bg-card px-6 py-2.5 font-mono text-xs tracking-widest text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
             >
-              Tags
+              Developer
+            </a>
+            <a
+              href="/llms.txt"
+              class="inline-flex items-center justify-center rounded-full border-2 border-border bg-card px-6 py-2.5 font-mono text-xs tracking-widest text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+            >
+              llms.txt
+            </a>
+            <a
+              href="/sitemap-index.xml"
+              class="inline-flex items-center justify-center rounded-full border-2 border-border bg-card px-6 py-2.5 font-mono text-xs tracking-widest text-foreground no-underline transition-colors hover:border-primary hover:text-primary"
+            >
+              Sitemap
             </a>
           </div>
 

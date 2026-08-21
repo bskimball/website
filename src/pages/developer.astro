@@ -1,0 +1,158 @@
+---
+import BaseHead from '@/components/BaseHead.astro'
+import Header from '@/components/Header.astro'
+import Footer from '@/components/Footer.astro'
+import Backdrop from '@/components/Backdrop.astro'
+import { SITE_URL, AUTHOR_NAME } from '@/consts'
+
+const description =
+  'Brian Kimball developer resources: llms.txt, markdown content negotiation, public GitHub projects, the IBM i MCP server, RSS, and sitemap — machine-readable files for AI agents.'
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: SITE_URL,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Developer resources',
+      item: `${SITE_URL}/developer/`,
+    },
+  ],
+}
+
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Brian Kimball developer resources',
+  url: `${SITE_URL}/developer/`,
+  description,
+  author: {
+    '@type': 'Person',
+    name: AUTHOR_NAME,
+    url: SITE_URL,
+  },
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Brian Kimball developer resources"
+      description={description}
+    />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(webPageSchema)}
+    />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(breadcrumbSchema)}
+    />
+  </head>
+  <body
+    class="bg-background text-foreground antialiased selection:bg-primary selection:text-background"
+  >
+    <div class="noise-overlay"></div>
+    <Backdrop />
+    <Header />
+    <main class="container py-20">
+      <article class="flex max-w-3xl flex-col gap-10">
+        <header class="flex flex-col gap-6">
+          <p class="font-mono text-xs tracking-[0.25em] text-primary uppercase">
+            For agents / For developers
+          </p>
+          <h1 class="font-display leading-tight text-5xl md:text-7xl">
+            Brian Kimball developer resources
+          </h1>
+          <p class="text-lg leading-relaxed text-foreground/75">
+            Machine-readable entry points for this site. There is no public
+            authenticated HTTP API or hosted MCP endpoint on this origin — these
+            files are how agents should discover content, markdown variants, and
+            public projects.
+          </p>
+        </header>
+
+        <section class="flex flex-col gap-4">
+          <h2 class="font-serif text-3xl">Site files for agents</h2>
+          <ul class="list-disc space-y-2 pl-6 text-foreground/80">
+            <li>
+              <a href="/llms.txt">llms.txt</a> — curated markdown index (llmstxt.org)
+            </li>
+            <li>
+              <a href="/llms-full.txt">llms-full.txt</a> — concatenated published
+              posts
+            </li>
+            <li>
+              <a href="/sitemap-index.xml">Sitemap</a>
+            </li>
+            <li>
+              <a href="/rss.xml">RSS</a>
+            </li>
+            <li>
+              <a href="/index.md">Homepage markdown</a>
+            </li>
+            <li>
+              <a href="/robots.txt">robots.txt</a>
+            </li>
+          </ul>
+        </section>
+
+        <section class="flex flex-col gap-4">
+          <h2 class="font-serif text-3xl">Markdown content negotiation</h2>
+          <p class="leading-relaxed text-foreground/80">
+            Send <code class="font-mono text-sm">Accept: text/markdown</code> to any
+            HTML page URL. The same path returns
+            <code class="font-mono text-sm"
+              >Content-Type: text/markdown; charset=utf-8</code
+            >
+            with <code class="font-mono text-sm">Vary: Accept</code>. Equivalent
+            files also live at <code class="font-mono text-sm">index.md</code>
+            next to each page.
+          </p>
+        </section>
+
+        <section class="flex flex-col gap-4">
+          <h2 class="font-serif text-3xl">Public projects</h2>
+          <ul class="list-disc space-y-2 pl-6 text-foreground/80">
+            <li>
+              <a href="/blog/custom-pi-agent-workflow/"
+                >Custom Pi agent workflow</a
+              >
+              — source:
+              <a href="https://github.com/bskimball/pi"
+                >github.com/bskimball/pi</a
+              >
+            </li>
+            <li>
+              <a href="/blog/ibmi-ai-mcp/">IBM i MCP server (31 tools)</a> — package:
+              <a href="https://www.npmjs.com/package/@bdkinc/ibmi-mcp"
+                >@bdkinc/ibmi-mcp</a
+              >
+            </li>
+            <li>
+              GitHub:
+              <a href="https://github.com/bskimball">github.com/bskimball</a>
+            </li>
+            <li>
+              This website:
+              <a href="https://github.com/bskimball/website"
+                >github.com/bskimball/website</a
+              >
+            </li>
+          </ul>
+        </section>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>

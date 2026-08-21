@@ -3,3 +3,27 @@
 
 /static/*
   Cache-Control: public, max-age=31536000, immutable
+
+/llms.txt
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/llms-full.txt
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.md
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/:dir/index.md
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
+/:dir/:slug/index.md
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate

@@ -18,7 +18,12 @@ const personSchema = {
   image: `${SITE_URL}/static/images/avatar.png`,
   jobTitle: 'Systems Engineer / Developer',
   description: aboutDescription,
-  sameAs: ['https://github.com/bskimball'],
+  sameAs: [
+    'https://github.com/bskimball',
+    'https://www.linkedin.com/in/brian-kimball-0499678a/',
+    'https://twitter.com/_BrianKimball',
+  ],
+  email: 'hello@brian-kimball.com',
   worksFor: {
     '@type': 'Organization',
     name: 'BDK Inc.',
@@ -157,14 +162,14 @@ const breadcrumbSchema = {
               <div class="mt-5 flex flex-wrap gap-3">
                 <a
                   href="mailto:hello@brian-kimball.com"
-                  class="rounded-full border-2 border-primary bg-primary px-5 py-3 font-mono text-xs tracking-widest text-primary-foreground no-underline hover:bg-transparent hover:text-primary"
+                  class="rounded-full border-2 border-primary bg-primary px-5 py-3 font-mono text-xs tracking-widest text-primary-foreground! no-underline! transition-colors hover:bg-transparent hover:text-primary! [--primary:177_74%_27%] dark:[--primary:177_78%_52%]"
                   >Email Brian</a
                 >
                 <a
                   href="https://www.linkedin.com/in/brian-kimball-0499678a/"
                   target="_blank"
                   rel="noreferrer"
-                  class="rounded-full border-2 border-border px-5 py-3 font-mono text-xs tracking-widest text-foreground no-underline hover:border-primary hover:text-primary"
+                  class="rounded-full border-2 border-border px-5 py-3 font-mono text-xs tracking-widest text-foreground! no-underline! transition-colors hover:border-primary hover:text-primary! [--primary:177_74%_27%] dark:[--primary:177_78%_52%]"
                   >LinkedIn</a
                 >
               </div>
