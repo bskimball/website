@@ -30,3 +30,6 @@ Allow: /
 
 Sitemap: https://brian-kimball.com/sitemap-index.xml
 Llms-txt: https://brian-kimball.com/llms.txt
+
+# Developer resources: https://brian-kimball.com/developer/
+# OpenAPI specification: https://brian-kimball.com/openapi.json

@@ -126,7 +126,8 @@ ${latest}
 
 - [About ${AUTHOR_NAME}](${SITE_URL}/about/index.md)
 - [Blog](${SITE_URL}/blog/index.md)
-- [Developer resources](${SITE_URL}/developer/index.md)
+- [Brian Kimball developer resources](${SITE_URL}/developer/index.md)
+- [OpenAPI 3.1 specification](${SITE_URL}/openapi.json)
 - [llms.txt](${SITE_URL}/llms.txt)
 - [Full markdown corpus](${SITE_URL}/llms-full.txt)
 - [Sitemap](${SITE_URL}/sitemap-index.xml)
@@ -158,7 +159,8 @@ This site is a working catalog of open-source contributions, production lessons,
 - GitHub: https://github.com/bskimball
 - LinkedIn: https://www.linkedin.com/in/brian-kimball-0499678a/
 - Site: ${SITE_URL}/
-- Developer resources: ${SITE_URL}/developer/
+- Brian Kimball developer resources: ${SITE_URL}/developer/
+- OpenAPI specification: ${SITE_URL}/openapi.json
 `
 }
 
@@ -214,37 +216,43 @@ ${items || 'No published posts with this tag yet.'}
 }
 
 export function developerMarkdown(): string {
-  return `# ${SITE_TITLE} developer resources
+  return `# Brian Kimball developer resources
 
-> Machine-readable entry points, public projects, and agent-facing files for ${AUTHOR_NAME} (${SITE_URL.replace('https://', '')}).
+> Machine-readable entry points, OpenAPI 3.1 specification, and agent discovery for Brian Kimball (${SITE_URL.replace('https://', '')}).
 
-This site is a personal engineering blog, not a SaaS API. There is no public authenticated HTTP API, webhook catalog, or hosted MCP endpoint here. The resources below are the stable URLs agents should use.
+This site is a personal engineering blog and developer resource hub by **${AUTHOR_NAME}**. There is no public authenticated HTTP API, write endpoint, or hosted MCP service on this origin. The resources below describe a curated subset of public read-only endpoints, markdown content negotiation, and public projects.
 
-## Site files for agents
+## Machine-readable discovery & APIs
 
-- [llms.txt](${SITE_URL}/llms.txt): curated markdown index (llmstxt.org)
-- [llms-full.txt](${SITE_URL}/llms-full.txt): concatenated published posts
-- [Sitemap](${SITE_URL}/sitemap-index.xml)
-- [RSS](${SITE_URL}/rss.xml)
-- [Homepage markdown](${SITE_URL}/index.md)
-- [robots.txt](${SITE_URL}/robots.txt)
+- [OpenAPI 3.1 specification](${SITE_URL}/openapi.json): OpenAPI 3.1 document covering a curated subset of public read-only endpoints, markdown negotiation, and negotiated JSON 404/406 Problem Details
+- [llms.txt](${SITE_URL}/llms.txt): curated markdown index following the llmstxt.org proposal
+- [llms-full.txt](${SITE_URL}/llms-full.txt): concatenated full markdown archive of published posts
+- [Developer documentation](${SITE_URL}/developer/index.md): human- and agent-readable guide to site protocols
+- [Sitemap](${SITE_URL}/sitemap-index.xml): XML sitemap index
+- [RSS](${SITE_URL}/rss.xml): RSS 2.0 feed of published articles
+- [Homepage markdown](${SITE_URL}/index.md): raw markdown representation of homepage
+- [robots.txt](${SITE_URL}/robots.txt): crawler directives, sitemap reference, and human-readable resource comments
 
 ## Markdown content negotiation
 
-Send \`Accept: text/markdown\` on any HTML page URL (for example \`${SITE_URL}/\` or \`${SITE_URL}/blog/high-availability/\`). The same URL returns \`Content-Type: text/markdown; charset=utf-8\` with \`Vary: Accept\`. Equivalent files also live at \`index.md\` next to each page.
+Send \`Accept: text/markdown\` on any HTML page URL (for example \`${SITE_URL}/\` or \`${SITE_URL}/blog/high-availability/\`). The same URL returns \`Content-Type: text/markdown; charset=utf-8\` with \`Vary: Accept\`. Equivalent static files are also published directly at \`index.md\` alongside each route.
 
 ## Public projects
 
 - [Custom Pi agent workflow](${SITE_URL}/blog/custom-pi-agent-workflow/index.md) — source: https://github.com/bskimball/pi
 - [IBM i MCP server (31 tools)](${SITE_URL}/blog/ibmi-ai-mcp/index.md) — package: https://www.npmjs.com/package/@bdkinc/ibmi-mcp
 - GitHub profile: https://github.com/bskimball
-- This website source: https://github.com/bskimball/website
+- Website repository: https://github.com/bskimball/website
 
-## Identity
+## Brian Kimball identity & contact
 
 - Name: ${AUTHOR_NAME}
-- Site: ${SITE_URL}/
+- Role: Systems Engineer / Developer
+- Canonical site: ${SITE_URL}/
+- Developer resources: ${SITE_URL}/developer/
+- OpenAPI specification: ${SITE_URL}/openapi.json
 - Email: hello@brian-kimball.com
+- GitHub: https://github.com/bskimball
 - LinkedIn: https://www.linkedin.com/in/brian-kimball-0499678a/
 `
 }
@@ -261,7 +269,8 @@ This response is an HTTP 404. The URL does not exist. Do not treat it as an empt
 
 - [Home](${SITE_URL}/index.md)
 - [llms.txt](${SITE_URL}/llms.txt) — curated site map for agents
-- [Developer resources](${SITE_URL}/developer/index.md)
+- [Brian Kimball developer resources](${SITE_URL}/developer/index.md)
+- [OpenAPI 3.1 specification](${SITE_URL}/openapi.json)
 - [Blog](${SITE_URL}/blog/index.md)
 - [About ${AUTHOR_NAME}](${SITE_URL}/about/index.md)
 - [Sitemap](${SITE_URL}/sitemap-index.xml)
@@ -290,7 +299,7 @@ export function llmsTxt(posts: AgentPost[]): string {
 
 > ${SITE_DESCRIPTION}
 
-Personal website of **${AUTHOR_NAME}**, a systems engineer and developer. Use the markdown URLs below (or send \`Accept: text/markdown\` to the HTML URLs). There is no public product API on this origin.
+Personal website and developer resources of **${AUTHOR_NAME}**, a systems engineer and developer. Use the markdown URLs below or send \`Accept: text/markdown\` to HTML URLs. Read-only machine endpoints and specifications are published directly on this origin.
 
 ## Pages
 
@@ -298,7 +307,13 @@ Personal website of **${AUTHOR_NAME}**, a systems engineer and developer. Use th
 - [About](${SITE_URL}/about/index.md): biography and contact
 - [Blog](${SITE_URL}/blog/index.md): all published field notes
 - [Tags](${SITE_URL}/tags/index.md): topics index
-- [Brian Kimball developer resources](${SITE_URL}/developer/index.md): llms.txt, markdown negotiation, GitHub, MCP, RSS
+- [Brian Kimball developer resources](${SITE_URL}/developer/index.md): OpenAPI specification, llms.txt, markdown content negotiation, GitHub projects, and RSS
+
+## Machine-readable APIs & specifications
+
+- [OpenAPI 3.1 specification](${SITE_URL}/openapi.json): OpenAPI 3.1 document covering a curated subset of public read-only GET endpoints and negotiated JSON 404/406 Problem Details
+- [llms.txt](${SITE_URL}/llms.txt): curated markdown index following the llmstxt.org proposal
+- [llms-full.txt](${SITE_URL}/llms-full.txt): full concatenated markdown corpus of published posts
 
 ## Featured & recent articles
 
@@ -310,7 +325,6 @@ ${archiveList}
 
 ## Optional
 
-- [llms-full.txt](${SITE_URL}/llms-full.txt): full concatenated markdown corpus
 - [Sitemap](${SITE_URL}/sitemap-index.xml)
 - [RSS](${SITE_URL}/rss.xml)
 - [GitHub](https://github.com/bskimball)
@@ -325,7 +339,7 @@ export function llmsFullTxt(posts: AgentPost[]): string {
     '',
     `> ${SITE_DESCRIPTION}`,
     '',
-    `Generated for agents. Canonical HTML site: ${SITE_URL}/`,
+    `Personal website and developer resources of **${AUTHOR_NAME}**. Generated for AI agents. Canonical HTML site: ${SITE_URL}/, Developer resources: ${SITE_URL}/developer/, OpenAPI specification: ${SITE_URL}/openapi.json`,
     '',
   ]
 

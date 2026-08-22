@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   appendVaryAccept,
+  effectiveQuality,
   explicitlyPrefersHtml,
   preferredType,
   prefersMarkdown,
@@ -63,6 +64,26 @@ describe('preferredType', () => {
 
   it('returns null when every produced type is rejected', () => {
     assert.equal(preferredType('text/html;q=0, text/markdown;q=0'), null)
+  })
+})
+
+describe('effectiveQuality', () => {
+  it('uses text/* for HTML and Markdown when no exact type is listed', () => {
+    const header = 'text/*;q=0.9, application/json;q=0.5'
+    assert.equal(effectiveQuality(header, 'text/html'), 0.9)
+    assert.equal(effectiveQuality(header, 'text/markdown'), 0.9)
+  })
+
+  it('uses */* for document candidates', () => {
+    const header = '*/*;q=1, application/json;q=0.5'
+    assert.equal(effectiveQuality(header, 'text/html'), 1)
+    assert.equal(effectiveQuality(header, 'text/markdown'), 1)
+  })
+
+  it('lets exact text/html;q=0 override text/* for HTML only', () => {
+    const header = 'text/*;q=0.9, text/html;q=0, application/json;q=0.5'
+    assert.equal(effectiveQuality(header, 'text/html'), 0)
+    assert.equal(effectiveQuality(header, 'text/markdown'), 0.9)
   })
 })
 

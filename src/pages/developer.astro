@@ -3,10 +3,10 @@ import BaseHead from '@/components/BaseHead.astro'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
 import Backdrop from '@/components/Backdrop.astro'
-import { SITE_URL, AUTHOR_NAME } from '@/consts'
+import { SITE_TITLE, SITE_URL, AUTHOR_NAME } from '@/consts'
 
 const description =
-  'Brian Kimball developer resources: llms.txt, markdown content negotiation, public GitHub projects, the IBM i MCP server, RSS, and sitemap — machine-readable files for AI agents.'
+  'Brian Kimball developer resources: OpenAPI specification, markdown negotiation, llms.txt, RSS, and sitemap for agents exploring this systems engineering site.'
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -16,7 +16,7 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 1,
       name: 'Home',
-      item: SITE_URL,
+      item: `${SITE_URL}/`,
     },
     {
       '@type': 'ListItem',
@@ -33,10 +33,19 @@ const webPageSchema = {
   name: 'Brian Kimball developer resources',
   url: `${SITE_URL}/developer/`,
   description,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: SITE_TITLE,
+    url: `${SITE_URL}/`,
+  },
   author: {
     '@type': 'Person',
     name: AUTHOR_NAME,
-    url: SITE_URL,
+    url: `${SITE_URL}/about/`,
+    sameAs: [
+      'https://github.com/bskimball',
+      'https://www.linkedin.com/in/brian-kimball-0499678a/',
+    ],
   },
 }
 ---
@@ -75,34 +84,120 @@ const webPageSchema = {
             Brian Kimball developer resources
           </h1>
           <p class="text-lg leading-relaxed text-foreground/75">
-            Machine-readable entry points for this site. There is no public
-            authenticated HTTP API or hosted MCP endpoint on this origin — these
-            files are how agents should discover content, markdown variants, and
-            public projects.
+            Machine-readable entry points and specifications for this site.
+            There is no public authenticated HTTP API, write endpoint, or hosted
+            MCP endpoint on this origin — these resources describe a curated
+            subset of public read-only resources for agent discovery, markdown
+            content negotiation, OpenAPI documentation, and public projects.
           </p>
         </header>
 
         <section class="flex flex-col gap-4">
-          <h2 class="font-serif text-3xl">Site files for agents</h2>
-          <ul class="list-disc space-y-2 pl-6 text-foreground/80">
+          <h2 class="font-serif text-3xl">Machine-readable discovery</h2>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <a
+              href="/openapi.json"
+              class="rounded-2xl border-2 border-primary/40 bg-card p-5 text-foreground no-underline transition-colors hover:border-primary"
+            >
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-base font-semibold text-primary"
+                  >/openapi.json</span
+                >
+                <span
+                  class="rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[0.65rem] tracking-wider text-primary uppercase"
+                  >OpenAPI 3.1</span
+                >
+              </div>
+              <p class="mt-2 text-sm leading-relaxed text-foreground/70">
+                Machine-readable OpenAPI 3.1 specification documenting a curated
+                subset of public read-only GET endpoints, markdown negotiation,
+                and negotiated JSON 404/406 Problem Details.
+              </p>
+            </a>
+
+            <a
+              href="/llms.txt"
+              class="rounded-2xl border-2 border-border bg-card p-5 text-foreground no-underline transition-colors hover:border-primary"
+            >
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-base font-semibold text-foreground"
+                  >/llms.txt</span
+                >
+                <span
+                  class="rounded-full bg-foreground/10 px-2 py-0.5 font-mono text-[0.65rem] tracking-wider text-foreground/80 uppercase"
+                  >Index</span
+                >
+              </div>
+              <p class="mt-2 text-sm leading-relaxed text-foreground/70">
+                Curated markdown index for AI assistants following the
+                llmstxt.org proposal.
+              </p>
+            </a>
+
+            <a
+              href="/llms-full.txt"
+              class="rounded-2xl border-2 border-border bg-card p-5 text-foreground no-underline transition-colors hover:border-primary"
+            >
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-base font-semibold text-foreground"
+                  >/llms-full.txt</span
+                >
+                <span
+                  class="rounded-full bg-foreground/10 px-2 py-0.5 font-mono text-[0.65rem] tracking-wider text-foreground/80 uppercase"
+                  >Corpus</span
+                >
+              </div>
+              <p class="mt-2 text-sm leading-relaxed text-foreground/70">
+                Full concatenated markdown archive of all published field notes
+                and articles.
+              </p>
+            </a>
+
+            <a
+              href="/index.md"
+              class="rounded-2xl border-2 border-border bg-card p-5 text-foreground no-underline transition-colors hover:border-primary"
+            >
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-base font-semibold text-foreground"
+                  >/index.md</span
+                >
+                <span
+                  class="rounded-full bg-foreground/10 px-2 py-0.5 font-mono text-[0.65rem] tracking-wider text-foreground/80 uppercase"
+                  >Markdown</span
+                >
+              </div>
+              <p class="mt-2 text-sm leading-relaxed text-foreground/70">
+                Raw markdown variant of the homepage with structured navigation
+                links.
+              </p>
+            </a>
+          </div>
+
+          <ul class="mt-2 list-disc space-y-2 pl-6 text-foreground/80">
             <li>
-              <a href="/llms.txt">llms.txt</a> — curated markdown index (llmstxt.org)
+              <a href="/openapi.json">OpenAPI 3.1 specification</a> — <code
+                >/openapi.json</code
+              > (curated read-only endpoints & negotiated error contracts)
+            </li>
+            <li>
+              <a href="/llms.txt">llms.txt</a> — curated markdown index (llmstxt.org
+              proposal)
             </li>
             <li>
               <a href="/llms-full.txt">llms-full.txt</a> — concatenated published
               posts
             </li>
             <li>
-              <a href="/sitemap-index.xml">Sitemap</a>
+              <a href="/sitemap-index.xml">Sitemap index</a> — <code
+                >/sitemap-index.xml</code
+              >
             </li>
             <li>
-              <a href="/rss.xml">RSS</a>
+              <a href="/rss.xml">RSS 2.0 feed</a> — <code>/rss.xml</code>
             </li>
             <li>
-              <a href="/index.md">Homepage markdown</a>
-            </li>
-            <li>
-              <a href="/robots.txt">robots.txt</a>
+              <a href="/robots.txt">robots.txt</a> — crawler directives, sitemap reference,
+              and human-readable resource comments
             </li>
           </ul>
         </section>
@@ -111,14 +206,52 @@ const webPageSchema = {
           <h2 class="font-serif text-3xl">Markdown content negotiation</h2>
           <p class="leading-relaxed text-foreground/80">
             Send <code class="font-mono text-sm">Accept: text/markdown</code> to any
-            HTML page URL. The same path returns
+            HTML page URL (for example <code class="font-mono text-sm">/</code> or
+            <code class="font-mono text-sm">/blog/high-availability/</code>).
+            The same path returns
             <code class="font-mono text-sm"
               >Content-Type: text/markdown; charset=utf-8</code
             >
             with <code class="font-mono text-sm">Vary: Accept</code>. Equivalent
-            files also live at <code class="font-mono text-sm">index.md</code>
+            static files also live at <code class="font-mono text-sm"
+              >index.md</code
+            >
             next to each page.
           </p>
+        </section>
+
+        <section class="flex flex-col gap-4">
+          <h2 class="font-serif text-3xl">OpenAPI 3.1 specification</h2>
+          <p class="leading-relaxed text-foreground/80">
+            The OpenAPI document at <a href="/openapi.json"
+              ><code class="font-mono text-sm">/openapi.json</code></a
+            >
+            documents a curated subset of public read-only GET endpoints, markdown
+            content negotiation rules, and negotiated RFC 9457 Problem Details schemas
+            for JSON 404 and 406 error responses.
+          </p>
+          <p class="leading-relaxed text-foreground/80">
+            Discovery links in the HTML document head include:
+          </p>
+          <ul
+            class="list-disc space-y-1 pl-6 font-mono text-xs text-foreground/75"
+          >
+            <li>
+              &lt;link rel="service-desc" type="application/json" href="{
+                SITE_URL
+              }/openapi.json" /&gt;
+            </li>
+            <li>
+              &lt;link rel="describedby" type="text/markdown" href="{
+                SITE_URL
+              }/llms.txt" /&gt;
+            </li>
+            <li>
+              &lt;link rel="alternate" type="application/rss+xml" href="{
+                SITE_URL
+              }/rss.xml" /&gt;
+            </li>
+          </ul>
         </section>
 
         <section class="flex flex-col gap-4">
@@ -147,6 +280,35 @@ const webPageSchema = {
               This website:
               <a href="https://github.com/bskimball/website"
                 >github.com/bskimball/website</a
+              >
+            </li>
+          </ul>
+        </section>
+
+        <section class="flex flex-col gap-4">
+          <h2 class="font-serif text-3xl">Identity & contact</h2>
+          <ul class="list-disc space-y-2 pl-6 text-foreground/80">
+            <li>
+              <strong>Name:</strong>
+              {AUTHOR_NAME}
+            </li>
+            <li>
+              <strong>Role:</strong> Systems Engineer / Developer
+            </li>
+            <li>
+              <strong>Canonical URL:</strong>
+              <a href={SITE_URL}>{SITE_URL}/</a>
+            </li>
+            <li>
+              <strong>Email:</strong>
+              <a href="mailto:hello@brian-kimball.com"
+                >hello@brian-kimball.com</a
+              >
+            </li>
+            <li>
+              <strong>LinkedIn:</strong>
+              <a href="https://www.linkedin.com/in/brian-kimball-0499678a/"
+                >linkedin.com/in/brian-kimball-0499678a/</a
               >
             </li>
           </ul>

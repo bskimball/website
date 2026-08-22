@@ -1,6 +1,4 @@
 ---
-import type { GetStaticPaths, Page } from 'astro'
-import type { CollectionEntry } from 'astro:content'
 import BaseHead from '../../components/BaseHead.astro'
 import Header from '../../components/Header.astro'
 import Footer from '../../components/Footer.astro'
@@ -11,20 +9,9 @@ import Search from 'astro-pagefind/components/Search.astro'
 import BentoCard from '../../components/BentoCard.astro'
 import Backdrop from '../../components/Backdrop.astro'
 
-export const getStaticPaths = (async ({ paginate }) => {
-  const posts = (await getCollection('blog'))
-    .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-
-  return paginate(posts, { pageSize: 10 })
-}) satisfies GetStaticPaths
-
-type Props = {
-  page: Page<CollectionEntry<'blog'>>
-}
-
-const { page } = Astro.props
-const posts = page.data
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 
 const blogDescription =
   'Articles on IBM i modernization, full-stack development, network infrastructure, and systems engineering by Brian Kimball.'
@@ -47,15 +34,12 @@ const breadcrumbSchema = {
     },
   ],
 }
-
-const pageLabel =
-  page.currentPage > 1 ? `Blog — Page ${page.currentPage}` : 'Blog'
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={pageLabel} description={blogDescription} />
+    <BaseHead title="Blog" description={blogDescription} />
     <script
       is:inline
       type="application/ld+json"
@@ -104,52 +88,9 @@ const pageLabel =
           </nav>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {posts.map((post) => <BentoCard post={post} />)}
+        <div class="columns-1 md:columns-2 lg:columns-3 gap-4">
+          {posts.map((post) => <BentoCard post={post} class="mb-4" />)}
         </div>
-
-        {
-          page.lastPage > 1 && (
-            <nav
-              class="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8"
-              aria-label="Blog pagination"
-            >
-              <div>
-                {page.url.prev ? (
-                  <a
-                    href={page.url.prev}
-                    class="font-mono text-xs tracking-widest border-2 border-border px-4 py-2 rounded-full no-underline text-foreground hover:border-primary hover:text-primary transition-colors"
-                  >
-                    ← Previous
-                  </a>
-                ) : (
-                  <span class="font-mono text-xs tracking-widest border-2 border-border/40 px-4 py-2 rounded-full text-foreground/30">
-                    ← Previous
-                  </span>
-                )}
-              </div>
-
-              <span class="font-mono text-xs tracking-widest text-foreground/60">
-                Page {page.currentPage} of {page.lastPage}
-              </span>
-
-              <div>
-                {page.url.next ? (
-                  <a
-                    href={page.url.next}
-                    class="font-mono text-xs tracking-widest border-2 border-border px-4 py-2 rounded-full no-underline text-foreground hover:border-primary hover:text-primary transition-colors"
-                  >
-                    Next →
-                  </a>
-                ) : (
-                  <span class="font-mono text-xs tracking-widest border-2 border-border/40 px-4 py-2 rounded-full text-foreground/30">
-                    Next →
-                  </span>
-                )}
-              </div>
-            </nav>
-          )
-        }
       </section>
     </main>
     <Footer />

@@ -22,12 +22,9 @@ function parseDate(value: string | undefined): Date {
   const date = new Date(cleaned)
   return Number.isNaN(date.valueOf()) ? new Date(0) : date
 }
-
 function isDraft(data: Record<string, string>): boolean {
   return (data.draft ?? '').toLowerCase() === 'true'
 }
-
-const BLOG_PAGE_SIZE = 10
 
 type LoadedPost = AgentPost & { draft: boolean }
 
@@ -102,15 +99,7 @@ export async function buildAgentFileMap(
   files.set('llms.txt', llmsTxt(posts))
   files.set('llms-full.txt', llmsFullTxt(posts))
 
-  const pageCount = Math.max(1, Math.ceil(posts.length / BLOG_PAGE_SIZE))
-  for (let page = 1; page <= pageCount; page++) {
-    const slice = posts.slice(
-      (page - 1) * BLOG_PAGE_SIZE,
-      page * BLOG_PAGE_SIZE,
-    )
-    const key = page === 1 ? 'blog/index.md' : `blog/${page}/index.md`
-    files.set(key, blogIndexMarkdown(slice))
-  }
+  files.set('blog/index.md', blogIndexMarkdown(posts))
 
   for (const post of allPosts) {
     files.set(`blog/${post.id}/index.md`, postToMarkdown(post))

@@ -5,3 +5,11 @@
 /blog/second-post/ /blog/ 301
 /blog/third-post /blog/ 301
 /blog/third-post/ /blog/ 301
+
+# Retired numeric blog pagination (single-page /blog/).
+/blog/2 /blog/ 301
+/blog/2/ /blog/ 301
+/blog/3 /blog/ 301
+/blog/3/ /blog/ 301
+/blog/2/index.md /blog/index.md 301
+/blog/3/index.md /blog/index.md 301

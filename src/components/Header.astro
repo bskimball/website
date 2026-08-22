@@ -7,10 +7,9 @@ import Starburst from './Starburst.astro'
 // angle in degrees (screen coords, y-down): x = r·cosθ, y = r·sinθ.
 const C = 20 // center of the 40×40 starburst trigger
 const rays = [
-  { label: 'Blog', href: '/blog/', angle: 8, r: 158 },
-  { label: 'Tags', href: '/tags/', angle: 32, r: 156 },
-  { label: 'About', href: '/about/', angle: 56, r: 150 },
-  { label: 'Dev', href: '/developer/', angle: 80, r: 148 },
+  { label: 'Blog', href: '/blog/', angle: 12, r: 158 },
+  { label: 'Tags', href: '/tags/', angle: 40, r: 154 },
+  { label: 'About', href: '/about/', angle: 68, r: 150 },
 ]
 const items = rays.map((it, i) => {
   const a = (it.angle * Math.PI) / 180
@@ -128,11 +127,6 @@ const items = rays.map((it, i) => {
           href="/about/"
           class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
           >About</HeaderLink
-        >
-        <HeaderLink
-          href="/developer/"
-          class="font-mono text-xs tracking-widest hover:text-primary transition-colors"
-          >Dev</HeaderLink
         >
         <div class="pl-4 border-l border-foreground/10">
           <button

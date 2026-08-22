@@ -11,7 +11,7 @@ function parseQValue(raw: string): number | null {
   return Number.isFinite(parsed) ? parsed : null
 }
 
-function parseAccept(header: string): AcceptEntry[] {
+export function parseAccept(header: string): AcceptEntry[] {
   return header
     .split(',')
     .map((raw) => {
@@ -51,6 +51,47 @@ function matches(entry: AcceptEntry, candidate: string): boolean {
   return entry.type === candidate
 }
 
+type EffectiveMatch = { q: number; specificity: number; position: number }
+
+/** Most-specific Accept range matching `candidate`, or null if none. */
+function matchingRange(
+  entries: AcceptEntry[],
+  candidate: string,
+): EffectiveMatch | null {
+  let matched: AcceptEntry | null = null
+  let matchedPosition = Infinity
+  for (let idx = 0; idx < entries.length; idx++) {
+    const entry = entries[idx]
+    if (!matches(entry, candidate)) continue
+    if (
+      matched === null ||
+      entry.specificity > matched.specificity ||
+      (entry.specificity === matched.specificity && idx < matchedPosition)
+    ) {
+      matched = entry
+      matchedPosition = idx
+    }
+  }
+  if (matched === null) return null
+  return {
+    q: matched.q,
+    specificity: matched.specificity,
+    position: matchedPosition,
+  }
+}
+
+/** Effective quality of candidate from Accept. Most-specific range wins; 0 if unmatched or q=0. */
+export function effectiveQuality(
+  header: string | null,
+  candidate: string,
+): number {
+  if (!header || header.trim() === '') return 0
+  const entries = parseAccept(header)
+  const matched = matchingRange(entries, candidate)
+  if (matched === null || matched.q <= 0) return 0
+  return matched.q
+}
+
 /**
  * RFC 9110 §12.5.1 negotiation used by acceptmarkdown.com.
  * Returns null when every produced type is explicitly rejected (q=0).
@@ -66,28 +107,15 @@ export function preferredType(header: string | null): ProducedType | null {
   let bestPosition = Infinity
 
   for (const candidate of PRODUCES) {
-    let matched: AcceptEntry | null = null
-    let matchedPosition = Infinity
-    for (let idx = 0; idx < entries.length; idx++) {
-      const entry = entries[idx]
-      if (!matches(entry, candidate)) continue
-      if (
-        matched === null ||
-        entry.specificity > matched.specificity ||
-        (entry.specificity === matched.specificity && idx < matchedPosition)
-      ) {
-        matched = entry
-        matchedPosition = idx
-      }
-    }
+    const matched = matchingRange(entries, candidate)
     if (matched === null) continue
     if (matched.q <= 0) continue
     if (
       matched.q > bestQ ||
-      (matched.q === bestQ && matchedPosition < bestPosition)
+      (matched.q === bestQ && matched.position < bestPosition)
     ) {
       bestQ = matched.q
-      bestPosition = matchedPosition
+      bestPosition = matched.position
       best = candidate
     }
   }

@@ -3,13 +3,56 @@ import {
   appendVaryAccept,
   explicitlyPrefersHtml,
 } from './accept.ts'
-import { isDocumentPath, toMarkdownAssetPath } from './paths.ts'
+import {
+  isDocumentPath,
+  toMarkdownAssetPath,
+  legacyBlogPageRedirect,
+  wantsProblemJson,
+} from './paths.ts'
 import { notFoundMarkdown } from './content.ts'
 import { SITE_URL } from '../../consts.ts'
 
 const MARKDOWN_TYPE = 'text/markdown; charset=utf-8'
 
-function notAcceptableResponse(method: string): Response {
+function problemResponse(
+  status: 404 | 406,
+  method: string,
+  instancePath: string,
+): Response {
+  const title = status === 404 ? 'Not Found' : 'Not Acceptable'
+  const code = status === 404 ? 'not_found' : 'not_acceptable'
+  const detail =
+    status === 404
+      ? `No resource exists at ${instancePath}.`
+      : 'No representation matches the requested Accept types. Produced types: text/html, text/markdown.'
+  const resolution =
+    status === 404
+      ? 'Use GET /llms.txt, GET /sitemap-index.xml, or GET /developer/ to discover published URLs.'
+      : 'Send Accept: text/html or Accept: text/markdown, or request a .md URL for documents.'
+  const body = JSON.stringify({
+    type: 'about:blank',
+    title,
+    status,
+    detail,
+    instance: instancePath,
+    code,
+    resolution,
+  })
+  const headers = new Headers()
+  appendVaryAccept(headers)
+  headers.set('Content-Type', 'application/problem+json; charset=utf-8')
+  headers.set('Cache-Control', 'no-store')
+  return new Response(method === 'HEAD' ? null : body, { status, headers })
+}
+
+function notAcceptableResponse(
+  method: string,
+  pathname: string,
+  accept: string | null,
+): Response {
+  if (wantsProblemJson(pathname, accept)) {
+    return problemResponse(406, method, pathname)
+  }
   const headers = new Headers()
   appendVaryAccept(headers)
   headers.set('Content-Type', 'text/plain; charset=utf-8')
@@ -73,16 +116,29 @@ export async function handleAgentRequest(options: {
     return next()
   }
 
-  if (!isDocumentPath(url.pathname)) {
-    return next()
-  }
-
   const accept = request.headers.get('accept')
-  const chosen = preferredType(accept)
-
-  if (chosen === null) {
-    return notAcceptableResponse(method)
+  const redirectTo = legacyBlogPageRedirect(url.pathname)
+  if (redirectTo) {
+    const location = new URL(redirectTo, url.origin)
+    location.search = url.search
+    return Response.redirect(location, 301)
   }
+
+  const jsonErrors = wantsProblemJson(url.pathname, accept)
+
+  if (!isDocumentPath(url.pathname)) {
+    if (!jsonErrors) return next()
+    const downstream = await next()
+    if (downstream.status === 404) {
+      return problemResponse(404, method, url.pathname)
+    }
+    if (downstream.status === 406) {
+      return problemResponse(406, method, url.pathname)
+    }
+    return downstream
+  }
+
+  const chosen = preferredType(accept)
 
   const wantsMarkdownFile = url.pathname.endsWith('.md')
 
@@ -105,6 +161,9 @@ export async function handleAgentRequest(options: {
       })
     }
     if (downstream.status === 404) {
+      if (jsonErrors) {
+        return problemResponse(404, method, url.pathname)
+      }
       const response = markdownResponse(
         notFoundMarkdown(url.pathname),
         404,
@@ -113,8 +172,21 @@ export async function handleAgentRequest(options: {
       setLinkHeaders(response.headers, url)
       return response
     }
+    if (downstream.status === 406) {
+      if (jsonErrors) {
+        return problemResponse(406, method, url.pathname)
+      }
+      const headers = new Headers(downstream.headers)
+      appendVaryAccept(headers)
+      setLinkHeaders(headers, url)
+      return new Response(downstream.body, {
+        status: downstream.status,
+        statusText: downstream.statusText,
+        headers,
+      })
+    }
     if (downstream.ok) {
-      return notAcceptableResponse(method)
+      return notAcceptableResponse(method, url.pathname, accept)
     }
     const headers = new Headers(downstream.headers)
     appendVaryAccept(headers)
@@ -126,7 +198,33 @@ export async function handleAgentRequest(options: {
     })
   }
 
+  if (chosen === null && !jsonErrors) {
+    return notAcceptableResponse(method, url.pathname, accept)
+  }
+
   const response = await next()
+
+  if (response.status === 404 && jsonErrors) {
+    return problemResponse(404, method, url.pathname)
+  }
+
+  if (response.status === 406) {
+    if (jsonErrors) {
+      return problemResponse(406, method, url.pathname)
+    }
+    const headers = new Headers(response.headers)
+    appendVaryAccept(headers)
+    setLinkHeaders(headers, url)
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    })
+  }
+
+  if (response.ok && chosen === null) {
+    return notAcceptableResponse(method, url.pathname, accept)
+  }
 
   if (response.status === 404 && !explicitlyPrefersHtml(accept)) {
     const recovered = markdownResponse(
