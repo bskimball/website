@@ -16,9 +16,9 @@ const PhysicalLayerAnimation = () => {
 
   return (
     <div className="w-full my-8 border border-primary/20 bg-card/50 rounded-lg overflow-hidden relative font-mono text-xs">
-      {/* Header Annotation */}
+      {/* Diagram label */}
       <div className="absolute top-0 left-0 p-2 text-[10px] text-muted-foreground tracking-widest border-b border-r border-primary/10 rounded-br-lg bg-background/80 backdrop-blur-sm z-10">
-        FIG 3.1 // PHYSICAL STACK
+        PHYSICAL STACK
       </div>
 
       {/* Main Container */}

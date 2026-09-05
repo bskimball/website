@@ -11,7 +11,11 @@ import Backdrop from '../../components/Backdrop.astro'
 
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .sort(
+    (a, b) =>
+      b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+      a.id.localeCompare(b.id),
+  )
 
 const blogDescription =
   'Articles on IBM i modernization, full-stack development, network infrastructure, and systems engineering by Brian Kimball.'
@@ -52,7 +56,7 @@ const breadcrumbSchema = {
     <div class="noise-overlay"></div>
     <Backdrop />
     <Header />
-    <main class="container py-20">
+    <main id="main-content" class="container py-20">
       <section class="flex flex-col gap-12">
         <div class="flex flex-col gap-8">
           <h1
@@ -61,7 +65,7 @@ const breadcrumbSchema = {
             Blog
           </h1>
 
-          <div class="blog-search max-w-xl">
+          <div class="blog-search max-w-xl" role="search" aria-label="Search posts">
             <Search
               className="w-full"
               searchboxOptions={{ placeholder: 'Search posts…' }}

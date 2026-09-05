@@ -12,8 +12,10 @@ export default defineConfig({
   site: 'https://brian-kimball.com',
   trailingSlash: 'always',
   integrations: [mdx(), sitemap(), react(), pagefind(), agentFiles()],
+  // Hover/tap prefetch only — prefetchAll would fetch every card
+  // on /blog/ (29+ posts) on page load, which is wasteful on mobile.
   prefetch: {
-    prefetchAll: true,
+    prefetchAll: false,
   },
   vite: {
     plugins: [tailwindcss()],

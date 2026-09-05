@@ -18,9 +18,9 @@ const LogicalLayerAnimation = () => {
 
   return (
     <div className="w-full my-8 border border-primary/20 bg-card/50 rounded-lg overflow-hidden relative font-mono text-xs select-none">
-      {/* Header Annotation */}
+      {/* Diagram label */}
       <div className="absolute top-0 left-0 p-2 text-[10px] text-muted-foreground tracking-widest border-b border-r border-primary/10 rounded-br-lg bg-background/80 backdrop-blur-sm z-10">
-        FIG 3.2 // LOGICAL FLOW
+        LOGICAL FLOW
       </div>
 
       <div className="p-8 pt-16 flex flex-col items-center gap-12 relative min-h-[400px]">

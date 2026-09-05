@@ -9,6 +9,7 @@ import { FaArrowLeft } from 'react-icons/fa6'
 import BlockAuthor from '../components/BlockAuthor.astro'
 import Backdrop from '@/components/Backdrop.astro'
 import { SITE_URL, AUTHOR_NAME } from '@/consts'
+import { getTagId } from '@/lib/utils'
 
 type RelatedPost = {
   id: string
@@ -18,8 +19,23 @@ type RelatedPost = {
   >
 }
 
+type NeighborPost = {
+  id: string
+  title: string
+} | null
+
+type TocHeading = {
+  depth: number
+  slug: string
+  text: string
+}
+
 type Props = CollectionEntry<'blog'>['data'] & {
   relatedPosts?: RelatedPost[]
+  prevPost?: NeighborPost
+  nextPost?: NeighborPost
+  headings?: TocHeading[]
+  readingTime?: number
 }
 
 const {
@@ -32,9 +48,13 @@ const {
   fullImage,
   tags,
   relatedPosts = [],
+  prevPost = null,
+  nextPost = null,
+  headings = [],
+  readingTime,
 } = Astro.props
 
-const tagStrings = tags?.map((t) => (typeof t === 'object' ? t.id : t)) ?? []
+const tagStrings = tags?.map((t) => getTagId(t as string | { id: string })) ?? []
 const canonicalPostUrl = new URL(Astro.url.pathname, SITE_URL).toString()
 
 let ogImagePath = heroImage
@@ -76,9 +96,13 @@ const articleSchema = {
     url: `${SITE_URL}/about/`,
   },
   publisher: {
-    '@type': 'Person',
+    '@type': 'Organization',
     name: AUTHOR_NAME,
     url: SITE_URL,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_URL}/favicon.svg`,
+    },
   },
   keywords: tagStrings.join(', '),
 }
@@ -142,7 +166,7 @@ const breadcrumbSchema = {
     <div class="noise-overlay"></div>
     <Backdrop />
     <Header />
-    <main class="container py-12 lg:py-20">
+    <main id="main-content" class="container py-12 lg:py-20">
       <article>
         <div class="flex flex-col gap-12">
           <!-- Header Section -->
@@ -181,6 +205,14 @@ const breadcrumbSchema = {
                   </div>
                 )
               }
+              {
+                typeof readingTime === 'number' && (
+                  <div class="flex items-center gap-2">
+                    <span class="text-primary">Read:</span>
+                    <span>{readingTime} min</span>
+                  </div>
+                )
+              }
             </div>
           </div>
 
@@ -197,6 +229,8 @@ const breadcrumbSchema = {
                       src={heroImageOptimized}
                       width={1280}
                       height={720}
+                      loading="eager"
+                      fetchpriority="high"
                       alt={`${title} — featured image`}
                     />
                     {fullImage && (
@@ -205,7 +239,7 @@ const breadcrumbSchema = {
                           href={fullImage}
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="font-mono text-[10px] tracking-[0.2em] uppercase text-foreground/50 hover:text-primary transition-colors flex items-center gap-2 group"
+                          class="font-mono text-[10px] tracking-[0.2em] uppercase text-foreground/65 hover:text-primary transition-colors flex items-center gap-2 group"
                         >
                           <span class="w-8 h-[1px] bg-border group-hover:bg-primary/40 transition-colors" />
                           Download full image
@@ -221,6 +255,8 @@ const breadcrumbSchema = {
                         src={heroImage}
                         width={1280}
                         height={720}
+                        loading="eager"
+                        fetchpriority="high"
                         alt={`${title} — featured image`}
                       />
                       {fullImage && (
@@ -229,7 +265,7 @@ const breadcrumbSchema = {
                             href={fullImage}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="font-mono text-[10px] tracking-[0.2em] uppercase text-foreground/50 hover:text-primary transition-colors flex items-center gap-2 group"
+                            class="font-mono text-[10px] tracking-[0.2em] uppercase text-foreground/65 hover:text-primary transition-colors flex items-center gap-2 group"
                           >
                             <span class="w-8 h-[1px] bg-border group-hover:bg-primary/40 transition-colors" />
                             Download full image
@@ -264,7 +300,7 @@ const breadcrumbSchema = {
                       </span>
                       <div class="flex flex-wrap gap-2">
                         {tags.map((tag) => {
-                          const tagId = typeof tag === 'object' ? tag.id : tag
+                          const tagId = getTagId(tag as string | { id: string })
                           return (
                             <a
                               href={`/tags/${tagId}/`}
@@ -276,6 +312,27 @@ const breadcrumbSchema = {
                         })}
                       </div>
                     </div>
+                  )
+                }
+                {
+                  headings.length >= 2 && (
+                    <nav aria-label="Table of contents">
+                      <span class="font-mono text-xs tracking-widest text-primary block mb-4">
+                        On this page
+                      </span>
+                      <ol class="flex flex-col gap-2">
+                        {headings.map((h) => (
+                          <li class:list={{ 'pl-4': h.depth === 3 }}>
+                            <a
+                              href={`#${h.slug}`}
+                              class="font-mono text-xs tracking-wide text-foreground/65 no-underline transition-colors hover:text-primary"
+                            >
+                              {h.text}
+                            </a>
+                          </li>
+                        ))}
+                      </ol>
+                    </nav>
                   )
                 }
               </div>
@@ -294,7 +351,7 @@ const breadcrumbSchema = {
                       href={`/blog/${post.id}/`}
                       class="group flex flex-col gap-3 rounded-2xl border-2 border-border bg-card p-5 no-underline transition-colors hover:border-primary"
                     >
-                      <div class="font-mono text-[10px] tracking-widest text-foreground/50">
+                      <div class="font-mono text-[10px] tracking-widest text-foreground/65">
                         <FormattedDate date={post.data.pubDate} />
                       </div>
                       <h3 class="font-serif text-xl leading-tight text-foreground group-hover:text-primary transition-colors">
@@ -307,6 +364,46 @@ const breadcrumbSchema = {
                   ))}
                 </div>
               </section>
+            )
+          }
+
+          {
+            (prevPost || nextPost) && (
+              <nav
+                aria-label="More posts"
+                class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-border pt-12"
+              >
+                {prevPost ? (
+                  <a
+                    href={`/blog/${prevPost.id}/`}
+                    class="group flex flex-col gap-2 rounded-2xl border-2 border-border bg-card p-5 no-underline transition-colors hover:border-primary"
+                  >
+                    <span class="font-mono text-[10px] tracking-widest text-primary">
+                      ← Older
+                    </span>
+                    <span class="font-serif text-xl leading-tight text-foreground group-hover:text-primary transition-colors">
+                      {prevPost.title}
+                    </span>
+                  </a>
+                ) : (
+                  <span />
+                )}
+                {nextPost ? (
+                  <a
+                    href={`/blog/${nextPost.id}/`}
+                    class="group flex flex-col gap-2 rounded-2xl border-2 border-border bg-card p-5 no-underline transition-colors hover:border-primary md:text-right md:items-end"
+                  >
+                    <span class="font-mono text-[10px] tracking-widest text-primary">
+                      Newer →
+                    </span>
+                    <span class="font-serif text-xl leading-tight text-foreground group-hover:text-primary transition-colors">
+                      {nextPost.title}
+                    </span>
+                  </a>
+                ) : (
+                  <span />
+                )}
+              </nav>
             )
           }
         </div>

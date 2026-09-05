@@ -6,7 +6,11 @@ export async function GET(context) {
   const posts = await getCollection('blog')
   const sortedPosts = posts
     .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .sort(
+      (a, b) =>
+        b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+        a.id.localeCompare(b.id),
+    )
 
   return rss({
     title: SITE_TITLE,

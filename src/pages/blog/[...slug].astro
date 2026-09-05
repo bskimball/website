@@ -1,23 +1,41 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content'
 import BlogPost from '../../layouts/BlogPost.astro'
+import { getTagId } from '../../lib/utils'
+
+type RelatedPost = {
+  id: string
+  data: Pick<
+    CollectionEntry<'blog'>['data'],
+    'title' | 'description' | 'pubDate'
+  >
+}
+
+type NeighborPost = {
+  id: string
+  title: string
+} | null
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog')
   const published = posts
     .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .sort(
+      (a, b) =>
+        b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+        a.id.localeCompare(b.id),
+    )
 
   return posts.map((post) => {
     const currentTagIds = new Set(
-      (post.data.tags ?? []).map((t) => (typeof t === 'object' ? t.id : t)),
+      (post.data.tags ?? []).map((t) => getTagId(t as string | { id: string })),
     )
 
     const scored = published
       .filter((candidate) => candidate.id !== post.id)
       .map((candidate) => {
         const shared = (candidate.data.tags ?? []).reduce((count, tag) => {
-          const tagId = typeof tag === 'object' ? tag.id : tag
+          const tagId = getTagId(tag as string | { id: string })
           return currentTagIds.has(tagId) ? count + 1 : count
         }, 0)
         return { post: candidate, shared }
@@ -25,7 +43,10 @@ export async function getStaticPaths() {
       .filter((entry) => entry.shared > 0)
       .sort((a, b) => {
         if (b.shared !== a.shared) return b.shared - a.shared
-        return b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf()
+        return (
+          b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf() ||
+          a.post.id.localeCompare(b.post.id)
+        )
       })
 
     const related = scored.slice(0, 3).map((entry) => entry.post)
@@ -37,6 +58,15 @@ export async function getStaticPaths() {
         if (related.length >= 3) break
       }
     }
+
+    // Chronological neighbors (published list is newest-first).
+    const publishedIndex = published.findIndex((p) => p.id === post.id)
+    const newer =
+      publishedIndex > 0 ? published[publishedIndex - 1] : undefined
+    const older =
+      publishedIndex >= 0 && publishedIndex < published.length - 1
+        ? published[publishedIndex + 1]
+        : undefined
 
     return {
       params: { slug: post.id },
@@ -50,6 +80,12 @@ export async function getStaticPaths() {
             pubDate: r.data.pubDate,
           },
         })),
+        prevPost: older
+          ? { id: older.id, title: older.data.title }
+          : null,
+        nextPost: newer
+          ? { id: newer.id, title: newer.data.title }
+          : null,
       },
     }
   })
@@ -57,19 +93,27 @@ export async function getStaticPaths() {
 
 type Props = {
   post: CollectionEntry<'blog'>
-  relatedPosts: {
-    id: string
-    data: Pick<
-      CollectionEntry<'blog'>['data'],
-      'title' | 'description' | 'pubDate'
-    >
-  }[]
+  relatedPosts: RelatedPost[]
+  prevPost: NeighborPost
+  nextPost: NeighborPost
 }
 
-const { post, relatedPosts } = Astro.props as Props
-const { Content } = await render(post)
+const { post, relatedPosts, prevPost, nextPost } = Astro.props as Props
+const { Content, headings } = await render(post)
+
+// Rough reading-time estimate from raw body text (200 wpm, min 1 min).
+const wordCount = (post.body ?? '').split(/\s+/).filter(Boolean).length
+const readingTime = Math.max(1, Math.round(wordCount / 200))
+const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3)
 ---
 
-<BlogPost {...post.data} relatedPosts={relatedPosts}>
+<BlogPost
+  {...post.data}
+  relatedPosts={relatedPosts}
+  prevPost={prevPost}
+  nextPost={nextPost}
+  headings={toc}
+  readingTime={readingTime}
+>
   <Content />
 </BlogPost>

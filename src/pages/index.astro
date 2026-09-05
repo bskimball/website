@@ -11,7 +11,11 @@ import Backdrop from '@/components/Backdrop.astro'
 
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .sort(
+    (a, b) =>
+      b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+      a.id.localeCompare(b.id),
+  )
   .slice(0, 9) // Limit to 9 posts for the home page grid
 
 const personSchema = {
@@ -68,7 +72,7 @@ const websiteSchema = {
     <div class="noise-overlay"></div>
     <Backdrop />
     <Header />
-    <main>
+    <main id="main-content">
       <section
         class="min-h-screen flex flex-col justify-center relative overflow-hidden"
       >

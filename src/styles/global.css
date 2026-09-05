@@ -117,6 +117,10 @@
     border-radius: 0.25rem;
     font-size: 0.875em;
   }
+  /* Anchor offset for TOC links under the sticky header. */
+  :is(h1, h2, h3, h4)[id] {
+    scroll-margin-top: 6rem;
+  }
   a {
     @apply text-primary underline;
     &:hover {
@@ -315,6 +319,13 @@
     stroke-dasharray: none;
   }
   .group:hover .atomic-border-trace {
+    animation: none;
+  }
+  .animate-spin-slow,
+  .animate-marquee,
+  .animate-flow-right,
+  .animate-dash,
+  .animate-dash-fast {
     animation: none;
   }
 }

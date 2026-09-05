@@ -7,6 +7,7 @@ import Footer from '@/components/Footer.astro'
 
 import BentoCard from '@/components/BentoCard.astro'
 import Backdrop from '@/components/Backdrop.astro'
+import { getTagId } from '@/lib/utils'
 
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog')
@@ -15,7 +16,10 @@ export async function getStaticPaths() {
   return allTags.map((tag) => {
     const filteredPosts = allPosts.filter(
       (post) =>
-        post.data.tags && post.data.tags.map((t) => t.id).includes(tag.id),
+        post.data.tags &&
+        post.data.tags
+          .map((t) => getTagId(t as string | { id: string }))
+          .includes(tag.id),
     )
 
     return {
@@ -33,7 +37,11 @@ type Props = {
 const { posts: allPosts, tag } = Astro.props as Props
 const posts = allPosts
   .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .sort(
+    (a, b) =>
+      b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+      a.id.localeCompare(b.id),
+  )
 
 const tagTitle = `Posts tagged "${tag.data.name}"`
 const tagDescription = `Articles about ${tag.data.name} — systems engineering, development, and infrastructure from Brian Kimball.`
@@ -80,7 +88,7 @@ const breadcrumbSchema = {
     <div class="noise-overlay"></div>
     <Backdrop />
     <Header />
-    <main class="container py-20">
+    <main id="main-content" class="container py-20">
       <div class="flex flex-col gap-12">
         <h1
           class="text-5xl md:text-7xl font-display leading-tight animate-in fill-mode-both fade-in slide-in-from-bottom-2 duration-1000"
@@ -91,6 +99,17 @@ const breadcrumbSchema = {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {posts.map((post) => <BentoCard post={post} />)}
         </div>
+        {
+          posts.length === 0 && (
+            <p class="font-mono text-sm tracking-widest text-foreground/65">
+              No published posts under this tag yet. Try the{' '}
+              <a href="/blog/" class="text-primary underline">
+                full index
+              </a>
+              .
+            </p>
+          )
+        }
       </div>
     </main>
     <Footer />

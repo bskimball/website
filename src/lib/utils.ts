@@ -24,3 +24,12 @@ export function checkLinkActive({
   const subpath = path.match(/[^\/]+/g)
   return link === path || link === '/' + (subpath?.[0] ?? '')
 }
+
+/** Normalize a content-collection tag reference to its string id. */
+export function getTagId(
+  tag: string | { id: string } | { data?: unknown } & Record<string, unknown>,
+): string {
+  return typeof tag === 'object' && tag !== null && 'id' in tag
+    ? String((tag as { id: string }).id)
+    : String(tag)
+}
